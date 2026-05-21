@@ -73,7 +73,9 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		#if mobile
 		if (selected && !__wasFocused) {
 			Application.current.window.textInputEnabled = true;
-		if (!selected && __wasFocused)
+		}
+		
+		if (!selected && __wasFocused) {
 			Application.current.window.textInputEnabled = false;
 		}
 		#end
