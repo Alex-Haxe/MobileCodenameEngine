@@ -11,7 +11,7 @@ class BackButton extends FlxSprite {
 
 	public static var isPressingBack:Bool = false;
 
-	public function new(x:Float = 975, y:Float = 455, ?buttonCam:FlxCamera) {
+	public function new(x:Float = 1000, y:Float = 485, ?buttonCam:FlxCamera) {
 		super(x, y);
 
 		frames = Paths.getSparrowAtlas('backButton');
