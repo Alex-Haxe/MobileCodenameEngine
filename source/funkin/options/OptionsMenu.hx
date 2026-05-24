@@ -6,9 +6,9 @@ import funkin.editors.ui.UIState;
 import funkin.options.categories.*;
 import funkin.options.type.*;
 #if mobile
-//import mobile.controls.VirtualPad;
-//import mobile.controls.FlxButton;
-import mobile.controls.ui.BackButton;
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+//import mobile.controls.ui.BackButton;
 #end
 
 typedef OptionCategory = {
@@ -21,7 +21,7 @@ typedef OptionCategory = {
 
 class OptionsMenu extends TreeMenu {
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 	public static var mainOptions:Array<OptionCategory> = [
 		{  // name and desc are actually the translations ids!  - Nex
@@ -77,10 +77,10 @@ class OptionsMenu extends TreeMenu {
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
 		#if mobile
-		//virtualPad = new VirtualPad(FULL, A_B);
-        //add(virtualPad);
+		virtualPad = new VirtualPad(FULL, A_B);
+        add(virtualPad);
 
-		add(new BackButton());
+		//add(new BackButton());
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {
