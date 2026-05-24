@@ -16,6 +16,7 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
 import flixel.input.keyboard.FlxKey;
+import flixel.input.mouse.FlxMouse;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 import flixel.group.FlxSpriteGroup;
@@ -62,12 +63,14 @@ import mobile.*;
 import mobile.controls.*;
 import mobile.backend.*;
 import mobile.backend.assets.*;
+import mobile.backend.utils.*;
 
 // Funkin Imports
 import funkin.backend.system.Controls;
 import funkin.game.PlayState;
 import funkin.options.Options;
 import funkin.backend.assets.Paths; 
+import funkin.editors.charter.Charter;
 
 // OpenFL Imports
 import openfl.Lib;

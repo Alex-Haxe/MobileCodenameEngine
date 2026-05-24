@@ -23,9 +23,19 @@ import haxe.Json;
 #if sys
 import sys.FileSystem;
 #end
+
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
+
 import flixel.util.FlxColor;
 
 class Charter extends UIState {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
+		
 	public static var __song:String;
 	static var __diff:String;
 	static var __variant:String;
@@ -577,6 +587,7 @@ class Charter extends UIState {
 
 		loadSong();
 
+
 		if (Framerate.isLoaded) {
 			Framerate.fpsCounter.alpha = 0.4;
 			Framerate.memoryCounter.alpha = 0.4;
@@ -597,6 +608,21 @@ class Charter extends UIState {
 		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);*/
 
 		DiscordUtil.call("onEditorLoaded", ["Chart Editor", __song + " (" + __diff + ")" + (__variant != null && __variant != "" ? " (" + __variant + ")" : "")]);
+
+		#if mobile
+		virtualPad = new VirtualPad(FULL, A_B_C_X_Y);
+        add(virtualPad);
+		
+		virtualPad.rebind('A', 'ENTER');
+		virtualPad.rebind('B', 'SPACE');
+		virtualPad.rebind('C', 'DELETE');
+		virtualPad.rebind('X', 'Q');
+		virtualPad.rebind('Y', 'E');
+		virtualPad.rebind('UP', 'W');
+		virtualPad.rebind('DOWN', 'S');
+		virtualPad.rebind('LEFT', 'A');
+		virtualPad.rebind('RIGHT', 'D');
+		#end
 	}
 
 	override function destroy() {

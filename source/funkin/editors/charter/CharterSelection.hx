@@ -9,14 +9,28 @@ import funkin.menus.FreeplayState.FreeplaySonglist;
 import funkin.options.type.*;
 import haxe.Json;
 
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
+
 using StringTools;
 
 class CharterSelection extends EditorTreeMenu {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
+		
 	override function create() {
 		super.create();
 		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
 		addMenu(new CharterSelectionScreen());
 		bgType = 'charter';
+
+		#if mobile
+		virtualPad = new VirtualPad(UP_DOWN, A_B);
+        add(virtualPad);
+		#end
 	}
 }
 

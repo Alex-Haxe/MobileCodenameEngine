@@ -1,5 +1,69 @@
 package mobile.controls;
 
+interface IMobileButton
+{
+	public function updateButton():Bool;
+}
+
+class FlxButtonManager
+{
+	public static var activeButtons:Array<IMobileButton> = [];
+	public static var isGlobalHookInitialized:Bool = false;
+	
+	private static var _wasMouseHidden:Bool = false;
+
+	public static function globalPreUpdate():Void
+	{
+		var isInputOccupied = false;
+
+		for (btn in activeButtons)
+		{
+			var basic = cast(btn, flixel.FlxBasic);
+			if (basic != null && basic.exists && basic.active && basic.visible)
+			{
+				#if FLX_POINTER_INPUT
+				if (btn.updateButton())
+					isInputOccupied = true;
+				#end
+			}
+		}
+
+		#if FLX_MOUSE
+		@:privateAccess
+		var mouseBtn = FlxG.mouse._leftButton;
+
+		if (isInputOccupied)
+		{
+			if (mouseBtn.current == 2)
+			{
+				mouseBtn.current = 0;
+			}
+			else if (mouseBtn.current == 1)
+			{
+				if (!_wasMouseHidden) 
+				{
+					mouseBtn.current = -1;
+				}
+				else 
+				{
+					mouseBtn.current = 0;
+				}
+			}
+			else if (mouseBtn.current == -1)
+			{
+				mouseBtn.current = 0;
+			}
+			
+			_wasMouseHidden = true;
+		}
+		else
+		{
+			_wasMouseHidden = false;
+		}
+		#end
+	}
+}
+
 class FlxButton extends FlxTypedButton<FlxText>
 {
 	public static inline var NORMAL:Int = 0;
@@ -59,7 +123,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 #if !display
 @:generic
 #end
-class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
+class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput implements IMobileButton
 {
 	public var label(default, set):T;
 
@@ -101,6 +165,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		labelAlphas[FlxButton.HIGHLIGHT] = 1;
 
 		input = new FlxInput(0);
+
+		FlxButtonManager.activeButtons.push(this);
+		if (!FlxButtonManager.isGlobalHookInitialized)
+		{
+			FlxG.signals.preUpdate.add(FlxButtonManager.globalPreUpdate);
+			FlxButtonManager.isGlobalHookInitialized = true;
+		}
 	}
 
 	override public function graphicLoaded():Void
@@ -125,22 +196,24 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	override public function destroy():Void
 	{
-        label = FlxDestroyUtil.destroy(label);
-        _spriteLabel = null;
+		label = FlxDestroyUtil.destroy(label);
+		_spriteLabel = null;
 
-        onUp = FlxDestroyUtil.destroy(onUp);
-        onDown = FlxDestroyUtil.destroy(onDown);
-        onOver = FlxDestroyUtil.destroy(onOver);
-        onOut = FlxDestroyUtil.destroy(onOut);
+		onUp = FlxDestroyUtil.destroy(onUp);
+		onDown = FlxDestroyUtil.destroy(onDown);
+		onOver = FlxDestroyUtil.destroy(onOver);
+		onOut = FlxDestroyUtil.destroy(onOut);
 
-        labelOffsets = FlxDestroyUtil.putArray(labelOffsets);
-    
-        labelAlphas = null;
-        currentInput = null;
-        input = null;
+		labelOffsets = FlxDestroyUtil.putArray(labelOffsets);
+	
+		labelAlphas = null;
+		currentInput = null;
+		input = null;
 
-        super.destroy();
-    }
+		FlxButtonManager.activeButtons.remove(this);
+
+		super.destroy();
+	}
 
 	override public function update(elapsed:Float):Void
 	{
@@ -148,10 +221,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 		if (visible)
 		{
-			#if FLX_POINTER_INPUT
-			updateButton();
-			#end
-
 			if (lastStatus != status)
 			{
 				updateStatusAnimation();
@@ -213,30 +282,64 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		return result;
 	}
 
-	function updateButton():Void
-	{
-		var overlapFound = checkTouchOverlap();
+	public function updateButton():Bool
+    {
+        var wasOwner = (currentInput != null); 
+        var overlapFound = checkTouchOverlap();
 
-		if (currentInput != null && currentInput.justReleased && overlapFound)
-			onUpHandler();
+        var inputJustReleased = (currentInput != null && currentInput.justReleased);
+    
+        if (inputJustReleased && overlapFound)
+            onUpHandler();
 
-		if (status != FlxButton.NORMAL && (!overlapFound || (currentInput != null && currentInput.justReleased)))
-			onOutHandler();
-	}
+        if (status != FlxButton.NORMAL && (!overlapFound || inputJustReleased))
+            onOutHandler();
+
+        return (currentInput != null) || overlapFound;
+    }
 
 	function checkTouchOverlap():Bool
 	{
+		var overlapFound = false;
+
 		#if FLX_TOUCH
-		for (camera in cameras)
+		var i = FlxG.touches.list.length - 1;
+		while (i >= 0)
 		{
-			for (touch in FlxG.touches.list)
+			var touch = FlxG.touches.list[i];
+			var consumed = false;
+			
+			for (camera in cameras)
 			{
 				if (checkInput(touch, touch, touch.justPressedPosition, camera))
-					return true;
+				{
+					overlapFound = true;
+					consumed = true;
+					break;
+				}
+			}
+			
+			if (consumed)
+            {
+	            FlxG.touches.list.remove(touch);
+            }
+			i--;
+		}
+		#end
+
+		#if FLX_MOUSE
+		for (camera in cameras)
+		{
+			@:privateAccess
+			if (checkInput(FlxG.mouse, FlxG.mouse._leftButton, FlxG.mouse._leftButton.justPressedPosition, camera))
+			{
+				overlapFound = true;
+				break;
 			}
 		}
 		#end
-		return false;
+
+		return overlapFound;
 	}
 
 	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
@@ -266,7 +369,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		else if (status == FlxButton.NORMAL)
 		{
 			if (allowSwiping && input.pressed)
+			{
+				currentInput = input;
 				onDownHandler();
+			}
 			else
 				onOverHandler();
 		}
@@ -312,6 +418,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		status = FlxButton.NORMAL;
 		input.release();
+		currentInput = null;
 		onOut.fire();
 	}
 

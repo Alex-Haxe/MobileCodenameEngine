@@ -22,6 +22,9 @@
 	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT WOULD BREAK THE ENGINE -->
 	<haxedef name="REGION" />
 
+	<!-- This only appears on dev builds. -->
+	<haxedef name="DEVBUILD" if="DEVBRANCH" />
+
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
 	<app preloader="flixel.system.FlxPreloader" />
@@ -245,7 +248,7 @@
 
 	<!-- iOS Section -->
 	<section if="ios">
-		<haxelib name="nativeiospopup" />
+		<haxelib name="IOSTools" />
 		
 	    <set name="IPHONEOS_DEPLOYMENT_TARGET" value="12.0" />
 		

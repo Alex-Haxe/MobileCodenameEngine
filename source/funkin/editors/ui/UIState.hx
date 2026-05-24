@@ -14,6 +14,11 @@ import flixel.system.scaleModes.StageSizeScaleMode;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
 
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
+
 class UIState extends MusicBeatState {
 	public var curContextMenu:UIContextMenu = null;
 
@@ -73,6 +78,11 @@ class UIState extends MusicBeatState {
 	}
 
 	public function isOverlapping(spr:UISprite, rect:FlxRect) {
+		#if mobile
+	    if (VirtualPad.touchingPad)
+		    return false;
+    	#end
+			
 		for(camera in spr.__lastDrawCameras) {
 			var pos = FlxG.mouse.getScreenPosition(camera, __point);
 			__rect.copyFrom(rect);
@@ -100,16 +110,31 @@ class UIState extends MusicBeatState {
 
 		super.tryUpdate(elapsed);
 
-		if (buttonHandler != null) {
+		if (buttonHandler != null 
+			#if mobile
+			&& !VirtualPad.touchingPad
+			#end
+		    ) {
 			buttonHandler();
 			buttonHandler = null;
 		}
+		else {
+			buttonHandler = null;
+		}
 
-		if (FlxG.mouse.justPressed) {
+		if (FlxG.mouse.justPressed 
+			#if mobile
+			&& !VirtualPad.touchingPad
+		    #end
+		    ) {
 			playEditorSound(Flags.DEFAULT_EDITOR_CLICK_SOUND);
 		}
 
-		if (FlxG.mouse.justReleased)
+		if (FlxG.mouse.justReleased 
+		   #if mobile
+		   && !VirtualPad.touchingPad
+		   #end
+		   )
 			currentFocus = (hoveredSprite is IUIFocusable) ? (cast hoveredSprite) : null;
 
 		FlxG.sound.keysAllowed = currentFocus != null ? !(currentFocus is UITextBox) : true;
