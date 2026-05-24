@@ -1,0 +1,41 @@
+name: Restore Dev Branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restore-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: restore dev branch
+        run: |
+          git fetch --all
+
+          if git show-ref --verify --quiet refs/heads/dev; then
+            echo "Local dev branch already exists."
+          elif git show-ref --verify --quiet refs/remotes/origin/dev; then
+            echo "Restoring dev from remote..."
+            git checkout -b dev origin/dev
+          else
+            echo "Searching reflog/history for deleted dev branch..."
+
+            LAST_COMMIT=$(git rev-list --all --max-count=1)
+
+            if [ -n "$LAST_COMMIT" ]; then
+              git checkout -b dev "$LAST_COMMIT"
+              echo "Recovered dev branch from commit $LAST_COMMIT"
+            else
+              echo "Could not recover dev branch."
+              exit 1
+            fi
+          fi
+
+      - name: push restored dev branch
+        run: |
+          git push origin dev
