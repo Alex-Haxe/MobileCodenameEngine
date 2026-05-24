@@ -1,0 +1,43 @@
+name: Reset Branch To Commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: "Branch to move"
+        required: true
+        default: "dev"
+
+      commit_hash:
+        description: "Commit hash to reset branch to"
+        required: true
+
+jobs:
+  reset-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Move branch to commit
+        run: |
+          BRANCH="${{ github.event.inputs.branch_name }}"
+          COMMIT="${{ github.event.inputs.commit_hash }}"
+
+          git fetch --all
+
+          git checkout -B "$BRANCH" "$COMMIT"
+
+      - name: Force push branch
+        run: |
+          BRANCH="${{ github.event.inputs.branch_name }}"
+
+          git push origin "$BRANCH" --force
