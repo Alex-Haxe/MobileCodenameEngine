@@ -150,7 +150,7 @@ jobs:
           ~/.gradle/wrapper
           ~/Android/Sdk
           /home/runner/hxcpp_cache
-         key: android-cache-${{ runner.os }}-${{ hashFiles('**/project.xml') }}
+         key: android-cache-${{ runner.os }}
 
       - name: Find APK
         run: find . -name "*.apk"
