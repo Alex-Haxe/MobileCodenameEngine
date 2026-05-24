@@ -1,19 +1,19 @@
-name: Reset Branch To Commit
+name: Restore Branch From Commit
 
 on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: "Branch to move"
+        description: "Branch name to restore"
         required: true
         default: "dev"
 
       commit_hash:
-        description: "Commit hash to reset branch to"
+        description: "Full commit hash"
         required: true
 
 jobs:
-  reset-branch:
+  restore-branch:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,17 +27,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Move branch to commit
+      - name: Fetch commit
         run: |
-          BRANCH="${{ github.event.inputs.branch_name }}"
-          COMMIT="${{ github.event.inputs.commit_hash }}"
+          git fetch origin ${{ github.event.inputs.commit_hash }}
 
-          git fetch --all
-
-          git checkout -B "$BRANCH" "$COMMIT"
-
-      - name: Force push branch
+      - name: Create branch from commit
         run: |
-          BRANCH="${{ github.event.inputs.branch_name }}"
+          git checkout -b "${{ github.event.inputs.branch_name }}" "${{ github.event.inputs.commit_hash }}"
 
-          git push origin "$BRANCH" --force
+      - name: Push restored branch
+        run: |
+          git push -u origin "${{ github.event.inputs.branch_name }}"
