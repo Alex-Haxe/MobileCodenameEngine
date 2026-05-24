@@ -12,7 +12,7 @@ class BackButton extends FlxSprite {
 	public static var isPressingBack:Bool = false;
 	public static var buttonCam:FlxCamera;
 
-	public function new(x:Float = 1000, y:Float = 475) {
+	public function new(x:Float = 1050, y:Float = 495) {
 		super(x, y);
 
 		if (buttonCam == null) {
