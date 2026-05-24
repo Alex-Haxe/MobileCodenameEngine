@@ -69,7 +69,7 @@ jobs:
           ~/.gradle/wrapper
           ~/Android/Sdk
           /home/runner/hxcpp_cache
-         key: android-cache-${{ runner.os }}-${{ hashFiles('**/project.xml') }}
+         key: android-cache-${{ runner.os }}
          restore-keys: |
           android-cache-${{ runner.os }}-
 
