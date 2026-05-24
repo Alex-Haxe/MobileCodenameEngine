@@ -12,35 +12,44 @@ class NumOption extends TextOption {
 	public var parent:Dynamic;
 	public var optionName:String;
 
+	var __colon:Alphabet;
 	var __number:Alphabet;
 	var __left:Alphabet;
 	var __right:Alphabet;
 
 	function set_currentValue(v:Float):Float {
-		if (__number != null)
-			__number.text = ':';
+		currentValue = v;
 
-		if (__left != null)
-			__left.text = '<';
+		if (__number != null) {
+			var textValue:String =
+				(v % 1 == 0) ? '${Std.int(v)}' : '$v';
 
-		if (__right != null)
-			__right.text = '$v >';
+			__number.text = textValue;
+		}
 
 		updateArrowPositions();
 
-		return currentValue = v;
+		return currentValue;
 	}
 
 	function updateArrowPositions() {
-		if (__left != null && __number != null && __right != null) {
-			__number.x = __text.x + __text.width + 12;
-			__left.x = __number.x + __number.width + 8;
-			__right.x = __left.x + __left.width + 8;
+		if (__colon == null || __number == null || __left == null || __right == null)
+			return;
 
-			__number.y = __text.y;
-			__left.y = __text.y;
-			__right.y = __text.y;
-		}
+		var spacing:Float = 10;
+
+		__colon.x = __text.x + __text.width + 12;
+
+		__left.x = __colon.x + __colon.width + spacing;
+
+		__number.x = __left.x + __left.width + spacing;
+
+		__right.x = __number.x + __number.width + spacing;
+
+		__colon.y = __text.y;
+		__left.y = __text.y;
+		__number.y = __text.y;
+		__right.y = __text.y;
 	}
 
 	override function set_text(v:String):String {
@@ -71,14 +80,16 @@ class NumOption extends TextOption {
 		else
 			currentValue = min;
 
-		__number = new Alphabet(0, 20, ':', 'bold');
-		__left = new Alphabet(0, 20, '<', 'bold');
-		__right = new Alphabet(0, 20, '$currentValue >', 'bold');
-
 		super(text, desc);
 
-		add(__number);
+		__colon = new Alphabet(0, 20, ':', 'bold');
+		__left = new Alphabet(0, 20, '<', 'bold');
+		__number = new Alphabet(0, 20, '$currentValue', 'bold');
+		__right = new Alphabet(0, 20, '>', 'bold');
+
+		add(__colon);
 		add(__left);
+		add(__number);
 		add(__right);
 
 		updateArrowPositions();
@@ -97,7 +108,8 @@ class NumOption extends TextOption {
 	}
 
 	function changeValue(change:Int) {
-		if (locked) return;
+		if (locked)
+			return;
 
 		var old = currentValue;
 
