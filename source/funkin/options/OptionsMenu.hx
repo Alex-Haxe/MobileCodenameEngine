@@ -21,7 +21,7 @@ typedef OptionCategory = {
 
 class OptionsMenu extends TreeMenu {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 	public static var mainOptions:Array<OptionCategory> = [
 		{  // name and desc are actually the translations ids!  - Nex
