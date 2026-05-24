@@ -37,4 +37,4 @@ jobs:
 
       - name: Push restored branch
         run: |
-          git push -u origin "${{ github.event.inputs.branch_name }}"
+          git push -u origin "${{ github.event.inputs.branch_name }}" --force
