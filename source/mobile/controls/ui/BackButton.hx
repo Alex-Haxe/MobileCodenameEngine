@@ -4,15 +4,25 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.input.keyboard.FlxKey;
-import funkin.backend.assets.Paths;
 import flixel.input.mouse.FlxMouse;
-#if mobile
+import funkin.backend.assets.Paths;
+
 class BackButton extends FlxSprite {
 
 	public static var isPressingBack:Bool = false;
+	public static var buttonCam:FlxCamera;
 
-	public function new(x:Float = 1000, y:Float = 485, ?buttonCam:FlxCamera) {
+	public function new(x:Float = 1000, y:Float = 475) {
 		super(x, y);
+
+		if (buttonCam == null) {
+			buttonCam = new FlxCamera();
+			buttonCam.bgColor.alpha = 0;
+
+			FlxG.cameras.add(buttonCam, false);
+		}
+
+		cameras = [buttonCam];
 
 		frames = Paths.getSparrowAtlas('backButton');
 
@@ -22,21 +32,18 @@ class BackButton extends FlxSprite {
 		animation.play('idle');
 
 		scale.set(0.85, 0.85);
+
 		updateHitbox();
 
 		scrollFactor.set(0, 0);
-
-		if (buttonCam != null)
-			cameras = [buttonCam];
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		var hovering:Bool = FlxG.mouse.overlaps(this, this.camera);
+		var hovering:Bool = FlxG.mouse.overlaps(this, cameras[0]);
 
-		if (hovering)
-			FlxMouse.globallyBlocked = true;
+		FlxMouse.globallyBlocked = hovering;
 
 		if (hovering && FlxG.mouse.justPressed) {
 			isPressingBack = true;
@@ -61,4 +68,3 @@ class BackButton extends FlxSprite {
 		}
 	}
 }
-#end
