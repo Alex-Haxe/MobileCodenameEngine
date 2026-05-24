@@ -8,7 +8,7 @@ import funkin.backend.assets.Paths;
 
 class BackButton extends FlxSprite {
     
-    var isPressingBack:Bool = false;
+    public static var isPressingBack:Bool = false;
     var canClick:Bool = true;
 
     public function new(x:Float = 975, y:Float = 455, ?buttonCam:FlxCamera) {
