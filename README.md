@@ -1,5 +1,9 @@
-# Friday Night Funkin' - Codename Engine
+# Friday Night Funkin' - Codename Engine Mobile
 
+> [!NOTE]
+> IOS may be buggy. if its bugging out then go to the [issues](https://github.com/ChanceXML/MobileCodenameEngine/issues) tab.
+
+---
 ![Animated-Banner](https://github.com/user-attachments/assets/5830221d-d954-4be3-afe8-caae364a5881)
 
 Codename Engine is a cross platform [Friday Night Funkin'](https://github.com/FunkinCrew/Funkin) Engine aimed at simplifying modding focusing on softcoding, along with extensiblity and ease of use.<br>
