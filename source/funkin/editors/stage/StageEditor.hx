@@ -543,7 +543,7 @@ class StageEditor extends UIState {
 	        }
         }
 
-		var sprites = getRealSprites();
+		var sprites:Array<FunkinSprite> = cast getRealSprites();
 
         if (sprites.length > 0) {
         	var curIndex = 0;
