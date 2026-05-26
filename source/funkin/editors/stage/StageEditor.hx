@@ -175,12 +175,20 @@ class StageEditor extends UIState {
 				childs: [
 					{
 						label: translate("view.zoomIn"),
+						#if desktop
 						keybind: [CONTROL, NUMPADPLUS],
+						#elseif mobile
+						keybind: [EIGHT],
+						#end
 						onSelect: _view_zoomin
 					},
 					{
 						label: translate("view.zoomOut"),
+						#if desktop
 						keybind: [CONTROL, NUMPADMINUS],
+						#elseif mobile
+						keybind: [NINE],
+						#end
 						onSelect: _view_zoomout
 					},
 					{
@@ -285,7 +293,7 @@ class StageEditor extends UIState {
 		}
 
 		#if mobile
-        virtualPad = new VirtualPad(FULL, A_B);
+        virtualPad = new VirtualPad(FULL, A_B_X_Y);
         add(virtualPad);
 		virtualPad.rebind('UP', 'W');
 		virtualPad.rebind('DOWN', 'S');
@@ -293,6 +301,8 @@ class StageEditor extends UIState {
 		virtualPad.rebind('RIGHT', 'D');
 		virtualPad.rebind('A', 'SEVEN');
 		virtualPad.rebind('B', 'TAB');
+		virtualPad.rebind('X', 'NINE');
+		virtualPad.rebind('Y', 'EIGHT');
         #end
 
 		// DiscordUtil.call("onEditorLoaded", ["Stage Editor", __stage]);
