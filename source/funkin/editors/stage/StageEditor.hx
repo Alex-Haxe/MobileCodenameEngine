@@ -554,19 +554,20 @@ class StageEditor extends UIState {
 
 	    if (FlxG.keys.justPressed.TAB) {
 		    curIndex++;
+
+			if (curIndex >= sprites.length)
+	    	curIndex = 0;
+
+			selectSprite(sprites[curIndex]);
     	}
 
 	    if (FlxG.keys.justPressed.SEVEN) {
 		    curIndex--;
-    	}
 
-	    if (curIndex >= sprites.length)
-	    	curIndex = 0;
-
-     	if (curIndex < 0)
-	    	curIndex = sprites.length - 1;
-  
-    	    selectSprite(sprites[curIndex]);
+     	    if (curIndex < 0)
+	    	    curIndex = sprites.length - 1;
+ 
+			selectSprite(sprites[curIndex]);
             }
 	    }
 	    #end
