@@ -133,7 +133,7 @@ class DialogueCutscene extends ScriptedCutscene {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(controls.ACCEPT) {
+		if(controls.ACCEPT #if mobile || FlxG.mouse.justPressed #end) {
 			if(dialogueBox.dialogueEnded) next();
 			else dialogueBox.text.skip();
 		}
