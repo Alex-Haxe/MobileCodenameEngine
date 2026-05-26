@@ -17,11 +17,18 @@ import haxe.xml.Access;
 import haxe.xml.Printer;
 import lime.ui.MouseCursor;
 import openfl.ui.Mouse;
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
 
 using funkin.backend.utils.MatrixUtil;
 
 @:access(flixel.FlxSprite)
 class StageEditor extends UIState {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	static var __stage:String;
 	public var stage:Stage;
 
@@ -277,6 +284,17 @@ class StageEditor extends UIState {
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
 
+		#if mobile
+        virtualPad = new VirtualPad(FULL, A_B);
+        add(virtualPad);
+		virtualPad.rebind('UP', 'W');
+		virtualPad.rebind('DOWN', 'S');
+		virtualPad.rebind('LEFT', 'A');
+		virtualPad.rebind('RIGHT', 'D');
+		virtualPad.rebind('A', 'SEVEN');
+		virtualPad.rebind('B', 'TAB');
+        #end
+
 		// DiscordUtil.call("onEditorLoaded", ["Stage Editor", __stage]);
 	}
 
@@ -497,6 +515,61 @@ class StageEditor extends UIState {
 
 		WindowUtils.prefix = undos.unsaved ? "* " : "";
 		SaveWarning.showWarning = undos.unsaved;
+
+		#if mobile
+		var moveSpeed = FlxG.keys.pressed.SHIFT ? 20 : 5;
+
+        if (FlxG.keys.pressed.W) {
+     	for (sprite in selection) {
+      		sprite.y -= moveSpeed;
+        	}
+        }
+
+        if (FlxG.keys.pressed.S) {
+     	for (sprite in selection) {
+		    sprite.y += moveSpeed;
+    	    }  
+        }
+
+        if (FlxG.keys.pressed.A) {
+	    for (sprite in selection) {
+	     	sprite.x -= moveSpeed;
+         	}
+        }
+
+        if (FlxG.keys.pressed.D) {
+	    for (sprite in selection) {
+		    sprite.x += moveSpeed;
+	        }
+        }
+
+		var sprites = getRealSprites();
+
+        if (sprites.length > 0) {
+        	var curIndex = 0;
+
+	    if (selection.length > 0) {
+		    curIndex = sprites.indexOf(selection[0]);
+    	}
+
+	    if (FlxG.keys.justPressed.TAB) {
+		    curIndex++;
+    	}
+
+	    if (FlxG.keys.justPressed.SEVEN) {
+		    curIndex--;
+    	}
+
+	    if (curIndex >= sprites.length)
+	    	curIndex = 0;
+
+     	if (curIndex < 0)
+	    	curIndex = sprites.length - 1;
+  
+    	    selectSprite(sprites[curIndex]);
+            }
+	    }
+	    #end
 	}
 
 	// TOP MENU OPTIONS
