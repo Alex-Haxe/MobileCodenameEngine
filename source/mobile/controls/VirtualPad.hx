@@ -445,7 +445,7 @@ class VirtualPad extends FlxSpriteGroup
 		
 		button.animation.add("normal", [0]);
 		button.animation.add("highlight", [1]);
-		button.animation.add("pressed", [1]);
+		button.animation.add("pressed", [2]);
 		
 		return button;
 	}
