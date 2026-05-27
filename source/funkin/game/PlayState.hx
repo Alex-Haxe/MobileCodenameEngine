@@ -38,7 +38,7 @@ import haxe.io.Path;
 
 #if mobile
 import mobile.controls.PauseButton;
-import funkin.menus.MobileControlsSubState;
+import funkin.menus.MobileControlsSubstate;
 import mobile.controls.HitBox;
 import mobile.controls.VirtualPad;
 import flixel.input.keyboard.FlxKey;
