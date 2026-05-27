@@ -78,17 +78,15 @@ class MobileOptions extends TreeMenuScreen
 	}
 
 	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
+    {
+	    super.update(elapsed);
 
-		if (controls.ACCEPT)
-		{
-			var option = optionsArray[curSelected];
-
-			if (option.name == "mobilecontrols")
-			{
-				openSubState(new funkin.menus.MobileControlsSubstate());
-			}
-		}
-	}
+	    if (controls.ACCEPT)
+	    {
+		    if (curOption != null && curOption.name == "mobilecontrols")
+		    {
+		 	    FlxG.state.openSubState(new funkin.menus.MobileControlsSubstate());
+		    }
+	    }
+    }
 }
