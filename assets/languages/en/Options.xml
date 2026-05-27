@@ -68,6 +68,9 @@
 	</group>
 	
     <group name="MobileOptions" prefix="MobileOptions">
+		<str id="mobilecontrols-name">Mobile Controls</str>
+		<str id="mobilecontrols-desc">Change the buttons that playstate will use to hit the notes.</str>
+		
    	    <str id="pauseButton-name">Pause Button</str>
 	    <str id="pauseButton-desc">If unchecked. the pause button will become invisible</str>
 
