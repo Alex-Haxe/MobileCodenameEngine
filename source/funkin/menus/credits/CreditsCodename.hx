@@ -7,15 +7,15 @@ import funkin.backend.system.github.GitHubContributor.CreditsGitHubContributor;
 import funkin.options.PlayerSettings;
 import funkin.options.type.GithubIconOption;
 #if mobile
-import mobile.controls.VirtualPad;
-import mobile.controls.FlxButton;
+//import mobile.controls.VirtualPad;
+//import mobile.controls.FlxButton;
 #end
 
 using StringTools;
 
 class CreditsCodename extends funkin.options.TreeMenuScreen {
 	#if mobile
-    public var virtualPad:VirtualPad;
+	//public var virtualPad:VirtualPad;
     #end
 	public var error:Bool = false;
 	public var totalContributions:Int = 0;
@@ -26,8 +26,8 @@ class CreditsCodename extends funkin.options.TreeMenuScreen {
 		tryUpdating(true);
 
 		#if mobile
-        virtualPad = new VirtualPad(FULL, A_B);
-        add(virtualPad);
+        //virtualPad = new VirtualPad(FULL, A_B);
+        //add(virtualPad);
         #end
 	}
 
