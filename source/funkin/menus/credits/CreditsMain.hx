@@ -7,8 +7,15 @@ import funkin.options.TreeMenu;
 import funkin.options.TreeMenuScreen;
 import funkin.options.type.*;
 import haxe.xml.Access;
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
 
 class CreditsMain extends TreeMenu {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	var bg:FlxSprite;
 	var items:Array<OptionType> = [];
 
@@ -38,6 +45,11 @@ class CreditsMain extends TreeMenu {
 
 		first.add(new TextOption('Codename Engine', 'credits.selectCodename', ' >', () -> addMenu(new CreditsCodename())));
 		first.add(new TextOption('Friday Night Funkin\'', 'credits.selectBase', ' >', () -> CoolUtil.openURL(Flags.URL_FNF_ITCH)));
+
+		#if mobile
+        virtualPad = new VirtualPad(UP_DOWN, A_B);
+        add(virtualPad);
+        #end
 	}
 
 	public function updateBG() {
