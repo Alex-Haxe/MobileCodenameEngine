@@ -1,17 +1,6 @@
 package mobile.controls;
 
 #if mobile
-import flixel.FlxG;
-import flixel.FlxCamera;
-import flixel.math.FlxPoint;
-import flixel.ui.FlxButton;
-import flixel.group.FlxSpriteGroup;
-import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.util.FlxDestroyUtil;
-import flixel.input.keyboard.FlxKey;
-import flixel.input.FlxInput.FlxInputState;
-
 class MobileButton extends FlxButton 
 {
 	public var justPressed:Bool = false;
