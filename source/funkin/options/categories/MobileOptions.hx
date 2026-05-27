@@ -2,8 +2,7 @@ package funkin.options.categories;
 
 import flixel.FlxG;
 import funkin.options.Options;
-import funkin.options.type.Checkbox;
-import funkin.options.type.SliderOption;
+import funkin.options.type.*;
 
 /**
 public static var hitboxOpacity:Float = 0.15;
@@ -19,12 +18,9 @@ class MobileOptions extends TreeMenuScreen
 	{
 		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
-		add(new ArrayOption(
-            getNameID('mobilecontrols'),
-            getDescID('mobilecontrols'),
-            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
-            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
-            'mobilecontrols'
+		add(new MobileControlsOption(
+	        getNameID('mobilecontrols'),
+	        getDescID('mobilecontrols')
         ));
 
         add(new Checkbox(
@@ -76,17 +72,3 @@ class MobileOptions extends TreeMenuScreen
 			'hitboxOpacity',
 		));
 	}
-
-	override function update(elapsed:Float)
-    {
-	    super.update(elapsed);
-
-	    if (controls.ACCEPT)
-	    {
-		    if (curOption != null && curOption.name == "mobilecontrols")
-		    {
-		 	    FlxG.state.openSubState(new funkin.menus.MobileControlsSubstate());
-		    }
-	    }
-    }
-}
