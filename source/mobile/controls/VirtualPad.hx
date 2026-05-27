@@ -1,7 +1,7 @@
 package mobile.controls;
 
 #if mobile
-class MobileButton extends FlxButton 
+class MobileButton extends FlxSprite 
 {
 	public var justPressed:Bool = false;
 	public var justReleased:Bool = false;
