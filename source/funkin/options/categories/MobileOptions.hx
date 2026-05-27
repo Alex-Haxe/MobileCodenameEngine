@@ -72,3 +72,4 @@ class MobileOptions extends TreeMenuScreen
 			'hitboxOpacity',
 		));
 	}
+}
