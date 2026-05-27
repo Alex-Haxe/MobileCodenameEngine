@@ -85,6 +85,7 @@ class MobileOptions extends TreeMenuScreen {
             {
                 openSubState(new funkin.menus.MobileControlsSubstate());
             } else {
-        }
-    }
+         }
+      }
+   }
 }
