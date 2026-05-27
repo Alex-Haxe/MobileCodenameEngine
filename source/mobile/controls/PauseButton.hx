@@ -25,6 +25,7 @@ class Pause extends FlxGroup
         pauseButton.animation.addByIndices('confirm', 'pause', confirmIndices, "", 24, false);
         
         pauseButton.scale.set(0.8, 0.8);
+        pauseButton.alpha = 0.8;
         pauseButton.updateHitbox();
         pauseButton.animation.play('idle');
         pauseButton.setPosition((FlxG.width - pauseButton.width) - 35, 35);
