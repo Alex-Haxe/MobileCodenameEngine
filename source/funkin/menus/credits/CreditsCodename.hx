@@ -6,10 +6,17 @@ import funkin.backend.system.github.GitHub;
 import funkin.backend.system.github.GitHubContributor.CreditsGitHubContributor;
 import funkin.options.PlayerSettings;
 import funkin.options.type.GithubIconOption;
+#if mobile
+//import mobile.controls.VirtualPad;
+//import mobile.controls.FlxButton;
+#end
 
 using StringTools;
 
 class CreditsCodename extends funkin.options.TreeMenuScreen {
+	#if mobile
+	//public var virtualPad:VirtualPad;
+    #end
 	public var error:Bool = false;
 	public var totalContributions:Int = 0;
 	public var contribFormats:Array<FlxTextFormatMarkerPair> = [];
@@ -17,6 +24,11 @@ class CreditsCodename extends funkin.options.TreeMenuScreen {
 	public function new() {
 		super("Codename Engine", "credits.allContributors");
 		tryUpdating(true);
+
+		#if mobile
+        //virtualPad = new VirtualPad(FULL, A_B);
+        //add(virtualPad);
+        #end
 	}
 
 	// blame the secondary threads if the code has to look this bad  - Nex
@@ -53,15 +65,22 @@ class CreditsCodename extends funkin.options.TreeMenuScreen {
 	}
 
 	public function updateMarkup() {
-		if (parent == null) return;
-		var text:String = parent.descLabel.text;
-		parent.descLabel.text = "";
-		parent.descLabel.applyMarkup(text, contribFormats = [
-			new FlxTextFormatMarkerPair(new FlxTextFormat(Flags.MAIN_DEVS_COLOR), '*'),
-			new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.interpolate(Flags.MIN_CONTRIBUTIONS_COLOR, Flags.MAIN_DEVS_COLOR, Options.contributors[curSelected].contributions / totalContributions)), '~')
-		]);
-	}
+        if (parent == null) return;
+        if (Options.contributors == null || Options.contributors.length == 0) return;
+        if (curSelected < 0 || curSelected >= Options.contributors.length) return;
+        if (totalContributions <= 0) return;
 
+        var text:String = parent.descLabel.text;
+        parent.descLabel.text = "";
+
+        parent.descLabel.applyMarkup(text, contribFormats = [
+            new FlxTextFormatMarkerPair(new FlxTextFormat(Flags.MAIN_DEVS_COLOR), '*'),
+            new FlxTextFormatMarkerPair(
+                new FlxTextFormat(FlxColor.interpolate(Flags.MIN_CONTRIBUTIONS_COLOR, Flags.MAIN_DEVS_COLOR,
+                    Options.contributors[curSelected].contributions / totalContributions)), '~')
+        ]);
+	}
+	
 	override function close() {
 		for (frmt in contribFormats) parent.descLabel.removeFormat(frmt.format);
 		super.close();

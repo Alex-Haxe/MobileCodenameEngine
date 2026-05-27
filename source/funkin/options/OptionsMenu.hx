@@ -8,6 +8,7 @@ import funkin.options.type.*;
 #if mobile
 import mobile.controls.VirtualPad;
 import mobile.controls.FlxButton;
+//import mobile.controls.ui.BackButton;
 #end
 
 typedef OptionCategory = {
@@ -78,6 +79,8 @@ class OptionsMenu extends TreeMenu {
 		#if mobile
 		virtualPad = new VirtualPad(FULL, A_B);
         add(virtualPad);
+
+		//add(new BackButton());
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {

@@ -2,6 +2,14 @@ import funkin.ui.FunkinText;
 import flixel.text.FlxText;
 import flixel.text.FlxTextBorderStyle;
 import flixel.util.FlxAxes;
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
+
+#if mobile
+var virtualPad:VirtualPad;
+#end
 
 var pixelScript:Script = game.scripts.getByName("pixel.hx");
 var pauseCam = new FlxCamera();
@@ -55,6 +63,10 @@ function create(event) {
 
 
 	FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
+
+	#if mobile
+	addVirtualPad('UP_DOWN', 'A_B');
+	#end
 }
 
 function confText(text) {
@@ -69,12 +81,16 @@ function confText(text) {
 	add(text);
 }
 
-function destroy() if (FlxG.cameras.list.contains(pauseCam))
+function destroy() 
+if (FlxG.cameras.list.contains(pauseCam))
 	FlxG.cameras.remove(pauseCam);
 
 var canDoShit = true;
 var time:Float = 0;
 function update(elapsed) {
+	#if mobile
+    if (virtualPad != null) virtualPad.update(elapsed);
+	#end
 	pixelScript?.call("postUpdate", [elapsed]);
 
 	pauseCam.alpha = lerp(pauseCam.alpha, 1, 0.25);
@@ -104,6 +120,13 @@ function enterOption() if (canDoShit) {
 	switch(option) {
 		case "Resume", "Exit to menu":
 			canDoShit = false;
+			#if mobile
+			if (virtualPad != null) {
+		        remove(virtualPad);
+		        virtualPad.destroy();
+	        	virtualPad = null;
+        	}
+            #end
 			for(t in texts) t.visible = false;
 			hand.visible = songText.visible = false;
 			FlxTween.tween(bg.scale, {y: 0}, 0.125, {ease: FlxEase.cubeOut, onComplete: selectOption});

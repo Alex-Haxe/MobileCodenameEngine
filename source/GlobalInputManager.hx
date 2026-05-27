@@ -6,6 +6,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.FlxBasic;
 import flixel.input.touch.FlxTouch;
 import mobile.controls.VirtualPad;
+//import mobile.controls.ui.BackButton;
 
 #if mobile
 class GlobalInputManager extends FlxBasic {

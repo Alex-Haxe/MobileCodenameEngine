@@ -1515,36 +1515,32 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 		
         #if mobile
-		if (hitbox != null) {
+        if (hitbox != null) {
             if (hitbox.UP.justPressed) {
                 FlxG.keys.handleAction(FlxKey.W, true);
-            }
-            if (hitbox.UP.justReleased) {
+            } else if (hitbox.UP.justReleased) {
                 FlxG.keys.handleAction(FlxKey.W, false);
             }
 
             if (hitbox.DOWN.justPressed) {
                 FlxG.keys.handleAction(FlxKey.S, true);
-            }
-            if (hitbox.DOWN.justReleased) {
+            } else if (hitbox.DOWN.justReleased) {
                 FlxG.keys.handleAction(FlxKey.S, false);
             }
 
             if (hitbox.LEFT.justPressed) {
                 FlxG.keys.handleAction(FlxKey.A, true);
-            }
-            if (hitbox.LEFT.justReleased) {
+            } else if (hitbox.LEFT.justReleased) {
                 FlxG.keys.handleAction(FlxKey.A, false);
             }
 
             if (hitbox.RIGHT.justPressed) {
-               FlxG.keys.handleAction(FlxKey.D, true);
-            }
-            if (hitbox.RIGHT.justReleased) {
+                FlxG.keys.handleAction(FlxKey.D, true);
+            } else if (hitbox.RIGHT.justReleased) {
                 FlxG.keys.handleAction(FlxKey.D, false);
-           }
-	    }
-		#end
+            } 
+        }
+        #end
 
 		scripts.call("postUpdate", [elapsed]);
 	}
