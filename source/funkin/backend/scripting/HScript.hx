@@ -64,115 +64,108 @@ class HScript extends Script {
 		#end
 
 		interp.variables.set("addCustomButton", function(x:Float, y:Float, assetPath:String, keyStr:String, animName:String = "", playOnlyWhenPressed:Dynamic = "true", size:Dynamic = 1.0) {
-	        var vpad = interp.variables.get("virtualPad");
-	        if (vpad == null) {
-		        trace("ERROR: virtualPad is null!");
-		        return null;
-	        }
 
-	        var btn = new flixel.ui.FlxButton(x, y);
-	        var hasXML = false;
-	
-	        var onlyOnPress:Bool = (Std.string(playOnlyWhenPressed).toLowerCase() != "false");
+            var vpad = interp.variables.get("virtualPad");
+            if (vpad == null) {
+                    trace("ERROR: virtualPad is null!");
+                    return null;
+            }
 
-	        try {
-		        var atlas = Paths.getSparrowAtlas(assetPath);
-		        if (atlas != null && atlas.frames != null) {
-			        btn.frames = atlas;
-			        hasXML = true;
-			
-			        if (animName != "") {
-				        btn.animation.addByPrefix(animName, animName, 24, !onlyOnPress); 
-				
-			        	if (btn.animation.getByName('normal') == null) {
-			        		btn.animation.addByPrefix('normal', 'normal', 24, false);
-			        	}
-				
-			        	if (!onlyOnPress) {
-			        		btn.animation.play(animName);
-			        	} else {
-			        		btn.animation.play(animName);
-			    	    	btn.animation.stop(); 
-		        	    	}
-	         	        } else {
-			        	btn.animation.addByPrefix('normal', 'normal', 24, false);
-			        	btn.animation.addByPrefix('pressed', 'pressed', 24, false);
-				        if (btn.animation.getByName('normal') == null) btn.animation.addByPrefix('normal', assetPath + ' normal', 24, false);
-				        if (btn.animation.getByName('pressed') == null) btn.animation.addByPrefix('pressed', assetPath + ' pressed', 24, false);
-				        btn.animation.play('normal');
-			        }
-		        }
-	        } catch(e:Dynamic) {}
+            var btn = new flixel.FlxSprite(x, y);
+            var hasXML = false;
 
-	        if (!hasXML) {
-		        try {
-			        var graphic = Paths.image(assetPath);
-		        	if (graphic != null) {
-		        		btn.loadGraphic(graphic);
-		        	} else {
-			        	trace("ERROR: Could not load graphic: " + assetPath);
-			        	return null;
-		        	}
-		        } catch(e:Dynamic) { return null; }
-	        }
+            var onlyOnPress:Bool = (Std.string(playOnlyWhenPressed).toLowerCase() != "false");
 
-        	var scaleAmt:Float = Std.parseFloat(Std.string(size));
-	        if (Math.isNaN(scaleAmt)) scaleAmt = 1.0;
+            try {
+                    var atlas = Paths.getSparrowAtlas(assetPath);
+                    if (atlas != null && atlas.frames != null) {
+                            btn.frames = atlas;
+                            hasXML = true;
 
-	        btn.scale.set(scaleAmt, scaleAmt);
-        	btn.updateHitbox();
-        	btn.solid = false;
-        	btn.immovable = true;
-        	btn.scrollFactor.set();
+                    if (animName != "") {
+                            btn.animation.addByPrefix(animName, animName, 24, !onlyOnPress);
 
-        	var customCam = interp.variables.get("virtualpadCamera");
-         	if (customCam != null) {
-		        btn.cameras = [customCam];
-        	} else if (vpad.cameras != null) {
-  	  	        btn.cameras = vpad.cameras; 
-	        }
+                            if (btn.animation.getByName("normal") == null) {
+                                    btn.animation.addByPrefix("normal", "normal", 24, false);
+                            }
+
+                            btn.animation.play(onlyOnPress ? "normal" : animName);
+                    } else {
+                            btn.animation.addByPrefix("normal", "normal", 24, false);
+                            btn.animation.addByPrefix("pressed", "pressed", 24, false);
+
+                            if (btn.animation.getByName("normal") == null) btn.animation.addByPrefix("normal", assetPath + " normal", 24, false);
+                            if (btn.animation.getByName("pressed") == null) btn.animation.addByPrefix("pressed", assetPath + " pressed", 24, false);
+
+                            btn.animation.play("normal");
+                    }
+                }
+           } catch(e:Dynamic) {}
+
+           if (!hasXML) {
+                try {
+                        var graphic = Paths.image(assetPath);
+                        if (graphic != null) {
+                                btn.loadGraphic(graphic);
+                        } else {
+                                trace("ERROR: Could not load graphic: " + assetPath);
+                                return null;
+                        }
+                } catch(e:Dynamic) {
+                        return null;
+                }
+            }
+
+            var scaleAmt:Float = Std.parseFloat(Std.string(size));
+            if (Math.isNaN(scaleAmt)) scaleAmt = 1.0;
+
+            btn.scale.set(scaleAmt, scaleAmt);
+            btn.updateHitbox();
+            btn.scrollFactor.set();
+            btn.cameras = vpad.cameras;
+
+            var key = flixel.input.keyboard.FlxKey.fromString(keyStr.toUpperCase());
+            vpad.add(btn);
   
-         	var key = flixel.input.keyboard.FlxKey.fromString(keyStr.toUpperCase());
-	        vpad.add(btn); 
-    
-	        var updateHook:Void->Void = null;
-	        updateHook = function() {
-	        	try {
-		        	if (btn == null || !btn.exists || vpad == null || !vpad.exists) {
-		         		flixel.FlxG.signals.preUpdate.remove(updateHook);
-			        	return;
-		        	}
+            var updateHook:Void->Void = null;
+            updateHook = function() {
+                    try {
+                        if (btn == null || !btn.exists || vpad == null || !vpad.exists) {
+                                flixel.FlxG.signals.preUpdate.remove(updateHook);
+                                return;
+                        }
 
-		         	if (hasXML) {
-			        	if (animName != "") {
-				        	if (onlyOnPress) {
-					          	if (btn.status == 2) {
-						      	    btn.animation.play(animName, false); 
-					        	} else {
-						        	if (btn.animation.getByName('normal') != null) {
-							        	btn.animation.play('normal');
-							        } else {
-								        btn.animation.stop();
-								        if (btn.animation.curAnim != null) btn.animation.curAnim.curFrame = 0;
-							        }
-						        }
-					        }
-				        } else {
-					        if (btn.status == 2) btn.animation.play('pressed');
-					        else btn.animation.play('normal');
-				        }
-		        	}
+                        var pressed = flixel.FlxG.mouse.overlaps(btn) && flixel.FlxG.mouse.pressed;
 
-			        @:privateAccess vpad.updateButtonKey(btn, key, "custom_" + assetPath, flixel.FlxG.elapsed);
-			
-		        } catch(e:Dynamic) {
-	         		flixel.FlxG.signals.preUpdate.remove(updateHook);
-		        }
-	        };
-	 
-        	flixel.FlxG.signals.preUpdate.add(updateHook);
+                        if (hasXML) {
+                                if (animName != "") {
+                                        if (onlyOnPress) {
+                                                if (pressed) {
+                                                        btn.animation.play(animName, false);
+                                                } else {
+                                                        if (btn.animation.getByName("normal") != null) {
+                                                                btn.animation.play("normal");
+                                                        } else {
+                                                                if (btn.animation.curAnim != null) btn.animation.curAnim.curFrame = 0;
+                                                        }
+                                                }
+                                        }
+                                } else {
+                                        if (pressed) btn.animation.play("pressed");
+                                        else btn.animation.play("normal");
+                                }
+                        }
 
-	        return btn;
+                        @:privateAccess vpad.updateButtonKey(btn, key, "custom_" + assetPath, flixel.FlxG.elapsed);
+
+                } catch(e:Dynamic) {
+                        flixel.FlxG.signals.preUpdate.remove(updateHook);
+                }
+            };
+
+            flixel.FlxG.signals.preUpdate.add(updateHook);
+
+            return btn;
         });
 		
 		interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
