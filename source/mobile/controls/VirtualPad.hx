@@ -233,6 +233,17 @@ class VirtualPad extends FlxSpriteGroup
 		VirtualPad.touchingPad = overlappingPad;
 
 		super.update(elapsed);
+		
+		for (btn in padButtons)
+		{
+			if (btn != null && btn.exists && btn.visible && buttonStates.exists(btn))
+			{
+				if (buttonStates.get(btn))
+					btn.animation.play("pressed");
+				else
+					btn.animation.play("normal");
+			}
+		}
 	}
 	
 	private inline function getBind(keyName:String):FlxKey 
@@ -431,6 +442,11 @@ class VirtualPad extends FlxSpriteGroup
 		button.solid = false;
 		button.immovable = true;
 		button.scrollFactor.set();
+		
+		button.animation.add("normal", [0]);
+		button.animation.add("highlight", [1]);
+		button.animation.add("pressed", [1]);
+		
 		return button;
 	}
 }
