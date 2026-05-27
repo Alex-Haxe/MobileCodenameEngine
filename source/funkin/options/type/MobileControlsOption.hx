@@ -4,21 +4,20 @@ import flixel.FlxG;
 
 class MobileControlsOption extends ArrayOption
 {
-	public function new(name:String, desc:String)
+	public function new()
 	{
 		super(
-			name,
-			desc,
+			'optionsTree.mobilecontrols-name',
+			'optionsTree.mobilecontrols-desc',
 			['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
 			['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
 			'mobilecontrols'
 		);
 	}
 
-	override public function select()
+	override function select()
 	{
 		super.select();
-
 		FlxG.state.openSubState(new funkin.menus.MobileControlsSubstate());
 	}
 }
