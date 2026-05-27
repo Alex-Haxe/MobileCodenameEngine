@@ -130,14 +130,18 @@ jobs:
           
       - name: Limit Java heap globally
         run: echo "JAVA_TOOL_OPTIONS=-Xmx5g" >> $GITHUB_ENV
-        
+
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+         
       - name: Build APK
         run: |
-         if [ "${GITHUB_REF##*/}" = "dev" ]; then
-             haxelib run lime build android -clean -D DEVBRANCH ${{ github.event.inputs.android_flags }}
-         else
-             haxelib run lime build android -clean ${{ github.event.inputs.android_flags }}
-         fi
+          haxelib run lime build android -release \
+           -Dandroid-keystore=keystore.jks \
+           -Dandroid-keyalias=${{ secrets.KEY_ALIAS }} \
+           -Dandroid-storepass=${{ secrets.KEYSTORE_PASSWORD }} \
+           -Dandroid-keypass=${{ secrets.KEY_PASSWORD }} \
+           -clean ${{ github.event.inputs.android_flags }}
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
