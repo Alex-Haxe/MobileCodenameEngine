@@ -16,6 +16,14 @@ class MobileOptions extends TreeMenuScreen {
     public function new() {
         super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
+		add(new ArrayOption(
+            getNameID('mobilecontrols'),
+            getDescID('mobilecontrols'),
+            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
+            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
+            'mobilecontrols'
+        ));
+
         add(new Checkbox(
             getNameID('pauseButton'),
             getDescID('pauseButton'),
@@ -65,4 +73,18 @@ class MobileOptions extends TreeMenuScreen {
 			'hitboxOpacity',
 		));
 	}
+
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+		
+    	if (controls.ACCEPT)
+        {
+            var option = optionsArray[curSelected];
+    
+            if (option.name == "mobilecontrols")
+            {
+                openSubState(new funkin.menus.MobileControlsSubstate());
+            } else {
+        }
+    }
 }
