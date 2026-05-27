@@ -18,10 +18,7 @@ class MobileOptions extends TreeMenuScreen
 	{
 		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
-		add(new MobileControlsOption(
-	        getNameID('mobilecontrols'),
-	        getDescID('mobilecontrols')
-        ));
+		add(new MobileControlsOption());
 
         add(new Checkbox(
             getNameID('pauseButton'),
