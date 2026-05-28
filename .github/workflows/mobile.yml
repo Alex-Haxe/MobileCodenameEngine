@@ -95,7 +95,7 @@ jobs:
           
           haxelib list
 
-      - name: Install Android SDK + NDK
+      - name: Install neccessary android tools
         run: |
           mkdir -p ~/android-sdk
           cd ~/android-sdk
@@ -119,7 +119,7 @@ jobs:
       - name: Clean Android
         run: haxelib run lime clean android
 
-      - name: Configure Gradle (5GB Safe Mode)
+      - name: Configure Gradle
         run: |
           mkdir -p ~/.gradle
           echo "org.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1536m -Dfile.encoding=UTF-8" > ~/.gradle/gradle.properties
@@ -128,7 +128,7 @@ jobs:
           echo "org.gradle.configureondemand=false" >> ~/.gradle/gradle.properties
           echo "android.splits.abi.enable=false" >> ~/.gradle/gradle.properties
           
-      - name: Limit Java heap globally
+      - name: Limit Java
         run: echo "JAVA_TOOL_OPTIONS=-Xmx5g" >> $GITHUB_ENV
 
       - name: Decode keystore
@@ -136,11 +136,11 @@ jobs:
          
       - name: Build APK
         run: |
-          haxelib run lime build android -final \
-           -Dandroid-keystore=keystore.jks \
-           -Dandroid-keyalias=${{ secrets.KEY_ALIAS }} \
-           -Dandroid-storepass=${{ secrets.KEYSTORE_PASSWORD }} \
-           -Dandroid-keypass=${{ secrets.KEY_PASSWORD }} \
+         haxelib run lime build android -final -release \
+           --certificate-path="keystore.jks" \
+           --certificate-alias="${{ secrets.KEY_ALIAS }}" \
+           --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
+           --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
          
       - name: Save cache
@@ -163,6 +163,12 @@ jobs:
         with:
           name: Android-Build
           path: export/release/android/bin/app/build/outputs/apk/debug/*.apk
+
+      # just in case it works
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Android-Release
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
 
   buildiOS:
     if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
