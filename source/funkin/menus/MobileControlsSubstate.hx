@@ -32,6 +32,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var menuButtons:VirtualPad;
 
 	var isCustomizing:Bool = false;
+	var acceptBlocked:Bool = true;
 
 	var draggedButton:FlxSprite;
 	var dragOffset:FlxPoint = FlxPoint.get();
@@ -51,6 +52,32 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		pad.cameras = [subCam];
 	}
 
+	function setPadEnabled(pad:VirtualPad, enabled:Bool)
+	{
+		if (pad == null) return;
+
+		pad.active = enabled;
+		pad.visible = enabled;
+
+		var buttons = [
+			pad.buttonUp,
+			pad.buttonDown,
+			pad.buttonLeft,
+			pad.buttonRight,
+			pad.buttonA,
+			pad.buttonB
+		];
+
+		for (btn in buttons)
+		{
+			if (btn != null)
+			{
+				btn.active = enabled;
+				btn.visible = enabled;
+			}
+		}
+	}
+
 	public override function create()
 	{
 		super.create();
@@ -60,11 +87,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		for (pad in VirtualPad.activePads)
 		{
-			if (pad != null && pad.exists)
+			if (pad != null && pad != menuButtons)
 			{
 				pad.visible = false;
 				pad.active = false;
-				pad.exists = false;
 				hiddenPads.push(pad);
 			}
 		}
@@ -102,26 +128,25 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewPad = new VirtualPad(FULL, NONE);
 		setupPadCamera(previewPad);
 		previewPad.alpha = 0.5;
-		previewPad.visible = false;
-		previewPad.active = false;
 		add(previewPad);
 
 		previewDoublePad = new VirtualPad(DOUBLE, NONE);
 		setupPadCamera(previewDoublePad);
 		previewDoublePad.alpha = 0.5;
-		previewDoublePad.visible = false;
-		previewDoublePad.active = false;
 		add(previewDoublePad);
 
 		customPad = new VirtualPad(CUSTOM, NONE);
 		setupPadCamera(customPad);
-		customPad.visible = false;
-		customPad.active = false;
+		customPad.alpha = 0.5;
 		add(customPad);
 
 		menuButtons = new VirtualPad(NONE, A_B);
 		setupPadCamera(menuButtons);
 		add(menuButtons);
+
+		setPadEnabled(previewPad, false);
+		setPadEnabled(previewDoublePad, false);
+		setPadEnabled(customPad, false);
 
 		changeSelection(0, true);
 	}
@@ -129,6 +154,19 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (acceptBlocked)
+		{
+			var stillPressed = controls.ACCEPT;
+
+			if (menuButtons.buttonA != null)
+				stillPressed = stillPressed || menuButtons.buttonA.pressed;
+
+			if (!stillPressed)
+				acceptBlocked = false;
+
+			return;
+		}
 
 		if (!isCustomizing)
 		{
@@ -143,15 +181,19 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 				if (pos.y < 150)
 				{
-					if (pos.x < FlxG.width * 0.5) leftPressed = true;
-					else rightPressed = true;
+					if (pos.x < FlxG.width * 0.5)
+						leftPressed = true;
+					else
+						rightPressed = true;
 				}
 
 				pos.put();
 			}
 
-			if (leftPressed || controls.LEFT_P) changeSelection(-1);
-			else if (rightPressed || controls.RIGHT_P) changeSelection(1);
+			if (leftPressed || controls.LEFT_P)
+				changeSelection(-1);
+			else if (rightPressed || controls.RIGHT_P)
+				changeSelection(1);
 
 			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed))
 			{
@@ -177,10 +219,11 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				isCustomizing = false;
 
-				customPad.visible = false;
-				customPad.active = false;
+				draggedButton = null;
 
 				modeText.visible = true;
+
+				setPadEnabled(customPad, false);
 
 				updatePreview();
 			}
@@ -206,11 +249,12 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		modeText.visible = false;
 
 		previewBox.visible = false;
-		previewPad.visible = false;
-		previewDoublePad.visible = false;
 
-		customPad.visible = true;
-		customPad.active = true;
+		setPadEnabled(previewPad, false);
+		setPadEnabled(previewDoublePad, false);
+
+		setPadEnabled(customPad, true);
+
 		customPad.alpha = 1;
 
 		loadCustomLayout();
@@ -235,6 +279,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			touchY = pos.y;
 
 			pos.put();
+
 			break;
 		}
 
@@ -330,7 +375,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function saveAndClose()
 	{
+		draggedButton = null;
+
 		Options.mobilecontrols = options[curSelected];
+
 		FlxG.save.flush();
 
 		close();
@@ -355,9 +403,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (isCustomizing) return;
 
 		previewBox.visible = false;
-		previewPad.visible = false;
-		previewDoublePad.visible = false;
-		customPad.visible = false;
+
+		setPadEnabled(previewPad, false);
+		setPadEnabled(previewDoublePad, false);
+		setPadEnabled(customPad, false);
 
 		switch (options[curSelected])
 		{
@@ -365,13 +414,18 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				previewBox.visible = true;
 
 			case 'Dpad':
-				previewPad.visible = true;
+				setPadEnabled(previewPad, true);
+				previewPad.active = false;
+				previewPad.alpha = 0.5;
 
 			case 'Double Dpad':
-				previewDoublePad.visible = true;
+				setPadEnabled(previewDoublePad, true);
+				previewDoublePad.active = false;
+				previewDoublePad.alpha = 0.5;
 
 			case 'Custom':
-				customPad.visible = true;
+				setPadEnabled(customPad, true);
+				customPad.active = false;
 				customPad.alpha = 0.5;
 
 			case 'None':
@@ -386,9 +440,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				pad.visible = true;
 				pad.active = true;
-				pad.exists = true;
 			}
 		}
+
+		draggedButton = null;
 
 		if (dragOffset != null)
 		{
