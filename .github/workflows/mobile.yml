@@ -159,10 +159,13 @@ jobs:
       - name: Find APK
         run: find . -name "*.apk"
 
+      - name: Verify APK
+        run: apksigner verify --print-certs export/release/android/bin/app/build/outputs/apk/debug/*.apk
+
       - uses: actions/upload-artifact@v4
         with:
           name: Android-Build
-          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+          path: export/release/android/bin/app/build/outputs/apk/debug/*.apk
 
   buildiOS:
     if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
