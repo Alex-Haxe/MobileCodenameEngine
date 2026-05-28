@@ -138,7 +138,7 @@ jobs:
         run: |
          haxelib run lime build android -final -release \
            --certificate-path="keystore.jks" \
-           --certificate-alias="${{ secrets.KEY_ALIAS }}" \
+           --certificate-alias="${{ secrets.KEYSTORE_ALIAS }}" \
            --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
            --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
