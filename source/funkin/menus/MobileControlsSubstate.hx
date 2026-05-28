@@ -12,7 +12,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import mobile.controls.VirtualPad;
 import mobile.controls.HitBox;
-import mobile.controls.FlxButton;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;
 
@@ -32,7 +31,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	var isCustomizing:Bool = false;
 	var customPad:VirtualPad;
-	var draggedButton:MobileButton;
+	
+	var draggedButton:FlxSprite; 
 	var dragOffset:FlxPoint = FlxPoint.get();
 	
 	var waitFrames:Int = 0;
@@ -46,8 +46,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 		pad.cameras = [subCam];
 	}
-	
-    var parentDisabler:FunkinParentDisabler;
+
 	public override function create() 
 	{
 		super.create();
@@ -59,8 +58,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				hiddenPads.push(pad);
 			}
 		}
-
-		add(parentDisabler = new FunkinParentDisabler());
 
 		camera = subCam = new FlxCamera();
 		subCam.bgColor = 0;
@@ -74,10 +71,16 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		bg.alpha = 0;
 		FlxTween.tween(bg, {alpha: 0.85}, 0.25, {ease: FlxEase.cubeOut});
 
-		curSelected = 0;
-		if (FlxG.save.data.mobileControlsMode != null) 
-		{
-			var idx = options.indexOf(FlxG.save.data.mobileControlsMode);
+		var savedMode:String = null;
+		if (Reflect.hasField(Options, "mobilecontrols")) savedMode = Reflect.getProperty(Options, "mobilecontrols");
+		else if (Reflect.hasField(Options, "mobileControlsMode")) savedMode = Reflect.getProperty(Options, "mobileControlsMode");
+		
+		if (savedMode == null && FlxG.save.data.mobileControlsMode != null) {
+			savedMode = FlxG.save.data.mobileControlsMode;
+		}
+
+		if (savedMode != null) {
+			var idx = options.indexOf(savedMode);
 			if (idx != -1) curSelected = idx;
 		}
 
@@ -92,7 +95,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox.visible = false;
 		previewBox.active = false;
 
-		previewPad = new VirtualPad(FULL, A_B_X_Y);
+		previewPad = new VirtualPad(FULL, NONE);
 		setupPadCamera(previewPad);
 		previewPad.alpha = 0.5;
 		previewPad.active = false;
@@ -102,7 +105,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		setupPadCamera(menuButtons);
 		add(menuButtons);
 
-		customPad = new VirtualPad(FULL, NONE); 
+		customPad = new VirtualPad(CUSTOM, NONE); 
 		setupPadCamera(customPad);
 		customPad.visible = false;
 		customPad.active = false;
@@ -123,40 +126,26 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		if (!isCustomizing) 
 		{
-			var touchedItem = false;
-			
+			var leftClick = false;
+			var rightClick = false;
+
 			for (touch in FlxG.touches.list) 
 			{
-				if (touch.justPressed) 
+				if (touch.justPressed && touch.getWorldPosition(subCam).y < 150) 
 				{
-					var touchPos = touch.getWorldPosition(subCam);
-					if (touchPos.y < 150) 
-					{
-						if (touchPos.x < FlxG.width / 2) changeSelection(-1);
-						else changeSelection(1);
-						
-						touchedItem = true;
-						break;
-					}
+					if (touch.getWorldPosition(subCam).x < FlxG.width / 2) leftClick = true;
+					else rightClick = true;
 				}
 			}
 
-			if (!touchedItem && FlxG.mouse.justPressed) 
+			if (FlxG.mouse.justPressed && FlxG.mouse.getWorldPosition(subCam).y < 150) 
 			{
-				var mousePos = FlxG.mouse.getWorldPosition(subCam);
-				if (mousePos.y < 150) 
-				{
-					if (mousePos.x < FlxG.width / 2) changeSelection(-1);
-					else changeSelection(1);
-					touchedItem = true;
-				}
+				if (FlxG.mouse.getWorldPosition(subCam).x < FlxG.width / 2) leftClick = true;
+				else rightClick = true;
 			}
 
-			if (!touchedItem) 
-			{
-				var shift = (controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0);
-				if (shift != 0) changeSelection(shift);
-			}
+			if (leftClick || controls.LEFT_P) changeSelection(-1);
+			else if (rightClick || controls.RIGHT_P) changeSelection(1);
 
 			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed)) 
 			{
@@ -172,21 +161,18 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		{
 			handleCustomDrag();
 
-			if (customPad != null && customPad.buttonA != null && customPad.buttonA.justPressed) 
+			if (menuButtons.buttonA != null && menuButtons.buttonA.justPressed) 
 			{
 				saveCustomLayout();
 				saveAndClose();
 			}
 
-			if (customPad != null && customPad.buttonB != null && customPad.buttonB.justPressed) 
+			if (menuButtons.buttonB != null && menuButtons.buttonB.justPressed) 
 			{
 				isCustomizing = false;
 				customPad.visible = false;
 				customPad.active = false;
 				modeText.visible = true;
-				
-				menuButtons.visible = true;
-				menuButtons.active = true;
 				
 				loadCustomLayout(); 
 				changeSelection(0, true);
@@ -211,8 +197,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		isCustomizing = true;
 		modeText.visible = false;
 		
-		menuButtons.visible = false;
-		menuButtons.active = false;
+		menuButtons.visible = true;
+		menuButtons.active = true;
 		
 		if (previewBox != null) {
 			previewBox.visible = false;
@@ -223,18 +209,9 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			previewPad.active = false;
 		}
 
-		if (customPad != null) 
-		{
-			remove(customPad);
-			customPad.destroy();
-		}
-
-		customPad = new VirtualPad(FULL, A_B);
-		setupPadCamera(customPad);
 		customPad.visible = true;
 		customPad.active = true;
 		customPad.alpha = 1;
-		add(customPad); 
 
 		loadCustomLayout();
 	}
@@ -346,15 +323,17 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function saveAndClose() 
 	{
-		FlxG.save.data.mobileControlsMode = options[curSelected];
-		
-		if (Reflect.hasField(Options, "mobileControlsMode")) {
-			Reflect.setProperty(Options, "mobileControlsMode", options[curSelected]);
-		} else if (Reflect.hasField(Options, "mobileControls")) {
-			Reflect.setProperty(Options, "mobileControls", options[curSelected]);
+		var selectedOption = options[curSelected];
+
+		if (Reflect.hasField(Options, "mobilecontrols")) {
+			Reflect.setProperty(Options, "mobilecontrols", selectedOption);
+		} else if (Reflect.hasField(Options, "mobileControlsMode")) {
+			Reflect.setProperty(Options, "mobileControlsMode", selectedOption);
 		}
 
+		FlxG.save.data.mobileControlsMode = selectedOption;
 		FlxG.save.flush();
+		
 		close();
 	}
 
@@ -405,7 +384,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			}
 
 			var padMode = (curOption == 'Double Dpad') ? DOUBLE : FULL;
-			previewPad = new VirtualPad(padMode, A_B_X_Y);
+			previewPad = new VirtualPad(padMode, NONE);
 			setupPadCamera(previewPad);
 			previewPad.alpha = 0.5;
 			previewPad.active = false;
