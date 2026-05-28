@@ -204,10 +204,17 @@ class VirtualPad extends FlxSpriteGroup
 
 	override function update(elapsed:Float) 
 	{
+		if (!active || !visible) {
+			super.update(elapsed);
+			return;
+		}
+
 		this.alpha = Options.virtualPadOpacity; 
 		
 		var overlappingPad:Bool = false;
 		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
+
+		var cam = virtualpadCamera != null ? virtualpadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
 
 		for (btn in padButtons) {
 			if (btn == null || !btn.exists || !btn.active || !btn.visible) continue;
@@ -216,8 +223,8 @@ class VirtualPad extends FlxSpriteGroup
 
 			for (touch in FlxG.touches.list) {
 				if (touch.pressed) { 
-					var point = touch.getWorldPosition(virtualpadCamera);
-					if (btn.overlapsPoint(point, true, virtualpadCamera)) {
+					var point = touch.getWorldPosition(cam);
+					if (btn.overlapsPoint(point, true, cam)) {
 						isPressed = true;
 						overlappingPad = true;
 						break;
