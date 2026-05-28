@@ -93,16 +93,18 @@ class VirtualPad extends FlxSpriteGroup
 				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
 				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
 			case DOUBLE:
-				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
+             	add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
+	            add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
+            	add(buttonRight = createButton(210, FlxG.height - 243, B_W, B_H, "right"));
+             	add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
 
-				add(buttonUp2 = createButton(FlxG.width - 258, FlxG.height - 348, B_W, B_H, "up"));
-				add(buttonLeft2 = createButton(FlxG.width - 384, FlxG.height - 243, B_W, B_H, "left"));
-				add(buttonRight2 = createButton(FlxG.width - 132, FlxG.height - 243, B_W, B_H, "right"));
-				add(buttonDown2 = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "down"));
-			case CUSTOM:
+            	var rightCenter = FlxG.width - 105 - B_W;
+   
+	            add(buttonUp2 = createButton(rightCenter, FlxG.height - 348, B_W, B_H, "up"));
+              	add(buttonLeft2 = createButton(rightCenter - 105, FlxG.height - 243, B_W, B_H, "left"));
+                add(buttonRight2 = createButton(rightCenter + 105, FlxG.height - 243, B_W, B_H, "right"));
+             	add(buttonDown2 = createButton(rightCenter, FlxG.height - 135, B_W, B_H, "down"));
+    	    case CUSTOM:
 				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
 				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
 				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
