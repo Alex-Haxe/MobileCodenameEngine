@@ -46,7 +46,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 		pad.cameras = [subCam];
 	}
-
+	
+    var parentDisabler:FunkinParentDisabler;
 	public override function create() 
 	{
 		super.create();
@@ -58,6 +59,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				hiddenPads.push(pad);
 			}
 		}
+
+		add(parentDisabler = new FunkinParentDisabler());
 
 		camera = subCam = new FlxCamera();
 		subCam.bgColor = 0;
