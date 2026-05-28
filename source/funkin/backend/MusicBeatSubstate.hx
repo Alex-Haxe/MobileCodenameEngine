@@ -11,6 +11,10 @@ import funkin.backend.system.Controls;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IBeatCancellableReceiver;
 import funkin.options.PlayerSettings;
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
 
 /**
  * Base class for all the sub states.
@@ -18,6 +22,10 @@ import funkin.options.PlayerSettings;
 **/
 class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
+		
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -240,6 +248,14 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 		var e = event("onCloseSubState", EventManager.get(StateEvent).recycle(subState));
 		if (!e.cancelled)
 			super.closeSubState();
+
+	    #if mobile
+		if (virtualPad != null) {
+		    remove(virtualPad);
+		    virtualPad.destroy();
+	        virtualPad = null;
+        }
+        #end
 	}
 
 	public override function onResize(w:Int, h:Int) {
