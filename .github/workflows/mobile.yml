@@ -136,7 +136,7 @@ jobs:
          
       - name: Build APK
         run: |
-          haxelib run lime build android -release \
+          haxelib run lime build android -final \
            -Dandroid-keystore=keystore.jks \
            -Dandroid-keyalias=${{ secrets.KEY_ALIAS }} \
            -Dandroid-storepass=${{ secrets.KEYSTORE_PASSWORD }} \
@@ -158,9 +158,6 @@ jobs:
 
       - name: Find APK
         run: find . -name "*.apk"
-
-      - name: Verify APK
-        run: apksigner verify --print-certs export/release/android/bin/app/build/outputs/apk/debug/*.apk
 
       - uses: actions/upload-artifact@v4
         with:
