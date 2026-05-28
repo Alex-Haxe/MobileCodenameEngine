@@ -86,8 +86,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		customPad = new VirtualPad(FULL, NONE); 
 		customPad.visible = false;
 		add(customPad);
-	}
 
+		changeSelection(0, true);
+	}
+	
 	public override function update(elapsed:Float) 
 	{
 		super.update(elapsed);
