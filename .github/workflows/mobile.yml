@@ -140,7 +140,6 @@ jobs:
            --certificate-path="keystore.jks" \
            --certificate-alias="${{ secrets.KEYSTORE_ALIAS }}" \
            --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
-           --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
          
       - name: Save cache
