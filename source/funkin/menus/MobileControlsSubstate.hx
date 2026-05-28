@@ -10,6 +10,7 @@ import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import mobile.controls.VirtualPad;
 import mobile.controls.HitBox;
 import mobile.controls.FlxButton;
@@ -74,6 +75,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 		add(alphabets);
 
+		customPad = new VirtualPad(FULL, NONE); 
+		customPad.visible = false;
+		add(customPad);
+
 		curSelected = 0;
 		if (FlxG.save.data.mobileControlsMode != null) 
 		{
@@ -82,14 +87,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 
 		changeSelection(0, true);
-
-		customPad = new VirtualPad(FULL, NONE); 
-		customPad.visible = false;
-		add(customPad);
-
-		changeSelection(0, true);
 	}
-	
+
 	public override function update(elapsed:Float) 
 	{
 		super.update(elapsed);
@@ -104,7 +103,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 					for (i in 0...alphabets.length) 
 					{
 						var a = alphabets.members[i];
-						if (a.overlapsPoint(touch.getWorldPosition(subCam), true, subCam)) 
+						if (a != null && a.overlapsPoint(touch.getWorldPosition(subCam), true, subCam)) 
 						{
 							if (curSelected != i) 
 							{
@@ -141,13 +140,13 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		{
 			handleCustomDrag();
 
-			if (customPad.buttonA != null && customPad.buttonA.justPressed) 
+			if (customPad != null && customPad.buttonA != null && customPad.buttonA.justPressed) 
 			{
 				saveCustomLayout();
 				saveAndClose();
 			}
 
-			if (customPad.buttonB != null && customPad.buttonB.justPressed) 
+			if (customPad != null && customPad.buttonB != null && customPad.buttonB.justPressed) 
 			{
 				isCustomizing = false;
 				customPad.visible = false;
@@ -180,14 +179,24 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox.visible = false;
 		previewPad.visible = false;
 
+		if (customPad != null) 
+		{
+			remove(customPad);
+			customPad.destroy();
+		}
+
 		customPad = new VirtualPad(FULL, A_B);
 		customPad.visible = true;
 		customPad.alpha = 1;
+		add(customPad); 
+
 		loadCustomLayout();
 	}
 
 	function handleCustomDrag() 
 	{
+		if (customPad == null) return;
+
 		var pointerPressed = false;
 		var pointerJustPressed = false;
 		var touchX:Float = 0;
@@ -249,6 +258,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function saveCustomLayout() 
 	{
+		if (customPad == null) return;
 		if (FlxG.save.data.customPadPos == null) FlxG.save.data.customPadPos = {};
 		
 		if (customPad.buttonUp != null) {
@@ -273,6 +283,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function loadCustomLayout() 
 	{
+		if (customPad == null) return;
 		var savedPos = FlxG.save.data.customPadPos;
 		if (savedPos != null) 
 		{
@@ -304,6 +315,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		for (k => alphabet in alphabets.members) 
 		{
+			if (alphabet == null) continue;
 			alphabet.alpha = 0.6;
 			alphabet.targetY = k - curSelected;
 
@@ -322,21 +334,21 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	{
 		if (isCustomizing) return;
 
-		previewBox.visible = false;
-		previewPad.visible = false;
-		customPad.visible = false;
+		if (previewBox != null) previewBox.visible = false;
+		if (previewPad != null) previewPad.visible = false;
+		if (customPad != null) customPad.visible = false;
 
 		var curOption = options[curSelected];
 		
-		if (curOption == 'Hitbox') 
+		if (curOption == 'Hitbox' && previewBox != null) 
 		{
 			previewBox.visible = true;
 		} 
-		else if (curOption == 'Dpad' || curOption == 'Double Dpad') 
+		else if ((curOption == 'Dpad' || curOption == 'Double Dpad') && previewPad != null) 
 		{
 			previewPad.visible = true;
 		}
-		else if (curOption == 'Custom') 
+		else if (curOption == 'Custom' && customPad != null) 
 		{
 			customPad.alpha = 0.5;
 			customPad.visible = true; 
@@ -349,6 +361,21 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		if (FlxG.cameras.list.contains(subCam))
 			FlxG.cameras.remove(subCam);
+
+		if (dragOffset != null) 
+		{
+			dragOffset.put();
+			dragOffset = null;
+		}
+
+		subCam = null;
+		bg = null;
+		previewBox = null;
+		previewPad = null;
+		menuButtons = null;
+		customPad = null;
+		alphabets = null;
+		draggedButton = null;
 	}
 }
 #end
