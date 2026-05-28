@@ -13,7 +13,7 @@ import mobile.controls.FlxButton;
 
 class ModSwitchMenu extends MusicBeatSubstate {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 	var mods:Array<String> = [];
 	var alphabets:FlxTypedGroup<Alphabet>;
