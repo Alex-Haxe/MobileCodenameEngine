@@ -10,6 +10,7 @@ class MobileButton extends FlxSprite
 
 class VirtualPad extends FlxSpriteGroup
 {
+	public static var activePads:Array<VirtualPad> = [];
 	public var buttonA:MobileButton;
 	public var buttonB:MobileButton;
 	public var buttonC:MobileButton;
@@ -57,6 +58,7 @@ class VirtualPad extends FlxSpriteGroup
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{
 		super();
+		VirtualPad.activePads.push(this);
 
 		virtualpadCamera = new FlxCamera();
 		virtualpadCamera.bgColor = 0x00000000;
@@ -436,6 +438,7 @@ class VirtualPad extends FlxSpriteGroup
 	
 	override public function destroy():Void
 	{
+		VirtualPad.activePads.remove(this);
 		if (boundActions != null) {
 			boundActions.clear();
 			boundActions = null;
