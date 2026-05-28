@@ -34,6 +34,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var customPad:VirtualPad;
 	var draggedButton:MobileButton;
 	var dragOffset:FlxPoint = FlxPoint.get();
+	
+	var waitFrames:Int = 0;
 
 	public override function create() 
 	{
@@ -93,6 +95,12 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	{
 		super.update(elapsed);
 
+		if (waitFrames < 2) 
+		{
+			waitFrames++;
+			return;
+		}
+
 		if (!isCustomizing) 
 		{
 			var touchedItem = false;
@@ -111,7 +119,20 @@ class MobileControlsSubstate extends MusicBeatSubstate
 							} 
 							else 
 							{
-								acceptSelection();
+								var touchPos = touch.getWorldPosition(subCam);
+								if (touchPos.x < a.x + (a.width * 0.3)) 
+								{
+									changeSelection(-1);
+								} 
+								else if (touchPos.x > a.x + (a.width * 0.7)) 
+								{
+									changeSelection(1);
+								} 
+								else 
+								{
+									acceptSelection();
+								}
+								touchPos.put();
 							}
 							touchedItem = true;
 							break;
@@ -122,7 +143,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 			if (!touchedItem) 
 			{
-				var shift = (controls.LEFT_P ? 1 : 0) + (controls.RIGHT_P ? -1 : 0) - FlxG.mouse.wheel;
+				var shift = (controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0);
 				if (shift != 0) changeSelection(shift);
 			}
 
