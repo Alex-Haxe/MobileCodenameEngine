@@ -11,6 +11,7 @@ class MobileButton extends FlxSprite
 class VirtualPad extends FlxSpriteGroup
 {
 	public static var activePads:Array<VirtualPad> = [];
+	
 	public var buttonA:MobileButton;
 	public var buttonB:MobileButton;
 	public var buttonC:MobileButton;
@@ -42,6 +43,8 @@ class VirtualPad extends FlxSpriteGroup
 
 	private var holdTimers:Map<String, Float> = new Map();
 	private var holdActive:Map<String, Bool> = new Map();
+
+	private var trackedTouches:Array<flixel.input.touch.FlxTouch> = [];
 
 	public var keyBinds:Map<String, FlxKey> = [
 		"up" => FlxKey.UP,
@@ -211,6 +214,18 @@ class VirtualPad extends FlxSpriteGroup
 
 		this.alpha = Options.virtualPadOpacity; 
 		
+		var isTopPad = (VirtualPad.activePads.length > 0 && VirtualPad.activePads[VirtualPad.activePads.length - 1] == this);
+
+		var currentTouches:Array<flixel.input.touch.FlxTouch> = [];
+		if (isTopPad) {
+			for (touch in FlxG.touches.list) {
+				if (touch.justPressed || trackedTouches.contains(touch)) {
+					currentTouches.push(touch);
+				}
+			}
+		}
+		trackedTouches = currentTouches;
+
 		var overlappingPad:Bool = false;
 		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
 
@@ -221,7 +236,7 @@ class VirtualPad extends FlxSpriteGroup
 
 			var isPressed = false;
 
-			for (touch in FlxG.touches.list) {
+			for (touch in trackedTouches) {
 				if (touch.pressed) { 
 					var point = touch.getWorldPosition(cam);
 					if (btn.overlapsPoint(point, true, cam)) {
@@ -446,6 +461,11 @@ class VirtualPad extends FlxSpriteGroup
 	override public function destroy():Void
 	{
 		VirtualPad.activePads.remove(this);
+		
+		if (trackedTouches != null) {
+			trackedTouches = null;
+		}
+		
 		if (boundActions != null) {
 			boundActions.clear();
 			boundActions = null;
