@@ -7,7 +7,7 @@
 		package="com.yoshman29.codenameengine"
 		version="1.0.1" build="2" company="Yoshman29" />
 
-	<!--
+	<!-- 
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
 	<haxedef name="SAVE_PATH" value="CodenameEngine"/>
