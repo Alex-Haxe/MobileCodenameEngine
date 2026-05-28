@@ -18,12 +18,9 @@ class MobileOptions extends TreeMenuScreen
 	{
 		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
-		add(new ArrayOption(
-            getNameID('mobilecontrols'),
-            getDescID('mobilecontrols'),
-            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
-            ['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
-            'mobilecontrols'
+		add(new MobileControlsOption(
+	        getNameID('mobilecontrols'),
+        	getDescID('mobilecontrols')
         ));
 		
         add(new Checkbox(
@@ -74,10 +71,5 @@ class MobileOptions extends TreeMenuScreen
             0.05,
 			'hitboxOpacity',
 		));
-	}
-
-	function __mobilecontrols()
-	{
-		FlxG.state.openSubState(new funkin.menus.MobileControlsSubstate());
 	}
 }
