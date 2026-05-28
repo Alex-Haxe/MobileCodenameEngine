@@ -1058,7 +1058,7 @@ class PlayState extends MusicBeatState
     #if mobile
 	function addMobileControls()
 	{
-		var controlMode:String = FlxG.save.data.mobileControlsMode;
+		var controlMode:String = Options.mobilecontrols;
 		if (controlMode == null) controlMode = 'Hitbox';
 
 		switch (controlMode)
