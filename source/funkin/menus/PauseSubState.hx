@@ -23,7 +23,7 @@ import mobile.controls.FlxButton;
 class PauseSubState extends MusicBeatSubstate
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 	
 	public static var script:String = Flags.DEFAULT_PAUSE_SCRIPT;
