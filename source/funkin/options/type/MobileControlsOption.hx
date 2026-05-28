@@ -11,19 +11,8 @@ class MobileControlsOption extends ArrayOption
 			desc,
 			['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
 			['Hitbox', 'Dpad', 'Double Dpad', 'Custom', 'None'],
-			'mobilecontrols'
+			'mobileControlsMode'
 		);
-
-		__selectionText.text = " >";
-	}
-
-	override function formatTextOption()
-	{
-		return " >";
-	}
-
-	override function changeSelection(change:Int)
-  {
 	}
 
 	override function select()
