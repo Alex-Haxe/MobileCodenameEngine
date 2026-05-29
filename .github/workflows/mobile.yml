@@ -73,16 +73,13 @@ jobs:
          restore-keys: |
           android-cache-${{ runner.os }}-
 
-      - name: Setup hxcpp cache
+      - name: Setup environment
         run: |
          mkdir -p /home/runner/hxcpp_cache
          echo '<xml>
           <set name="HXCPP_COMPILE_CACHE" value="/home/runner/hxcpp_cache" />
           <set name="HXCPP_CACHE_MB" value="4096" />
          </xml>' > ~/.hxcpp_config.xml
-
-      - name: Setup environment
-        run: |
           haxelib setup ~/haxelib
 
           haxe -cp commandline -D analyzer-optimize --run Main setup --silent
@@ -116,10 +113,7 @@ jobs:
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$HOME/android-sdk/ndk/29.0.14206865" >> $GITHUB_ENV
 
-      - name: Clean Android
-        run: haxelib run lime clean android
-
-      - name: Configure Gradle
+      - name: Setup Android
         run: |
           mkdir -p ~/.gradle
           echo "org.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1536m -Dfile.encoding=UTF-8" > ~/.gradle/gradle.properties
@@ -127,21 +121,19 @@ jobs:
           echo "org.gradle.parallel=false" >> ~/.gradle/gradle.properties
           echo "org.gradle.configureondemand=false" >> ~/.gradle/gradle.properties
           echo "android.splits.abi.enable=false" >> ~/.gradle/gradle.properties
-          
-      - name: Limit Java
-        run: echo "JAVA_TOOL_OPTIONS=-Xmx5g" >> $GITHUB_ENV
-
-      - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+          echo "JAVA_TOOL_OPTIONS=-Xmx5g" >> $GITHUB_ENV
+          echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
          
       - name: Build APK
         run: |
+         haxelib run lime clean android
          haxelib run lime build android -final -release \
            --certificate-path="keystore.jks" \
            --certificate-alias="${{ secrets.KEYSTORE_ALIAS }}" \
            --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
            --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
+         find . -name "*.apk"
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
@@ -156,15 +148,6 @@ jobs:
           /home/runner/hxcpp_cache
          key: android-cache-${{ runner.os }}
 
-      - name: Find APK
-        run: find . -name "*.apk"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Android-Build
-          path: export/release/android/bin/app/build/outputs/apk/debug/*.apk
-
-      # just in case it works
       - uses: actions/upload-artifact@v4
         with:
           name: Android-Release
