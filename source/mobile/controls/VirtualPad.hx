@@ -208,6 +208,15 @@ class VirtualPad extends FlxSpriteGroup
 		}
 	}
 
+	function resetButton(btn:MobileButton)
+    {
+	    if (btn == null) return;
+
+    	btn.justPressed = false;
+    	btn.justReleased = false;
+    	btn.pressed = false;
+    }
+     
 	override function update(elapsed:Float) 
 	{
 		if (!active || !visible) {
