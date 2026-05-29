@@ -218,29 +218,29 @@ class VirtualPad extends FlxSpriteGroup
 		this.alpha = Options.virtualPadOpacity; 
 
 		if (inputBlockFrames > 0)
-	    {
-		    inputBlockFrames--;
+        {
+        	inputBlockFrames--;
 
-		    if (buttonLeft != null) buttonLeft.status = NORMAL;
-		    if (buttonDown != null) buttonDown.status = NORMAL;
-	   	    if (buttonUp != null) buttonUp.status = NORMAL;
-	    	if (buttonRight != null) buttonRight.status = NORMAL;
-  
-	      	if (buttonLeft2 != null) buttonLeft2.status = NORMAL;
-		    if (buttonDown2 != null) buttonDown2.status = NORMAL;
-		    if (buttonUp2 != null) buttonUp2.status = NORMAL;
-		    if (buttonRight2 != null) buttonRight2.status = NORMAL;
+           	resetButton(buttonLeft);
+          	resetButton(buttonDown);
+        	resetButton(buttonUp);
+         	resetButton(buttonRight);
 
-		    if (buttonA != null) buttonA.status = NORMAL;
-		    if (buttonB != null) buttonB.status = NORMAL;
-		    if (buttonX != null) buttonX.status = NORMAL;
-		    if (buttonY != null) buttonY.status = NORMAL;
-  
-	    	FlxG.mouse.reset();
-	     	FlxG.touches.reset();
+         	resetButton(buttonLeft2);
+         	resetButton(buttonDown2);
+         	resetButton(buttonUp2);
+         	resetButton(buttonRight2);
 
-		    return;
-		}
+        	resetButton(buttonA);
+          	resetButton(buttonB);
+        	resetButton(buttonX);
+         	resetButton(buttonY);
+
+         	FlxG.mouse.reset();
+        	FlxG.touches.reset();
+
+         	return;
+        }
 		
 		var isTopPad = (VirtualPad.activePads.length > 0 && VirtualPad.activePads[VirtualPad.activePads.length - 1] == this);
 
