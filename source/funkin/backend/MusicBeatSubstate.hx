@@ -247,8 +247,6 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 		    if (virtualPad != null)
 		    {
 		      	virtualPad.visible = false;
-		    	virtualPad.active = false;
-		    	virtualPad.blockInput = true;
 	    	}
 
     		super.openSubState(e.substate is FlxSubState ? cast e.substate : subState);
@@ -266,8 +264,6 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 		    if (virtualPad != null)
 		    {
 		    	virtualPad.visible = true;
-			    virtualPad.active = true;
-			    virtualPad.blockInput = false;
 		    }
     	}
     }
