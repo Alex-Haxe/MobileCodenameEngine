@@ -238,25 +238,39 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 	/**
 	 * SCRIPTING STUFF
 	 */
-	public override function openSubState(subState:FlxSubState) {
-		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
-		if (!e.cancelled)
-			super.openSubState(e.substate is FlxSubState ? cast e.substate : subState);
-	}
+	public override function openSubState(subState:FlxSubState)
+    { 
+	    var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
 
-	public override function closeSubState() {
-		var e = event("onCloseSubState", EventManager.get(StateEvent).recycle(subState));
-		if (!e.cancelled)
-			super.closeSubState();
-		
-	    #if mobile
-		if (virtualPad != null) {
-		    remove(virtualPad);
-		    virtualPad.destroy();
-	        virtualPad = null;
-        }
-        #end
-	}
+	    if (!e.cancelled)
+	    {
+		    if (virtualPad != null)
+		    {
+		      	virtualPad.visible = false;
+		    	virtualPad.active = false;
+		    	virtualPad.blockInput = true;
+	    	}
+
+    		super.openSubState(e.substate is FlxSubState ? cast e.substate : subState);
+    	}
+    }
+
+	public override function closeSubState()
+    {
+	    var e = event("onCloseSubState", EventManager.get(StateEvent).recycle(subState));
+
+	    if (!e.cancelled)
+	    {
+		    super.closeSubState();
+
+		    if (virtualPad != null)
+		    {
+		    	virtualPad.visible = true;
+			    virtualPad.active = true;
+			    virtualPad.blockInput = false;
+		    }
+    	}
+    }
 
 	public override function onResize(w:Int, h:Int) {
 		super.onResize(w, h);
