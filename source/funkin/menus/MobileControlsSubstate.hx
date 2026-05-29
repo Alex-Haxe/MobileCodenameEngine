@@ -12,7 +12,7 @@ import mobile.controls.VirtualPad;
 import mobile.controls.HitBox;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;
-import funkin.backend.system.MusicBeatSubstate;
+import funkin.backend.MusicBeatSubstate;
 import funkin.objects.Alphabet;
 
 class MobileControlsSubstate extends MusicBeatSubstate
