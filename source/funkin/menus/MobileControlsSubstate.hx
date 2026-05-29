@@ -13,7 +13,7 @@ import mobile.controls.HitBox;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;
 import funkin.backend.MusicBeatSubstate;
-import funkin.menu.ui.Alphabet;
+import funkin.menus.ui.Alphabet;
 
 class MobileControlsSubstate extends MusicBeatSubstate
 {
