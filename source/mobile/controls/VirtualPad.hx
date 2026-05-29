@@ -1,6 +1,17 @@
 package mobile.controls;
 
 #if mobile
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxCamera;
+import flixel.math.FlxPoint;
+import flixel.group.FlxSpriteGroup;
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.util.FlxDestroyUtil;
+import flixel.input.FlxInput.FlxInputState;
+import flixel.input.keyboard.FlxKey;
+
 class MobileButton extends FlxSprite 
 {
 	public var justPressed:Bool = false;
@@ -12,6 +23,8 @@ class VirtualPad extends FlxSpriteGroup
 {
 	public static var activePads:Array<VirtualPad> = [];
 	public static var inputBlockFrames:Int = 0;
+	
+	public var blockInput:Bool = false;
 	
 	public var buttonA:MobileButton;
 	public var buttonB:MobileButton;
@@ -69,7 +82,7 @@ class VirtualPad extends FlxSpriteGroup
 		FlxG.cameras.add(virtualpadCamera, false);
 		this.cameras = [virtualpadCamera];
 
-		if (Std.isOfType(FlxG.state, Charter)) {
+		if (Std.isOfType(FlxG.state, funkin.editors.charter.Charter)) {
 			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
 			'assets/images/editors/mobile/charter/virtual-input.png',
 			'assets/images/editors/mobile/charter/virtual-input.txt');
@@ -224,30 +237,22 @@ class VirtualPad extends FlxSpriteGroup
 			return;
 		}
 
-		this.alpha = Options.virtualPadOpacity; 
+		this.alpha = funkin.options.Options.virtualPadOpacity; 
+		
+		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
 
-		if (inputBlockFrames > 0)
+		if (blockInput || inputBlockFrames > 0)
         {
-        	inputBlockFrames--;
+        	if (inputBlockFrames > 0) inputBlockFrames--;
 
-           	resetButton(buttonLeft);
-          	resetButton(buttonDown);
-        	resetButton(buttonUp);
-         	resetButton(buttonRight);
+            for (btn in padButtons) resetButton(btn);
 
-         	resetButton(buttonLeft2);
-         	resetButton(buttonDown2);
-         	resetButton(buttonUp2);
-         	resetButton(buttonRight2);
+            if (!blockInput) {
+         	    FlxG.mouse.reset();
+        	    FlxG.touches.reset();
+            }
 
-        	resetButton(buttonA);
-          	resetButton(buttonB);
-        	resetButton(buttonX);
-         	resetButton(buttonY);
-
-         	FlxG.mouse.reset();
-        	FlxG.touches.reset();
-
+            super.update(elapsed);
          	return;
         }
 		
@@ -264,8 +269,6 @@ class VirtualPad extends FlxSpriteGroup
 		trackedTouches = currentTouches;
 
 		var overlappingPad:Bool = false;
-		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
-
 		var cam = virtualpadCamera != null ? virtualpadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
 
 		for (btn in padButtons) {
@@ -279,8 +282,10 @@ class VirtualPad extends FlxSpriteGroup
 					if (btn.overlapsPoint(point, true, cam)) {
 						isPressed = true;
 						overlappingPad = true;
+						point.put();
 						break;
 					}
+					point.put();
 				}
 			}
 
@@ -296,13 +301,9 @@ class VirtualPad extends FlxSpriteGroup
 				@:privateAccess
 				{
 					if (btn.justPressed)
-					{
 						FlxG.keys._keyListMap[key].current = JUST_PRESSED;
-					}
 					else if (btn.justReleased)
-					{
 						FlxG.keys._keyListMap[key].current = JUST_RELEASED;
-					}
 					else if (btn.pressed)
 					{
 						if (FlxG.keys._keyListMap[key].current == JUST_PRESSED)
@@ -315,6 +316,11 @@ class VirtualPad extends FlxSpriteGroup
 					}
 				}
 			}
+			
+			if (btn.pressed)
+				btn.animation.play("pressed");
+			else
+				btn.animation.play("normal");
 		}
 		
 		if (overlappingPad)
@@ -326,17 +332,6 @@ class VirtualPad extends FlxSpriteGroup
 		VirtualPad.touchingPad = overlappingPad;
 
 		super.update(elapsed);
-		
-		for (btn in padButtons)
-		{
-			if (btn != null && btn.exists && btn.visible)
-			{
-				if (btn.pressed)
-					btn.animation.play("pressed");
-				else
-					btn.animation.play("normal");
-			}
-		}
 	}
 	
 	private inline function getBind(keyName:String):FlxKey 
@@ -506,6 +501,16 @@ class VirtualPad extends FlxSpriteGroup
 		if (boundActions != null) {
 			boundActions.clear();
 			boundActions = null;
+		}
+		
+		if (holdTimers != null) {
+		    holdTimers.clear();
+		    holdTimers = null;
+		}
+		
+		if (holdActive != null) {
+		    holdActive.clear();
+		    holdActive = null;
 		}
 
 		if (virtualpadCamera != null) {
