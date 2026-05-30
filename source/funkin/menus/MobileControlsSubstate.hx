@@ -5,7 +5,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import mobile.controls.VirtualPad;
@@ -21,23 +20,20 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var curSelected:Int = 0;
 
 	var modeText:Alphabet;
-
 	var subCam:FlxCamera;
 	var bg:FlxSprite;
 
 	var previewBox:HitBox;
-
 	var previewPad:VirtualPad;
 	var previewDoublePad:VirtualPad;
 	var customPad:VirtualPad;
-
 	var menuButtons:VirtualPad;
 
 	var isCustomizing:Bool = false;
 	var acceptBlocked:Bool = true;
 
-	var draggedButton:FlxSprite;
-	var dragOffset:FlxPoint = FlxPoint.get();
+	var bindButton:FlxSprite;
+	var buttonIsTouched:Bool = false;
 
 	var hiddenPads:Array<VirtualPad> = [];
 
@@ -139,6 +135,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		modeText = new Alphabet(0, 40, "", true);
 		modeText.isMenuItem = false;
+		modeText.cameras = [subCam];
 		add(modeText);
 
 		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
@@ -202,11 +199,13 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				if (!touch.justPressed) continue;
 
 				var pos = touch.getWorldPosition(subCam);
+				
 				if (pos.y < 150)
 				{
 					if (pos.x < FlxG.width * 0.5) leftPressed = true;
 					else rightPressed = true;
 				}
+				
 				pos.put();
 			}
 
@@ -236,7 +235,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			if (menuButtons.buttonB != null && menuButtons.buttonB.justPressed)
 			{
 				isCustomizing = false;
-				draggedButton = null;
+				bindButton = null;
+				buttonIsTouched = false;
 				modeText.visible = true;
 				customPad.blockInput = true;
 				updatePreview();
@@ -267,15 +267,17 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function handleCustomDrag()
 	{
-		var pointerPressed = false;
 		var pointerJustPressed = false;
+		var pointerPressed = false;
+		var pointerJustReleased = false;
 		var pointerX:Float = 0;
 		var pointerY:Float = 0;
 
-		if (FlxG.mouse.pressed)
+		if (FlxG.mouse.pressed || FlxG.mouse.justReleased)
 		{
-			pointerPressed = true;
+			pointerPressed = FlxG.mouse.pressed;
 			pointerJustPressed = FlxG.mouse.justPressed;
+			pointerJustReleased = FlxG.mouse.justReleased;
 			var mousePos = FlxG.mouse.getWorldPosition(subCam);
 			pointerX = mousePos.x;
 			pointerY = mousePos.y;
@@ -285,22 +287,32 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		{
 			for (touch in FlxG.touches.list)
 			{
-				if (touch.pressed)
-				{
-					pointerPressed = true;
-					pointerJustPressed = touch.justPressed;
-					var touchPos = touch.getWorldPosition(subCam);
-					pointerX = touchPos.x;
-					pointerY = touchPos.y;
-					touchPos.put();
-					break; 
-				}
+				pointerPressed = touch.pressed;
+				pointerJustPressed = touch.justPressed;
+				pointerJustReleased = touch.justReleased;
+				var touchPos = touch.getWorldPosition(subCam);
+				pointerX = touchPos.x;
+				pointerY = touchPos.y;
+				touchPos.put();
+				break; 
 			}
 		}
 
-		if (pointerPressed)
+		if (buttonIsTouched)
 		{
-			if (draggedButton == null && pointerJustPressed)
+			if (pointerJustReleased)
+			{
+				bindButton = null;
+				buttonIsTouched = false;
+			}
+			else if (pointerPressed && bindButton != null)
+			{
+				moveButton(pointerX, pointerY, bindButton);
+			}
+		}
+		else
+		{
+			if (pointerJustPressed)
 			{
 				var buttons = [
 					customPad.buttonUp, customPad.buttonDown,
@@ -313,43 +325,41 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				{
 					if (btn != null && pointerX >= btn.x && pointerX <= btn.x + btn.width && pointerY >= btn.y && pointerY <= btn.y + btn.height)
 					{
-						draggedButton = btn;
-						dragOffset.set(pointerX - btn.x, pointerY - btn.y);
+						moveButton(pointerX, pointerY, btn);
 						break;
 					}
 				}
 			}
 		}
+	}
 
-		if (!pointerPressed || draggedButton == null)
-		{
-			draggedButton = null;
-			return;
-		}
-
-		draggedButton.x = pointerX - dragOffset.x;
-		draggedButton.y = pointerY - dragOffset.y;
+	function moveButton(pointerX:Float, pointerY:Float, button:FlxSprite)
+	{
+		button.x = pointerX - button.width / 2;
+		button.y = pointerY - button.height / 2;
+		bindButton = button;
+		buttonIsTouched = true;
 	}
 
 	function saveCustomLayout()
 	{
 		FlxG.save.data.customPadPos = {
-			upX: customPad.buttonUp.x,
-			upY: customPad.buttonUp.y,
-			downX: customPad.buttonDown.x,
-			downY: customPad.buttonDown.y,
-			leftX: customPad.buttonLeft.x,
-			leftY: customPad.buttonLeft.y,
-			rightX: customPad.buttonRight.x,
-			rightY: customPad.buttonRight.y,
-			aX: customPad.buttonA.x,
-			aY: customPad.buttonA.y,
-			bX: customPad.buttonB.x,
-			bY: customPad.buttonB.y,
-			xX: customPad.buttonX.x,
-			xY: customPad.buttonX.y,
-			yX: customPad.buttonY.x,
-			yY: customPad.buttonY.y
+			upX: customPad.buttonUp != null ? customPad.buttonUp.x : 0,
+			upY: customPad.buttonUp != null ? customPad.buttonUp.y : 0,
+			downX: customPad.buttonDown != null ? customPad.buttonDown.x : 0,
+			downY: customPad.buttonDown != null ? customPad.buttonDown.y : 0,
+			leftX: customPad.buttonLeft != null ? customPad.buttonLeft.x : 0,
+			leftY: customPad.buttonLeft != null ? customPad.buttonLeft.y : 0,
+			rightX: customPad.buttonRight != null ? customPad.buttonRight.x : 0,
+			rightY: customPad.buttonRight != null ? customPad.buttonRight.y : 0,
+			aX: customPad.buttonA != null ? customPad.buttonA.x : 0,
+			aY: customPad.buttonA != null ? customPad.buttonA.y : 0,
+			bX: customPad.buttonB != null ? customPad.buttonB.x : 0,
+			bY: customPad.buttonB != null ? customPad.buttonB.y : 0,
+			xX: customPad.buttonX != null ? customPad.buttonX.x : 0,
+			xY: customPad.buttonX != null ? customPad.buttonX.y : 0,
+			yX: customPad.buttonY != null ? customPad.buttonY.x : 0,
+			yY: customPad.buttonY != null ? customPad.buttonY.y : 0
 		};
 
 		FlxG.save.flush();
@@ -360,19 +370,19 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		var save = FlxG.save.data.customPadPos;
 		if (save == null) return;
 
-		if (save.upX != null) { customPad.buttonUp.x = save.upX; customPad.buttonUp.y = save.upY; }
-		if (save.downX != null) { customPad.buttonDown.x = save.downX; customPad.buttonDown.y = save.downY; }
-		if (save.leftX != null) { customPad.buttonLeft.x = save.leftX; customPad.buttonLeft.y = save.leftY; }
-		if (save.rightX != null) { customPad.buttonRight.x = save.rightX; customPad.buttonRight.y = save.rightY; }
-		if (save.aX != null) { customPad.buttonA.x = save.aX; customPad.buttonA.y = save.aY; }
-		if (save.bX != null) { customPad.buttonB.x = save.bX; customPad.buttonB.y = save.bY; }
-		if (save.xX != null) { customPad.buttonX.x = save.xX; customPad.buttonX.y = save.xY; }
-		if (save.yX != null) { customPad.buttonY.x = save.yX; customPad.buttonY.y = save.yY; }
+		if (save.upX != null && customPad.buttonUp != null) { customPad.buttonUp.x = save.upX; customPad.buttonUp.y = save.upY; }
+		if (save.downX != null && customPad.buttonDown != null) { customPad.buttonDown.x = save.downX; customPad.buttonDown.y = save.downY; }
+		if (save.leftX != null && customPad.buttonLeft != null) { customPad.buttonLeft.x = save.leftX; customPad.buttonLeft.y = save.leftY; }
+		if (save.rightX != null && customPad.buttonRight != null) { customPad.buttonRight.x = save.rightX; customPad.buttonRight.y = save.rightY; }
+		if (save.aX != null && customPad.buttonA != null) { customPad.buttonA.x = save.aX; customPad.buttonA.y = save.aY; }
+		if (save.bX != null && customPad.buttonB != null) { customPad.buttonB.x = save.bX; customPad.buttonB.y = save.bY; }
+		if (save.xX != null && customPad.buttonX != null) { customPad.buttonX.x = save.xX; customPad.buttonX.y = save.xY; }
+		if (save.yX != null && customPad.buttonY != null) { customPad.buttonY.x = save.yX; customPad.buttonY.y = save.yY; }
 	}
 
 	function saveAndClose()
 	{
-		draggedButton = null;
+		bindButton = null;
 		Options.mobilecontrols = options[curSelected];
 		FlxG.save.data.mobileControlsMode = options[curSelected];
 		FlxG.save.flush();
@@ -443,13 +453,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			}
 		}
 
-		draggedButton = null;
-
-		if (dragOffset != null)
-		{
-			dragOffset.put();
-			dragOffset = null;
-		}
+		bindButton = null;
 
 		if (FlxG.cameras.list.contains(subCam))
 			FlxG.cameras.remove(subCam);
