@@ -167,6 +167,11 @@ class VirtualPad extends FlxSpriteGroup
 
 	override function update(elapsed:Float) 
 	{
+		if (flixel.FlxG.state.subState != null) {
+            super.update(elapsed);
+          return; 
+		}
+		
 		this.alpha = Options.virtualPadOpacity; 
 	    
 		var overlappingPad:Bool = false;
@@ -176,6 +181,7 @@ class VirtualPad extends FlxSpriteGroup
 			if (btn == null || !btn.exists || !btn.active || !btn.visible) continue;
 
 			var isPressed = false;
+
 
 			for (touch in FlxG.touches.list) {
 				if (touch.pressed) { 
