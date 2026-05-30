@@ -231,7 +231,7 @@ class VirtualPad extends FlxSpriteGroup
 			{
 				if (Std.isOfType(member, flixel.group.FlxSpriteGroup))
 				{
-					if (belongsToTargetState(cast(member, flixel.group.FlxSpriteGroup).group, element)) return true;
+					if (belongsToTargetState((cast member).group, element)) return true;
 				}
 				else if (Std.isOfType(member, flixel.group.FlxGroup))
 				{
