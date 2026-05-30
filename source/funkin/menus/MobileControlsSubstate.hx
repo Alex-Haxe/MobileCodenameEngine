@@ -38,9 +38,14 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	var draggedButton:FlxSprite;
 	var dragOffset:FlxPoint = FlxPoint.get();
-	var dragTouchID:Int = -1;
 
 	var hiddenPads:Array<VirtualPad> = [];
+
+	public function new()
+	{
+		super();
+		this.persistentUpdate = false;
+	}
 
 	private function setupPadCamera(pad:VirtualPad):Void
 	{
@@ -53,9 +58,20 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 
 		pad.cameras = [subCam];
+
+		var buttons = [
+			pad.buttonUp, pad.buttonDown, pad.buttonLeft, pad.buttonRight,
+			pad.buttonUp2, pad.buttonDown2, pad.buttonLeft2, pad.buttonRight2,
+			pad.buttonA, pad.buttonB, pad.buttonX, pad.buttonY
+		];
+
+		for (btn in buttons)
+		{
+			if (btn != null) btn.cameras = [subCam];
+		}
 	}
 
-	function setPadEnabled(pad:VirtualPad, enabled:Bool)
+	function setPadEnabled(pad:VirtualPad, enabled:Bool, targetAlpha:Float = 1.0)
 	{
 		if (pad == null) return;
 
@@ -74,6 +90,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				btn.visible = enabled;
 				btn.active = enabled;
+				btn.alpha = targetAlpha;
 			}
 		}
 	}
@@ -126,24 +143,27 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
 		previewBox.setupCamera();
-		previewBox.alpha = 0.5;
+		
+		previewBox.cameras = [subCam];
+		if (previewBox.members != null) {
+			for (btn in previewBox.members) {
+				if (btn != null) btn.cameras = [subCam];
+			}
+		}
 		previewBox.visible = false;
 		previewBox.active = false;
 		add(previewBox);
 
 		previewPad = new VirtualPad(FULL, NONE);
 		setupPadCamera(previewPad);
-		previewPad.alpha = 0.5;
 		add(previewPad);
 
 		previewDoublePad = new VirtualPad(DOUBLE, NONE);
 		setupPadCamera(previewDoublePad);
-		previewDoublePad.alpha = 0.5;
 		add(previewDoublePad);
 
 		customPad = new VirtualPad(CUSTOM, NONE);
 		setupPadCamera(customPad);
-		customPad.alpha = 0.5;
 		customPad.blockInput = true;
 		add(customPad);
 
@@ -217,10 +237,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				isCustomizing = false;
 				draggedButton = null;
-				dragTouchID = -1;
 				modeText.visible = true;
 				customPad.blockInput = true;
-				setPadEnabled(customPad, false);
 				updatePreview();
 			}
 		}
@@ -240,9 +258,9 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		setPadEnabled(previewPad, false);
 		setPadEnabled(previewDoublePad, false);
-		setPadEnabled(customPad, true);
+		
+		setPadEnabled(customPad, true, 1.0);
 
-		customPad.alpha = 1;
 		customPad.blockInput = false;
 		loadCustomLayout();
 	}
@@ -250,57 +268,67 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	function handleCustomDrag()
 	{
 		var pointerPressed = false;
-		var activeTouch:flixel.input.touch.FlxTouch = null;
+		var pointerJustPressed = false;
+		var pointerX:Float = 0;
+		var pointerY:Float = 0;
 
-		for (touch in FlxG.touches.list)
+		if (FlxG.mouse.pressed)
 		{
-			if (touch.pressed)
+			pointerPressed = true;
+			pointerJustPressed = FlxG.mouse.justPressed;
+			var mousePos = FlxG.mouse.getWorldPosition(subCam);
+			pointerX = mousePos.x;
+			pointerY = mousePos.y;
+			mousePos.put();
+		}
+		else
+		{
+			for (touch in FlxG.touches.list)
 			{
-				pointerPressed = true;
-				
-				if (draggedButton == null && touch.justPressed)
+				if (touch.pressed)
 				{
-					var pos = touch.getScreenPosition(subCam);
-					var buttons = [
-						customPad.buttonUp, customPad.buttonDown,
-						customPad.buttonLeft, customPad.buttonRight,
-						customPad.buttonA, customPad.buttonB, 
-						customPad.buttonX, customPad.buttonY
-					];
-
-					for (btn in buttons)
-					{
-						if (btn != null && pos.x >= btn.x && pos.x <= btn.x + btn.width && pos.y >= btn.y && pos.y <= btn.y + btn.height)
-						{
-							draggedButton = btn;
-							dragOffset.set(pos.x - btn.x, pos.y - btn.y);
-							dragTouchID = touch.touchPointID;
-							activeTouch = touch;
-							break;
-						}
-					}
-					pos.put();
+					pointerPressed = true;
+					pointerJustPressed = touch.justPressed;
+					var touchPos = touch.getWorldPosition(subCam);
+					pointerX = touchPos.x;
+					pointerY = touchPos.y;
+					touchPos.put();
+					break; 
 				}
-				else if (draggedButton != null && touch.touchPointID == dragTouchID)
-				{
-					activeTouch = touch;
-				}
-				
-				if (activeTouch != null) break;
 			}
 		}
 
-		if (!pointerPressed || draggedButton == null || activeTouch == null)
+		if (pointerPressed)
+		{
+			if (draggedButton == null && pointerJustPressed)
+			{
+				var buttons = [
+					customPad.buttonUp, customPad.buttonDown,
+					customPad.buttonLeft, customPad.buttonRight,
+					customPad.buttonA, customPad.buttonB, 
+					customPad.buttonX, customPad.buttonY
+				];
+
+				for (btn in buttons)
+				{
+					if (btn != null && pointerX >= btn.x && pointerX <= btn.x + btn.width && pointerY >= btn.y && pointerY <= btn.y + btn.height)
+					{
+						draggedButton = btn;
+						dragOffset.set(pointerX - btn.x, pointerY - btn.y);
+						break;
+					}
+				}
+			}
+		}
+
+		if (!pointerPressed || draggedButton == null)
 		{
 			draggedButton = null;
-			dragTouchID = -1;
 			return;
 		}
 
-		var finalPos = activeTouch.getScreenPosition(subCam);
-		draggedButton.x = finalPos.x - dragOffset.x;
-		draggedButton.y = finalPos.y - dragOffset.y;
-		finalPos.put();
+		draggedButton.x = pointerX - dragOffset.x;
+		draggedButton.y = pointerY - dragOffset.y;
 	}
 
 	function saveCustomLayout()
@@ -345,7 +373,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	function saveAndClose()
 	{
 		draggedButton = null;
-		dragTouchID = -1;
 		Options.mobilecontrols = options[curSelected];
 		FlxG.save.data.mobileControlsMode = options[curSelected];
 		FlxG.save.flush();
@@ -369,6 +396,12 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (isCustomizing) return;
 
 		previewBox.visible = false;
+		if (previewBox.members != null) {
+			for (btn in previewBox.members) {
+				if (btn != null) btn.visible = false;
+			}
+		}
+
 		setPadEnabled(previewPad, false);
 		setPadEnabled(previewDoublePad, false);
 		setPadEnabled(customPad, false);
@@ -377,19 +410,22 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		{
 			case 'Hitbox':
 				previewBox.visible = true;
+				if (previewBox.members != null) {
+					for (btn in previewBox.members) {
+						if (btn != null) {
+							btn.visible = true;
+							btn.alpha = 0.5;
+						}
+					}
+				}
 			case 'Dpad':
-				setPadEnabled(previewPad, true);
-				previewPad.active = false;
-				previewPad.alpha = 0.5;
+				setPadEnabled(previewPad, true, 0.5);
 				previewPad.blockInput = true;
 			case 'Double Dpad':
-				setPadEnabled(previewDoublePad, true);
-				previewDoublePad.active = false;
-				previewDoublePad.alpha = 0.5;
+				setPadEnabled(previewDoublePad, true, 0.5);
 				previewDoublePad.blockInput = true;
 			case 'Custom':
-				setPadEnabled(customPad, true);
-				customPad.alpha = 0.5;
+				setPadEnabled(customPad, true, 0.5);
 				customPad.blockInput = true;
 			case 'None':
 		}
@@ -408,7 +444,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 
 		draggedButton = null;
-		dragTouchID = -1;
 
 		if (dragOffset != null)
 		{
