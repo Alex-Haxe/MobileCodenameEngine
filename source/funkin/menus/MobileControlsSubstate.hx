@@ -316,9 +316,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				var buttons = [
 					customPad.buttonUp, customPad.buttonDown,
-					customPad.buttonLeft, customPad.buttonRight,
-					customPad.buttonA, customPad.buttonB, 
-					customPad.buttonX, customPad.buttonY
+					customPad.buttonLeft, customPad.buttonRight
 				];
 
 				for (btn in buttons)
@@ -352,14 +350,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			leftY: customPad.buttonLeft != null ? customPad.buttonLeft.y : 0,
 			rightX: customPad.buttonRight != null ? customPad.buttonRight.x : 0,
 			rightY: customPad.buttonRight != null ? customPad.buttonRight.y : 0,
-			aX: customPad.buttonA != null ? customPad.buttonA.x : 0,
-			aY: customPad.buttonA != null ? customPad.buttonA.y : 0,
-			bX: customPad.buttonB != null ? customPad.buttonB.x : 0,
-			bY: customPad.buttonB != null ? customPad.buttonB.y : 0,
-			xX: customPad.buttonX != null ? customPad.buttonX.x : 0,
-			xY: customPad.buttonX != null ? customPad.buttonX.y : 0,
-			yX: customPad.buttonY != null ? customPad.buttonY.x : 0,
-			yY: customPad.buttonY != null ? customPad.buttonY.y : 0
 		};
 
 		FlxG.save.flush();
@@ -374,10 +364,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (save.downX != null && customPad.buttonDown != null) { customPad.buttonDown.x = save.downX; customPad.buttonDown.y = save.downY; }
 		if (save.leftX != null && customPad.buttonLeft != null) { customPad.buttonLeft.x = save.leftX; customPad.buttonLeft.y = save.leftY; }
 		if (save.rightX != null && customPad.buttonRight != null) { customPad.buttonRight.x = save.rightX; customPad.buttonRight.y = save.rightY; }
-		if (save.aX != null && customPad.buttonA != null) { customPad.buttonA.x = save.aX; customPad.buttonA.y = save.aY; }
-		if (save.bX != null && customPad.buttonB != null) { customPad.buttonB.x = save.bX; customPad.buttonB.y = save.bY; }
-		if (save.xX != null && customPad.buttonX != null) { customPad.buttonX.x = save.xX; customPad.buttonX.y = save.xY; }
-		if (save.yX != null && customPad.buttonY != null) { customPad.buttonY.x = save.yX; customPad.buttonY.y = save.yY; }
 	}
 
 	function saveAndClose()
