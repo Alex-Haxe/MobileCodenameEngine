@@ -260,15 +260,17 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				
 				if (draggedButton == null && touch.justPressed)
 				{
-					var pos = touch.getWorldPosition(subCam);
+					var pos = touch.getScreenPosition(subCam);
 					var buttons = [
 						customPad.buttonUp, customPad.buttonDown,
-						customPad.buttonLeft, customPad.buttonRight
+						customPad.buttonLeft, customPad.buttonRight,
+						customPad.buttonA, customPad.buttonB, 
+						customPad.buttonX, customPad.buttonY
 					];
 
 					for (btn in buttons)
 					{
-						if (btn != null && btn.overlapsPoint(pos, true, subCam))
+						if (btn != null && pos.x >= btn.x && pos.x <= btn.x + btn.width && pos.y >= btn.y && pos.y <= btn.y + btn.height)
 						{
 							draggedButton = btn;
 							dragOffset.set(pos.x - btn.x, pos.y - btn.y);
@@ -295,7 +297,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			return;
 		}
 
-		var finalPos = activeTouch.getWorldPosition(subCam);
+		var finalPos = activeTouch.getScreenPosition(subCam);
 		draggedButton.x = finalPos.x - dragOffset.x;
 		draggedButton.y = finalPos.y - dragOffset.y;
 		finalPos.put();
@@ -311,7 +313,15 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			leftX: customPad.buttonLeft.x,
 			leftY: customPad.buttonLeft.y,
 			rightX: customPad.buttonRight.x,
-			rightY: customPad.buttonRight.y
+			rightY: customPad.buttonRight.y,
+			aX: customPad.buttonA.x,
+			aY: customPad.buttonA.y,
+			bX: customPad.buttonB.x,
+			bY: customPad.buttonB.y,
+			xX: customPad.buttonX.x,
+			xY: customPad.buttonX.y,
+			yX: customPad.buttonY.x,
+			yY: customPad.buttonY.y
 		};
 
 		FlxG.save.flush();
@@ -326,6 +336,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (save.downX != null) { customPad.buttonDown.x = save.downX; customPad.buttonDown.y = save.downY; }
 		if (save.leftX != null) { customPad.buttonLeft.x = save.leftX; customPad.buttonLeft.y = save.leftY; }
 		if (save.rightX != null) { customPad.buttonRight.x = save.rightX; customPad.buttonRight.y = save.rightY; }
+		if (save.aX != null) { customPad.buttonA.x = save.aX; customPad.buttonA.y = save.aY; }
+		if (save.bX != null) { customPad.buttonB.x = save.bX; customPad.buttonB.y = save.bY; }
+		if (save.xX != null) { customPad.buttonX.x = save.xX; customPad.buttonX.y = save.xY; }
+		if (save.yX != null) { customPad.buttonY.x = save.yX; customPad.buttonY.y = save.yY; }
 	}
 
 	function saveAndClose()
