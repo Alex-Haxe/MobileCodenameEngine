@@ -232,6 +232,11 @@ class VirtualPad extends FlxSpriteGroup
      
 	override function update(elapsed:Float) 
 	{
+		if (flixel.FlxG.state.subState != null) {
+            super.update(elapsed);
+          return; 
+		}
+		
 		if (!active || !visible) {
 			super.update(elapsed);
 			return;
