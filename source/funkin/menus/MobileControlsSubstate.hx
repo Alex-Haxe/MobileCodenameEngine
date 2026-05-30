@@ -38,6 +38,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	var draggedButton:FlxSprite;
 	var dragOffset:FlxPoint = FlxPoint.get();
+	var dragTouchID:Int = -1;
 
 	var hiddenPads:Array<VirtualPad> = [];
 
@@ -216,6 +217,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				isCustomizing = false;
 				draggedButton = null;
+				dragTouchID = -1;
 				modeText.visible = true;
 				customPad.blockInput = true;
 				setPadEnabled(customPad, false);
@@ -248,71 +250,69 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	function handleCustomDrag()
 	{
 		var pointerPressed = false;
-		var pointerJustPressed = false;
-		var touchX:Float = 0;
-		var touchY:Float = 0;
+		var activeTouch:flixel.input.touch.FlxTouch = null;
 
 		for (touch in FlxG.touches.list)
 		{
-			pointerPressed = touch.pressed;
-			pointerJustPressed = touch.justPressed;
-
-			var pos = touch.getWorldPosition(subCam);
-			touchX = pos.x;
-			touchY = pos.y;
-			pos.put();
-			break;
-		}
-
-		if (!pointerPressed)
-		{
-			draggedButton = null;
-			return;
-		}
-
-		var point = FlxPoint.get(touchX, touchY);
-
-		if (pointerJustPressed)
-		{
-			var buttons = [
-				customPad.buttonUp, customPad.buttonDown,
-				customPad.buttonLeft, customPad.buttonRight
-			];
-
-			for (btn in buttons)
+			if (touch.pressed)
 			{
-				if (btn != null && btn.overlapsPoint(point, true, subCam))
+				pointerPressed = true;
+				
+				if (draggedButton == null && touch.justPressed)
 				{
-					draggedButton = btn;
-					dragOffset.set(touchX - btn.x, touchY - btn.y);
-					break;
+					var pos = touch.getWorldPosition(subCam);
+					var buttons = [
+						customPad.buttonUp, customPad.buttonDown,
+						customPad.buttonLeft, customPad.buttonRight
+					];
+
+					for (btn in buttons)
+					{
+						if (btn != null && btn.overlapsPoint(pos, true, subCam))
+						{
+							draggedButton = btn;
+							dragOffset.set(pos.x - btn.x, pos.y - btn.y);
+							dragTouchID = touch.touchPointID;
+							activeTouch = touch;
+							break;
+						}
+					}
+					pos.put();
 				}
+				else if (draggedButton != null && touch.touchPointID == dragTouchID)
+				{
+					activeTouch = touch;
+				}
+				
+				if (activeTouch != null) break;
 			}
 		}
 
-		if (draggedButton != null)
+		if (!pointerPressed || draggedButton == null || activeTouch == null)
 		{
-			draggedButton.x = touchX - dragOffset.x;
-			draggedButton.y = touchY - dragOffset.y;
+			draggedButton = null;
+			dragTouchID = -1;
+			return;
 		}
 
-		point.put();
+		var finalPos = activeTouch.getWorldPosition(subCam);
+		draggedButton.x = finalPos.x - dragOffset.x;
+		draggedButton.y = finalPos.y - dragOffset.y;
+		finalPos.put();
 	}
 
 	function saveCustomLayout()
 	{
-		if (FlxG.save.data.customPadPos == null)
-			FlxG.save.data.customPadPos = {};
-
-		var save = FlxG.save.data.customPadPos;
-		save.upX = customPad.buttonUp.x;
-		save.upY = customPad.buttonUp.y;
-		save.downX = customPad.buttonDown.x;
-		save.downY = customPad.buttonDown.y;
-		save.leftX = customPad.buttonLeft.x;
-		save.leftY = customPad.buttonLeft.y;
-		save.rightX = customPad.buttonRight.x;
-		save.rightY = customPad.buttonRight.y;
+		FlxG.save.data.customPadPos = {
+			upX: customPad.buttonUp.x,
+			upY: customPad.buttonUp.y,
+			downX: customPad.buttonDown.x,
+			downY: customPad.buttonDown.y,
+			leftX: customPad.buttonLeft.x,
+			leftY: customPad.buttonLeft.y,
+			rightX: customPad.buttonRight.x,
+			rightY: customPad.buttonRight.y
+		};
 
 		FlxG.save.flush();
 	}
@@ -331,6 +331,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	function saveAndClose()
 	{
 		draggedButton = null;
+		dragTouchID = -1;
 		Options.mobilecontrols = options[curSelected];
 		FlxG.save.data.mobileControlsMode = options[curSelected];
 		FlxG.save.flush();
@@ -393,6 +394,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 
 		draggedButton = null;
+		dragTouchID = -1;
 
 		if (dragOffset != null)
 		{
