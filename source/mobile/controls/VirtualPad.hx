@@ -23,6 +23,8 @@ class VirtualPad extends FlxSpriteGroup
 {
 	public static var activePads:Array<VirtualPad> = [];
 	public static var inputBlockFrames:Int = 0;
+	public static var usedTouches:Array<flixel.input.touch.FlxTouch> = [];
+	public static var lastUpdateFrame:Int = 0;
 	
 	public var blockInput:Bool = false;
 	
@@ -57,8 +59,6 @@ class VirtualPad extends FlxSpriteGroup
 
 	private var holdTimers:Map<String, Float> = new Map();
 	private var holdActive:Map<String, Bool> = new Map();
-
-	private var trackedTouches:Array<flixel.input.touch.FlxTouch> = [];
 
 	public var keyBinds:Map<String, FlxKey> = [
 		"up" => FlxKey.UP,
@@ -239,7 +239,12 @@ class VirtualPad extends FlxSpriteGroup
 
 		this.alpha = funkin.options.Options.virtualPadOpacity; 
 		
-		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
+		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
+
+		if (VirtualPad.lastUpdateFrame != FlxG.game.ticks) {
+			VirtualPad.usedTouches = [];
+			VirtualPad.lastUpdateFrame = FlxG.game.ticks;
+		}
 
 		if (blockInput || inputBlockFrames > 0)
         {
@@ -255,18 +260,6 @@ class VirtualPad extends FlxSpriteGroup
             super.update(elapsed);
          	return;
         }
-		
-		var isTopPad = (VirtualPad.activePads.length > 0 && VirtualPad.activePads[VirtualPad.activePads.length - 1] == this);
-
-		var currentTouches:Array<flixel.input.touch.FlxTouch> = [];
-		if (isTopPad) {
-			for (touch in FlxG.touches.list) {
-				if (touch.justPressed || trackedTouches.contains(touch)) {
-					currentTouches.push(touch);
-				}
-			}
-		}
-		trackedTouches = currentTouches;
 
 		var overlappingPad:Bool = false;
 		var cam = virtualpadCamera != null ? virtualpadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
@@ -276,12 +269,13 @@ class VirtualPad extends FlxSpriteGroup
 
 			var isPressed = false;
 
-			for (touch in trackedTouches) {
-				if (touch.pressed) { 
+			for (touch in FlxG.touches.list) {
+				if (touch.pressed && !VirtualPad.usedTouches.contains(touch)) { 
 					var point = touch.getWorldPosition(cam);
 					if (btn.overlapsPoint(point, true, cam)) {
 						isPressed = true;
 						overlappingPad = true;
+						VirtualPad.usedTouches.push(touch);
 						point.put();
 						break;
 					}
@@ -493,10 +487,6 @@ class VirtualPad extends FlxSpriteGroup
 	override public function destroy():Void
 	{
 		VirtualPad.activePads.remove(this);
-		
-		if (trackedTouches != null) {
-			trackedTouches = null;
-		}
 		
 		if (boundActions != null) {
 			boundActions.clear();
