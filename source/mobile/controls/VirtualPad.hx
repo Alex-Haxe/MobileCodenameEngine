@@ -1,17 +1,6 @@
 package mobile.controls;
 
 #if mobile
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.math.FlxPoint;
-import flixel.group.FlxSpriteGroup;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.FlxTileFrames;
-import flixel.util.FlxDestroyUtil;
-import flixel.input.FlxInput.FlxInputState;
-import flixel.input.keyboard.FlxKey;
-
 class MobileButton extends FlxSprite 
 {
 	public var justPressed:Bool = false;
@@ -229,12 +218,46 @@ class VirtualPad extends FlxSpriteGroup
     	btn.justReleased = false;
     	btn.pressed = false;
     }
-     
+
+	private function belongsToTargetState(target:Dynamic, element:flixel.FlxBasic):Bool
+	{
+		if (target == null || element == null || target.members == null) return false;
+		var members:Array<Dynamic> = cast target.members;
+		for (i in 0...members.length)
+		{
+			var member = members[i];
+			if (member == element) return true;
+			if (member != null)
+			{
+				if (Std.isOfType(member, flixel.group.FlxSpriteGroup))
+				{
+					if (belongsToTargetState(cast(member, flixel.group.FlxSpriteGroup).group, element)) return true;
+				}
+				else if (Std.isOfType(member, flixel.group.FlxGroup))
+				{
+					if (belongsToTargetState(member, element)) return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	override function update(elapsed:Float) 
 	{
+		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
+
 		if (flixel.FlxG.state.subState != null) {
-            super.update(elapsed);
-          return; 
+			var activeState:flixel.FlxState = flixel.FlxG.state;
+			var topState:Dynamic = activeState;
+			while (activeState != null && activeState.subState != null) {
+				activeState = activeState.subState;
+				topState = activeState;
+			}
+			if (!belongsToTargetState(topState, this)) {
+				for (btn in padButtons) resetButton(btn);
+				super.update(elapsed);
+				return;
+			}
 		}
 		
 		if (!active || !visible) {
@@ -243,8 +266,6 @@ class VirtualPad extends FlxSpriteGroup
 		}
 
 		this.alpha = funkin.options.Options.virtualPadOpacity; 
-		
-		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
 
 		if (VirtualPad.lastUpdateFrame != FlxG.game.ticks) {
 			VirtualPad.usedTouches = [];
