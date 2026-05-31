@@ -89,6 +89,7 @@ class Main extends Sprite
 
 		#if mobile
 		MobileTrace.enabled = true;
+		MobileTrace.init();
 		#end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
