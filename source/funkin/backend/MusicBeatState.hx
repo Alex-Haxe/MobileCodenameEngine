@@ -233,7 +233,7 @@ class MusicBeatState extends FlxState implements IBeatCancellableReceiver
 
 	override function update(elapsed:Float)
 	{
-		blockInputThisFrame = false;
+		FlxKeyboard.blockInputThisFrame = false;
 		
 		call("update", [elapsed]);
 
