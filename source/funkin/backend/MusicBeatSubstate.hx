@@ -261,7 +261,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 	    if (!e.cancelled)
 	    {
 			#if mobile
-			GlobalConfig.blockInputThisFrame = true;
+			blockInputThisFrame = true;
 			#end
 		    super.closeSubState();
     	}
