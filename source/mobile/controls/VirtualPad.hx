@@ -218,54 +218,17 @@ class VirtualPad extends FlxSpriteGroup
     	btn.justReleased = false;
     	btn.pressed = false;
     }
-
-	private function belongsToTargetState(target:Dynamic, element:flixel.FlxBasic):Bool
-	{
-		if (target == null || element == null || target.members == null) return false;
-		var members:Array<Dynamic> = cast target.members;
-		for (i in 0...members.length)
-		{
-			var member = members[i];
-			if (member == element) return true;
-			if (member != null)
-			{
-				if (Std.isOfType(member, flixel.group.FlxSpriteGroup))
-				{
-					if (belongsToTargetState((cast member).group, element)) return true;
-				}
-				else if (Std.isOfType(member, flixel.group.FlxGroup))
-				{
-					if (belongsToTargetState(member, element)) return true;
-				}
-			}
-		}
-		return false;
-	}
-
+     
 	override function update(elapsed:Float) 
 	{
-		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
-
-		if (flixel.FlxG.state.subState != null) {
-			var activeState:flixel.FlxState = flixel.FlxG.state;
-			var topState:Dynamic = activeState;
-			while (activeState != null && activeState.subState != null) {
-				activeState = activeState.subState;
-				topState = activeState;
-			}
-			if (!belongsToTargetState(topState, this)) {
-				for (btn in padButtons) resetButton(btn);
-				super.update(elapsed);
-				return;
-			}
-		}
-		
 		if (!active || !visible) {
 			super.update(elapsed);
 			return;
 		}
 
 		this.alpha = funkin.options.Options.virtualPadOpacity; 
+		
+		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
 
 		if (VirtualPad.lastUpdateFrame != FlxG.game.ticks) {
 			VirtualPad.usedTouches = [];
