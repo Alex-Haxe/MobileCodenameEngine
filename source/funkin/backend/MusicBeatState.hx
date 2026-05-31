@@ -13,6 +13,9 @@ import funkin.backend.system.framerate.Framerate;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IBeatCancellableReceiver;
 import funkin.options.PlayerSettings;
+#if mobile
+import flixel.input.keyboard.FlxKeyboard;
+#end
 
 /**
  * Base class for all the states.
@@ -230,7 +233,7 @@ class MusicBeatState extends FlxState implements IBeatCancellableReceiver
 
 	override function update(elapsed:Float)
 	{
-		GlobalConfig.blockInputThisFrame = false;
+		blockInputThisFrame = false;
 		
 		call("update", [elapsed]);
 
