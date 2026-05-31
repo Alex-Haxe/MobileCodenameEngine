@@ -33,7 +33,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var acceptBlocked:Bool = true;
 
 	var bindButton:FlxSprite;
-	var buttonIsTouched:Bool = false;
 
 	var hiddenPads:Array<VirtualPad> = [];
 
@@ -54,17 +53,9 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		}
 
 		pad.cameras = [subCam];
-
-		var buttons = [
-			pad.buttonUp, pad.buttonDown, pad.buttonLeft, pad.buttonRight,
-			pad.buttonUp2, pad.buttonDown2, pad.buttonLeft2, pad.buttonRight2,
-			pad.buttonA, pad.buttonB, pad.buttonX, pad.buttonY
-		];
-
-		for (btn in buttons)
-		{
-			if (btn != null) btn.cameras = [subCam];
-		}
+		pad.forEachAlive(function(button:FlxSprite) {
+			button.cameras = [subCam];
+		});
 	}
 
 	function setPadEnabled(pad:VirtualPad, enabled:Bool, targetAlpha:Float = 1.0)
@@ -73,22 +64,12 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		pad.visible = enabled;
 		pad.active = enabled;
-
-		var buttons = [
-			pad.buttonUp, pad.buttonDown, pad.buttonLeft, pad.buttonRight,
-			pad.buttonUp2, pad.buttonDown2, pad.buttonLeft2, pad.buttonRight2,
-			pad.buttonA, pad.buttonB, pad.buttonX, pad.buttonY
-		];
-
-		for (btn in buttons)
-		{
-			if (btn != null)
-			{
-				btn.visible = enabled;
-				btn.active = enabled;
-				btn.alpha = targetAlpha;
-			}
-		}
+		
+		pad.forEachAlive(function(button:FlxSprite) {
+			button.visible = enabled;
+			button.active = enabled;
+			button.alpha = targetAlpha;
+		});
 	}
 
 	public override function create()
@@ -100,15 +81,15 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		FlxG.mouse.reset();
 		FlxG.touches.reset();
 
-		for (pad in VirtualPad.activePads.copy())
-		{
-			if (pad == null) continue;
-
-			pad.visible = false;
-			pad.active = false;
-			pad.blockInput = true;
-
-			hiddenPads.push(pad);
+		if (VirtualPad.activePads != null) {
+			for (pad in VirtualPad.activePads.copy())
+			{
+				if (pad == null) continue;
+				pad.visible = false;
+				pad.active = false;
+				pad.blockInput = true;
+				hiddenPads.push(pad);
+			}
 		}
 
 		camera = subCam = new FlxCamera();
@@ -117,20 +98,14 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		bg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF000000);
 		bg.scrollFactor.set();
+		bg.alpha = 0;
 		add(bg);
 
-		bg.alpha = 0;
-
-		FlxTween.tween(bg, {alpha: 0.85}, 0.25, {
-			ease: FlxEase.cubeOut
-		});
+		FlxTween.tween(bg, {alpha: 0.85}, 0.25, {ease: FlxEase.cubeOut});
 
 		var savedMode:String = Options.mobilecontrols;
-
-		if (savedMode != null)
-		{
-			var idx = options.indexOf(savedMode);
-			if (idx != -1) curSelected = idx;
+		if (savedMode != null && options.contains(savedMode)) {
+			curSelected = options.indexOf(savedMode);
 		}
 
 		modeText = new Alphabet(0, 40, "", true);
@@ -140,13 +115,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
 		previewBox.setupCamera();
-		
 		previewBox.cameras = [subCam];
-		if (previewBox.members != null) {
-			for (btn in previewBox.members) {
-				if (btn != null) btn.cameras = [subCam];
-			}
-		}
+		previewBox.forEachAlive(function(btn:FlxSprite) {
+			btn.cameras = [subCam];
+		});
 		previewBox.visible = false;
 		previewBox.active = false;
 		add(previewBox);
@@ -166,9 +138,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		menuButtons = new VirtualPad(NONE, A_B);
 		setupPadCamera(menuButtons);
-		add(menuButtons);
-
 		menuButtons.blockInput = false;
+		add(menuButtons);
 
 		setPadEnabled(previewPad, false);
 		setPadEnabled(previewDoublePad, false);
@@ -199,13 +170,11 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				if (!touch.justPressed) continue;
 
 				var pos = touch.getWorldPosition(subCam);
-				
-				if (pos.y < 150)
+				if (pos.y < FlxG.height * 0.5)
 				{
 					if (pos.x < FlxG.width * 0.5) leftPressed = true;
 					else rightPressed = true;
 				}
-				
 				pos.put();
 			}
 
@@ -213,14 +182,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			else if (rightPressed || controls.RIGHT_P) changeSelection(1);
 
 			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed))
-			{
 				acceptSelection();
-			}
 
 			if (controls.BACK || (menuButtons.buttonB != null && menuButtons.buttonB.justPressed))
-			{
 				close();
-			}
 		}
 		else
 		{
@@ -236,7 +201,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			{
 				isCustomizing = false;
 				bindButton = null;
-				buttonIsTouched = false;
 				modeText.visible = true;
 				customPad.blockInput = true;
 				updatePreview();
@@ -258,7 +222,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		setPadEnabled(previewPad, false);
 		setPadEnabled(previewDoublePad, false);
-		
 		setPadEnabled(customPad, true, 1.0);
 
 		customPad.blockInput = false;
@@ -267,76 +230,48 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 	function handleCustomDrag()
 	{
-		var pointerJustPressed = false;
-		var pointerPressed = false;
-		var pointerJustReleased = false;
+		var pointerPressed:Bool = false;
+		var pointerJustPressed:Bool = false;
 		var pointerX:Float = 0;
 		var pointerY:Float = 0;
 
-		if (FlxG.mouse.pressed || FlxG.mouse.justReleased)
-		{
-			pointerPressed = FlxG.mouse.pressed;
-			pointerJustPressed = FlxG.mouse.justPressed;
-			pointerJustReleased = FlxG.mouse.justReleased;
-			var mousePos = FlxG.mouse.getWorldPosition(subCam);
-			pointerX = mousePos.x;
-			pointerY = mousePos.y;
-			mousePos.put();
+		#if mobile
+		for (touch in FlxG.touches.list) {
+			pointerPressed = touch.pressed;
+			pointerJustPressed = touch.justPressed;
+			pointerX = touch.getWorldPosition(subCam).x;
+			pointerY = touch.getWorldPosition(subCam).y;
+			break;
 		}
-		else
-		{
-			for (touch in FlxG.touches.list)
-			{
-				pointerPressed = touch.pressed;
-				pointerJustPressed = touch.justPressed;
-				pointerJustReleased = touch.justReleased;
-				var touchPos = touch.getWorldPosition(subCam);
-				pointerX = touchPos.x;
-				pointerY = touchPos.y;
-				touchPos.put();
-				break; 
-			}
-		}
+		#else
+		pointerPressed = FlxG.mouse.pressed;
+		pointerJustPressed = FlxG.mouse.justPressed;
+		pointerX = FlxG.mouse.getWorldPosition(subCam).x;
+		pointerY = FlxG.mouse.getWorldPosition(subCam).y;
+		#end
 
-		if (buttonIsTouched)
+		if (bindButton != null)
 		{
-			if (pointerJustReleased)
+			if (pointerPressed)
+			{
+				bindButton.x = FlxMath.bound(pointerX - (bindButton.width / 2), 0, FlxG.width - bindButton.width);
+				bindButton.y = FlxMath.bound(pointerY - (bindButton.height / 2), 0, FlxG.height - bindButton.height);
+			}
+			else
 			{
 				bindButton = null;
-				buttonIsTouched = false;
-			}
-			else if (pointerPressed && bindButton != null)
-			{
-				moveButton(pointerX, pointerY, bindButton);
 			}
 		}
-		else
+		else if (pointerJustPressed)
 		{
-			if (pointerJustPressed)
-			{
-				var buttons = [
-					customPad.buttonUp, customPad.buttonDown,
-					customPad.buttonLeft, customPad.buttonRight
-				];
-
-				for (btn in buttons)
+			customPad.forEachAlive(function(btn:FlxSprite) {
+				if (pointerX >= btn.x && pointerX <= btn.x + btn.width && 
+					pointerY >= btn.y && pointerY <= btn.y + btn.height) 
 				{
-					if (btn != null && pointerX >= btn.x && pointerX <= btn.x + btn.width && pointerY >= btn.y && pointerY <= btn.y + btn.height)
-					{
-						moveButton(pointerX, pointerY, btn);
-						break;
-					}
+					bindButton = btn;
 				}
-			}
+			});
 		}
-	}
-
-	function moveButton(pointerX:Float, pointerY:Float, button:FlxSprite)
-	{
-		button.x = pointerX - button.width / 2;
-		button.y = pointerY - button.height / 2;
-		bindButton = button;
-		buttonIsTouched = true;
 	}
 
 	function saveCustomLayout()
@@ -351,7 +286,6 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			rightX: customPad.buttonRight != null ? customPad.buttonRight.x : 0,
 			rightY: customPad.buttonRight != null ? customPad.buttonRight.y : 0,
 		};
-
 		FlxG.save.flush();
 	}
 
@@ -392,11 +326,9 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (isCustomizing) return;
 
 		previewBox.visible = false;
-		if (previewBox.members != null) {
-			for (btn in previewBox.members) {
-				if (btn != null) btn.visible = false;
-			}
-		}
+		previewBox.forEachAlive(function(btn:FlxSprite) {
+			btn.visible = false;
+		});
 
 		setPadEnabled(previewPad, false);
 		setPadEnabled(previewDoublePad, false);
@@ -406,14 +338,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		{
 			case 'Hitbox':
 				previewBox.visible = true;
-				if (previewBox.members != null) {
-					for (btn in previewBox.members) {
-						if (btn != null) {
-							btn.visible = true;
-							btn.alpha = 0.5;
-						}
-					}
-				}
+				previewBox.forEachAlive(function(btn:FlxSprite) {
+					btn.visible = true;
+					btn.alpha = 0.5;
+				});
 			case 'Dpad':
 				setPadEnabled(previewPad, true, 0.5);
 				previewPad.blockInput = true;
@@ -442,7 +370,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		bindButton = null;
 
 		if (FlxG.cameras.list.contains(subCam))
-			FlxG.cameras.remove(subCam);
+			FlxG.cameras.remove(subCam, true);
 
 		super.destroy();
 	}
