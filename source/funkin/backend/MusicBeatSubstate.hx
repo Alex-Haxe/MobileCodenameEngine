@@ -14,6 +14,7 @@ import funkin.options.PlayerSettings;
 #if mobile
 import mobile.controls.VirtualPad;
 import mobile.controls.FlxButton;
+import flixel.input.keyboard.FlxKeyboard;
 #end
 
 /**
@@ -259,12 +260,10 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 
 	    if (!e.cancelled)
 	    {
+			#if mobile
+			GlobalConfig.blockInputThisFrame = true;
+			#end
 		    super.closeSubState();
-
-		    if (virtualPad != null)
-		    {
-		    	virtualPad.visible = true;
-		    }
     	}
     }
 
