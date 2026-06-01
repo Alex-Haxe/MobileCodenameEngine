@@ -20,6 +20,10 @@ class HScript extends Script {
 	public var parser:Parser;
 	public var expr:Expr;
 	public var code:String = null;
+
+	public static var currentScript:String = "";
+    public static var currentFunction:String = "";
+    public static var callLog:Array<String> = [];
 	//public var folderlessPath:String;
 	var __importedPaths:Array<String>;
 
@@ -319,16 +323,25 @@ class HScript extends Script {
 	}
 
 	private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
-		if (interp == null) return null;
-		if (!interp.variables.exists(funcName)) return null;
+        if (interp == null) return null;
+        if (!interp.variables.exists(funcName)) return null;
 
-		var func = interp.variables.get(funcName);
-		if (func != null && Reflect.isFunction(func))
-			return Reflect.callMethod(null, func, parameters);
+        currentScript = fileName;
+        currentFunction = funcName;
 
-		return null;
+        callLog.push(fileName + " -> " + funcName);
+
+        while (callLog.length > 25)
+            callLog.shift();
+
+        var func = interp.variables.get(funcName);
+
+        if (func != null && Reflect.isFunction(func)) {
+            var result = Reflect.callMethod(null, func, parameters);
+            return result;
+        }
+        return null;
 	}
-
 	public override function get(val:String):Dynamic {
 		return interp.variables.get(val);
 	}
