@@ -119,6 +119,8 @@ class HScript extends Script {
             btn.scrollFactor.set();
 
 			var vpCam:Dynamic = interp.variables.get("touchCam");
+			var vpad:Dynamic = interp.variables.get("virtualPad");
+			
 			if (vpCam == null) {
                 vpCam = new flixel.FlxCamera();
                 vpCam.bgColor = 0x00000000;
