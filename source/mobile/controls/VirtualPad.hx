@@ -33,21 +33,18 @@ class VirtualPad extends FlxSpriteGroup
 	public var buttonDown2:MobileButton;
 
 	public var virtualpadCamera:FlxCamera;
-
 	public static var touchingPad:Bool = false;
 
 	private inline static var B_W:Int = 132;
 	private inline static var B_H:Int = 135;
-
-	public var boundActions:Map<MobileButton, Array<String>> = new Map();
-
-	private var atlasFrames:FlxAtlasFrames;
 	
 	public static inline var HOLD_DELAY:Float = 0.15;
 	public static inline var HOLD_REPEAT:Float = 0.05;
 
+	public var boundActions:Map<MobileButton, Array<String>> = new Map();
 	private var holdTimers:Map<String, Float> = new Map();
 	private var holdActive:Map<String, Bool> = new Map();
+	private var atlasFrames:FlxAtlasFrames;
 
 	public var keyBinds:Map<String, FlxKey> = [
 		"up" => FlxKey.UP,
@@ -213,7 +210,6 @@ class VirtualPad extends FlxSpriteGroup
 	function resetButton(btn:MobileButton)
     {
 	    if (btn == null) return;
-
     	btn.justPressed = false;
     	btn.justReleased = false;
     	btn.pressed = false;
@@ -227,7 +223,6 @@ class VirtualPad extends FlxSpriteGroup
 		}
 
 		this.alpha = funkin.options.Options.virtualPadOpacity; 
-		
 		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
 
 		if (VirtualPad.lastUpdateFrame != FlxG.game.ticks) {
@@ -238,7 +233,6 @@ class VirtualPad extends FlxSpriteGroup
 		if (blockInput || inputBlockFrames > 0)
         {
         	if (inputBlockFrames > 0) inputBlockFrames--;
-
             for (btn in padButtons) resetButton(btn);
 
             if (!blockInput) {
@@ -313,7 +307,6 @@ class VirtualPad extends FlxSpriteGroup
 		}
 
 		VirtualPad.touchingPad = overlappingPad;
-
 		super.update(elapsed);
 	}
 	
