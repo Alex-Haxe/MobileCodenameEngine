@@ -138,9 +138,10 @@ class HScript extends Script {
                         return;
                     } 
 
+					var cam = (btn.cameras != null && btn.cameras.length > 0) ? btn.cameras[0] : flixel.FlxG.camera;
                     var isPressed = false;
 
-                    if (flixel.FlxG.mouse.pressed && flixel.FlxG.mouse.overlaps(btn, btn.camera)) {
+					if (flixel.FlxG.mouse.pressed && flixel.FlxG.mouse.overlaps(btn, cam)) {
                         isPressed = true;
                     }
 
@@ -159,13 +160,16 @@ class HScript extends Script {
                             } catch(e:Dynamic) {}
 
                             if (!isUsed) {
-                                if (btn.overlapsPoint(touch.getWorldPosition(btn.camera), true, btn.camera)) {
+                                var touchPos = touch.getWorldPosition(cam);
+                                if (btn.overlapsPoint(touchPos, true, cam)) {
                                     isPressed = true;
                                     try {
-                                        mobile.controls.VirtualPad.usedTouches.push(touch);
-                                    } catch(e:Dynamic) {}
-                                    break;
-                                }
+                                       mobile.controls.VirtualPad.usedTouches.push(touch);
+                                       } catch(e:Dynamic) {}
+                                       touchPos.put(); 
+                                           break;
+                                           }
+						    touchPos.put();							
                             }
                         }
                     }
