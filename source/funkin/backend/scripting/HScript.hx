@@ -118,29 +118,23 @@ class HScript extends Script {
             btn.updateHitbox();
             btn.scrollFactor.set();
 
-			var vpCam:Dynamic = null;
-            var vpad = interp.variables.get("virtualPad");
-			
-            if (vpad != null && vpad.exists) {
-                try { vpCam = vpad.virtualpadCamera; } catch(e:Dynamic) {}
-            }
+			var vpCam:Dynamic = interp.variables.get("touchCam");
+			if (vpCam == null) {
+                vpCam = new flixel.FlxCamera();
+                vpCam.bgColor = 0x00000000;
+                flixel.FlxG.cameras.add(vpCam, false);
+        
+                interp.variables.set("touchCam", vpCam);
+			}
 
-            if (vpCam == null) {
-                try { vpCam = flixel.FlxG.state.camHUD; } catch(e:Dynamic) {}
-            }
-			
-            if (vpCam == null) {
-                vpCam = flixel.FlxG.cameras.list[flixel.FlxG.cameras.list.length - 1];
-            }
-
-            try { btn.camera = vpCam; } catch(e:Dynamic) {}
+			try { btn.camera = vpCam; } catch(e:Dynamic) {}
             try { btn.cameras = [vpCam]; } catch(e:Dynamic) {}
     
             if (vpad != null && vpad.exists) {
                 vpad.add(btn);
             } else {
                 flixel.FlxG.state.add(btn);
-        	}
+	        }
 
             var key = flixel.input.keyboard.FlxKey.fromString(keyStr.toUpperCase());
             var wasPressed = false;
