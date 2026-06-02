@@ -118,12 +118,17 @@ class HScript extends Script {
             btn.updateHitbox();
             btn.scrollFactor.set();
 
+			var vpCam:Dynamic = flixel.FlxG.camera;
             var vpad = interp.variables.get("virtualPad");
               if (vpad != null && vpad.exists) {
-                btn.cameras = vpad.cameras;
+                try {
+                    vpCam = vpad.virtualpadCamera; 
+                } catch(e:Dynamic) {}
                 vpad.add(btn);
               } else {
-                btn.cameras = [flixel.FlxG.cameras.list[flixel.FlxG.cameras.list.length - 1]];
+                try {
+                    btn.cameras = [vpCam]; 
+                } catch(e:Dynamic) {}				  
                 flixel.FlxG.state.add(btn);
             }
 
@@ -137,11 +142,10 @@ class HScript extends Script {
                         flixel.FlxG.signals.preUpdate.remove(updateHook);
                         return;
                     } 
-
-					var cam = (btn.cameras != null && btn.cameras.length > 0) ? btn.cameras[0] : flixel.FlxG.camera;
+					
                     var isPressed = false;
 
-					if (flixel.FlxG.mouse.pressed && flixel.FlxG.mouse.overlaps(btn, cam)) {
+					if (flixel.FlxG.mouse.pressed && flixel.FlxG.mouse.overlaps(btn, vpCam)) {
                         isPressed = true;
                     }
 
@@ -160,8 +164,8 @@ class HScript extends Script {
                             } catch(e:Dynamic) {}
 
                             if (!isUsed) {
-                                var touchPos = touch.getWorldPosition(cam);
-                                if (btn.overlapsPoint(touchPos, true, cam)) {
+                                var touchPos = touch.getWorldPosition(vpCam);
+                                if (btn.overlapsPoint(touchPos, true, vpCam)) {
                                     isPressed = true;
                                     try {
                                        mobile.controls.VirtualPad.usedTouches.push(touch);
