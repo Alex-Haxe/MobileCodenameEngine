@@ -99,6 +99,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		bg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF000000);
 		bg.scrollFactor.set();
 		bg.alpha = 0;
+		bg.blockInput = true;
 		add(bg);
 
 		FlxTween.tween(bg, {alpha: 0.85}, 0.25, {ease: FlxEase.cubeOut});
@@ -116,6 +117,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
 		previewBox.setupCamera();
 		previewBox.cameras = [subCam];
+		previewBox.blockInput = true;
 		previewBox.forEachAlive(function(btn:FlxSprite) {
 			btn.cameras = [subCam];
 		});
@@ -125,10 +127,12 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		previewPad = new VirtualPad(FULL, NONE);
 		setupPadCamera(previewPad);
+		previewPad.blockInput = true;
 		add(previewPad);
 
 		previewDoublePad = new VirtualPad(DOUBLE, NONE);
 		setupPadCamera(previewDoublePad);
+		previewDoublePad.blockInput = true;
 		add(previewDoublePad);
 
 		customPad = new VirtualPad(CUSTOM, NONE);
@@ -328,6 +332,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox.visible = false;
 		previewBox.forEachAlive(function(btn:FlxSprite) {
 			btn.visible = false;
+			btn.alpha = 0.2;
 		});
 
 		setPadEnabled(previewPad, false);
@@ -340,17 +345,13 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				previewBox.visible = true;
 				previewBox.forEachAlive(function(btn:FlxSprite) {
 					btn.visible = true;
-					btn.alpha = 0.5;
 				});
 			case 'Dpad':
 				setPadEnabled(previewPad, true, 0.5);
-				previewPad.blockInput = true;
 			case 'Double Dpad':
 				setPadEnabled(previewDoublePad, true, 0.5);
-				previewDoublePad.blockInput = true;
 			case 'Custom':
 				setPadEnabled(customPad, true, 0.5);
-				customPad.blockInput = true;
 			case 'None':
 		}
 	}
