@@ -99,7 +99,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		bg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF000000);
 		bg.scrollFactor.set();
 		bg.alpha = 0;
-		bg.blockInput = true;
+		//bg.blockInput = true;
 		add(bg);
 
 		FlxTween.tween(bg, {alpha: 0.85}, 0.25, {ease: FlxEase.cubeOut});
