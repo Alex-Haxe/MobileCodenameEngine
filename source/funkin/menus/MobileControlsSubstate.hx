@@ -87,7 +87,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				if (pad == null) continue;
 				pad.visible = false;
 				pad.active = false;
-				pad.blockInput = true;
+				//pad.blockInput = true;
 				hiddenPads.push(pad);
 			}
 		}
@@ -117,7 +117,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
 		previewBox.setupCamera();
 		previewBox.cameras = [subCam];
-		previewBox.blockInput = true;
+        //previewBox.blockInput = true;
 		previewBox.forEachAlive(function(btn:FlxSprite) {
 			btn.cameras = [subCam];
 		});
@@ -127,22 +127,22 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 		previewPad = new VirtualPad(FULL, NONE);
 		setupPadCamera(previewPad);
-		previewPad.blockInput = true;
+		//previewPad.blockInput = true;
 		add(previewPad);
 
 		previewDoublePad = new VirtualPad(DOUBLE, NONE);
 		setupPadCamera(previewDoublePad);
-		previewDoublePad.blockInput = true;
+		//previewDoublePad.blockInput = true;
 		add(previewDoublePad);
 
 		customPad = new VirtualPad(CUSTOM, NONE);
 		setupPadCamera(customPad);
-		customPad.blockInput = true;
+		//customPad.blockInput = true;
 		add(customPad);
 
 		menuButtons = new VirtualPad(NONE, A_B);
 		setupPadCamera(menuButtons);
-		menuButtons.blockInput = false;
+		//menuButtons.blockInput = false;
 		add(menuButtons);
 
 		setPadEnabled(previewPad, false);
@@ -228,7 +228,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		setPadEnabled(previewDoublePad, false);
 		setPadEnabled(customPad, true, 1.0);
 
-		customPad.blockInput = false;
+		//customPad.blockInput = false;
 		loadCustomLayout();
 	}
 
