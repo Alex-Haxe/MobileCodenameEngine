@@ -134,6 +134,14 @@ jobs:
            --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
          find . -name "*.apk"
+
+      - name: Show AndroidManifest.xml
+        run: |
+         if [ -f AndroidManifest.xml ]; then
+           cat AndroidManifest.xml
+         else
+           echo "AndroidManifest.xml not found"
+         fi
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
