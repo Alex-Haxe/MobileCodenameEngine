@@ -265,9 +265,12 @@ final class CoolUtil
 
 		for (folder in folders) {
 			currentPath += folder + "/";
-			if (!FileSystem.exists(currentPath))
-				FileSystem.createDirectory(currentPath);
-		}
+			if (!FileSystem.exists(currentPath)) {
+				try {
+					FileSystem.createDirectory(currentPath);
+				} catch (e:Dynamic) {}
+			}
+		}		
 		#end
 		return path;
 	}
