@@ -54,7 +54,6 @@ The engine uses [HaxeFlixel](https://haxeflixel.com/) and it mainly features:
 > Codename Engine as for now supports **Windows x64**, **Mac OS x64** and **Linux x64**.<br>
 > More platforms will soon come, stay tuned!<br>
 > - [ ] **Web (HTML5) Support**
-> - [ ] **Mobile Support**
 
 <details>
   <summary><h2>How to download</h2></summary>

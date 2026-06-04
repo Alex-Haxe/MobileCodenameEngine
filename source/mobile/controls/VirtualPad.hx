@@ -252,6 +252,7 @@ class VirtualPad extends FlxSpriteGroup
 
 			var isPressed = false;
 
+
 			for (touch in FlxG.touches.list) {
 				if (touch.pressed && !VirtualPad.usedTouches.contains(touch)) { 
 					var point = touch.getWorldPosition(cam);
