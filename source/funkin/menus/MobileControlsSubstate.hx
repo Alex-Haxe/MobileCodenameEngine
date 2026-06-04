@@ -39,8 +39,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var hiddenPads:Array<VirtualPad> = [];
 	var parentDisabler:FunkinParentDisabler;
 
-	var leftArrow:FlxSprite;
-	var rightArrow:FlxSprite;
+	var leftArrow:Alphabet;
+	var rightArrow:Alphabet;
 
 	public function new()
 	{
@@ -120,13 +120,13 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		modeText.cameras = [subCam];
 		add(modeText);
 
-		leftArrow = new FlxSprite(20, FlxG.height / 2 - 30);
-		leftArrow.makeGraphic(60, 60, 0xFF00FF00);
+		leftArrow = new Alphabet(0, 40, "<", true);
+		leftArrow.isMenuItem = false;
 		leftArrow.cameras = [subCam];
 		add(leftArrow);
 
-		rightArrow = new FlxSprite(FlxG.width - 80, FlxG.height / 2 - 30);
-		rightArrow.makeGraphic(60, 60, 0xFF00FF00);
+		rightArrow = new Alphabet(0, 40, ">", true);
+		rightArrow.isMenuItem = false;
 		rightArrow.cameras = [subCam];
 		add(rightArrow);
 
@@ -183,16 +183,16 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 				var pos = touch.getWorldPosition(subCam);
 				
-				if (pos.x >= leftArrow.x && pos.x <= leftArrow.x + leftArrow.width &&
-					pos.y >= leftArrow.y && pos.y <= leftArrow.y + leftArrow.height)
+				if (pos.x >= leftArrow.x - 30 && pos.x <= leftArrow.x + leftArrow.width + 30 &&
+					pos.y >= leftArrow.y - 30 && pos.y <= leftArrow.y + leftArrow.height + 30)
 				{
 					changeSelection(-1);
 					pos.put();
 					return;
 				}
 				
-				if (pos.x >= rightArrow.x && pos.x <= rightArrow.x + rightArrow.width &&
-					pos.y >= rightArrow.y && pos.y <= rightArrow.y + rightArrow.height)
+				if (pos.x >= rightArrow.x - 30 && pos.x <= rightArrow.x + rightArrow.width + 30 &&
+					pos.y >= rightArrow.y - 30 && pos.y <= rightArrow.y + rightArrow.height + 30)
 				{
 					changeSelection(1);
 					pos.put();
@@ -205,17 +205,21 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			if (controls.LEFT_P) changeSelection(-1);
 			else if (controls.RIGHT_P) changeSelection(1);
 
-			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed))
+			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed)) 
+			{
 				VirtualPad.inputBlockFrames = 2;
-                FlxG.mouse.reset();
-                FlxG.touches.reset();
+				FlxG.mouse.reset();
+				FlxG.touches.reset();
 				acceptSelection();
+			}
 
-			if (controls.BACK || (menuButtons.buttonB != null && menuButtons.buttonB.justPressed))
+			if (controls.BACK || (menuButtons.buttonB != null && menuButtons.buttonB.justPressed)) 
+			{
 				VirtualPad.inputBlockFrames = 2;
-                FlxG.mouse.reset();
-                FlxG.touches.reset();
+				FlxG.mouse.reset();
+				FlxG.touches.reset();
 				close();
+			}
 		}
 		else
 		{
@@ -233,6 +237,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 				bindButton = null;
 				isDragging = false;
 				modeText.visible = true;
+				leftArrow.visible = true;
+				rightArrow.visible = true;
 				updatePreview();
 			}
 		}
@@ -248,6 +254,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	{
 		isCustomizing = true;
 		modeText.visible = false;
+		leftArrow.visible = false;
+		rightArrow.visible = false;
 		previewBox.visible = false;
 
 		setPadEnabled(previewPad, false);
@@ -351,8 +359,15 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		curSelected = FlxMath.wrap(curSelected + change, 0, options.length - 1);
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		modeText.text = "< " + options[curSelected] + " >";
+		modeText.text = options[curSelected];
 		modeText.screenCenter(X);
+
+		leftArrow.x = modeText.x - leftArrow.width - 20;
+		leftArrow.y = modeText.y;
+
+		rightArrow.x = modeText.x + modeText.width + 20;
+		rightArrow.y = modeText.y;
+
 		updatePreview();
 	}
 
