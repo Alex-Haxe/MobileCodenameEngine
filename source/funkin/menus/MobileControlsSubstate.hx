@@ -206,9 +206,15 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			else if (controls.RIGHT_P) changeSelection(1);
 
 			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed))
+				VirtualPad.inputBlockFrames = 2;
+                FlxG.mouse.reset();
+                FlxG.touches.reset();
 				acceptSelection();
 
 			if (controls.BACK || (menuButtons.buttonB != null && menuButtons.buttonB.justPressed))
+				VirtualPad.inputBlockFrames = 2;
+                FlxG.mouse.reset();
+                FlxG.touches.reset();
 				close();
 		}
 		else
