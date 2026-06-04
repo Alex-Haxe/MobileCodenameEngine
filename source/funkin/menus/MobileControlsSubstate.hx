@@ -141,14 +141,17 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		add(previewBox);
 
 		previewPad = new VirtualPad(FULL, NONE);
+		previewPad.blockInput = true;
 		setupPadCamera(previewPad);
 		add(previewPad);
 
 		previewDoublePad = new VirtualPad(DOUBLE, NONE);
+		previewDoublePad.blockInput = true;
 		setupPadCamera(previewDoublePad);
 		add(previewDoublePad);
 
 		customPad = new VirtualPad(CUSTOM, NONE);
+		customPad.blockInput = true;
 		setupPadCamera(customPad);
 		add(customPad);
 
@@ -349,6 +352,9 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		Options.mobilecontrols = options[curSelected];
 		FlxG.save.data.mobileControlsMode = options[curSelected];
 		FlxG.save.flush();
+		VirtualPad.inputBlockFrames = 2;
+		FlxG.mouse.reset();
+		FlxG.touches.reset();
 		close();
 	}
 
