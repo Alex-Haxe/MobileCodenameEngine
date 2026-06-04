@@ -11,17 +11,21 @@ class MobileTrace
 	public static var enabled:Bool = false;
 
 	public static function init()
-	{
-		text = new FlxText(10, 10, FlxG.width - 20, "");
-		text.setFormat(null, 16, FlxColor.YELLOW);
-		text.scrollFactor.set();
-		text.alpha = 0.7;
-		text.borderSize = 1;
-		text.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+    {
+	    if (FlxG.state == null) return;
 
-		FlxG.state.add(text);
-	}
+    	text = new FlxText(10, 10, FlxG.width - 20, "");
+    	text.setFormat(null, 16, FlxColor.YELLOW);
+     	text.scrollFactor.set();
+     	text.alpha = 0.7;
+     	text.borderSize = 1;
+  
+    	var cam = FlxG.cameras.list.length > 0 ? FlxG.cameras.list[FlxG.cameras.list.length - 1] : FlxG.camera;
+     	text.cameras = [cam];
 
+	    FlxG.state.add(text);
+    }
+ 
 	public static function log(msg:Dynamic, ?color:FlxColor)
 	{
 		if (!enabled) return;
