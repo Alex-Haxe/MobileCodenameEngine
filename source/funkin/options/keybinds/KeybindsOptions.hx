@@ -2,10 +2,18 @@ package funkin.options.keybinds;
 
 import flixel.util.FlxColor;
 import haxe.xml.Access;
+#if mobile
+import mobile.controls.VirtualPad;
+import mobile.controls.FlxButton;
+#end
 using StringTools;
 
 
 class KeybindsOptions extends MusicBeatSubstate {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
+	
 	public static var instance:KeybindsOptions;
 
 	public function translate(id:String, ?args:Array<Dynamic>)
@@ -223,6 +231,11 @@ class KeybindsOptions extends MusicBeatSubstate {
 		FlxG.sound.volumeUpKeys = [];
 		FlxG.sound.volumeDownKeys = [];
 		FlxG.sound.muteKeys = [];
+
+		#if mobile
+        virtualPad = new VirtualPad(FULL, A_B);
+        add(virtualPad);
+        #end
 	}
 
 	public override function destroy() {
