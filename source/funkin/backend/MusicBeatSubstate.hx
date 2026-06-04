@@ -14,6 +14,7 @@ import funkin.options.PlayerSettings;
 #if mobile
 import mobile.controls.VirtualPad;
 import mobile.controls.FlxButton;
+import flixel.input.keyboard.FlxKeyboard;
 #end
 
 /**
@@ -168,6 +169,11 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 	override function close() {
 		var event = event("onClose", new CancellableEvent());
 		if (!event.cancelled) {
+			VirtualPad.inputBlockFrames = 2;
+
+            FlxG.mouse.reset();
+            FlxG.touches.reset();
+			
 			super.close();
 			call("onClosePost");
 		}
@@ -238,25 +244,28 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 	/**
 	 * SCRIPTING STUFF
 	 */
-	public override function openSubState(subState:FlxSubState) {
-		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
-		if (!e.cancelled)
-			super.openSubState(e.substate is FlxSubState ? cast e.substate : subState);
-	}
+	public override function openSubState(subState:FlxSubState)
+    { 
+	    var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
 
-	public override function closeSubState() {
-		var e = event("onCloseSubState", EventManager.get(StateEvent).recycle(subState));
-		if (!e.cancelled)
-			super.closeSubState();
+	    if (!e.cancelled)
+	    {
+    		super.openSubState(e.substate is FlxSubState ? cast e.substate : subState);
+    	}
+    }
 
-	    #if mobile
-		if (virtualPad != null) {
-		    remove(virtualPad);
-		    virtualPad.destroy();
-	        virtualPad = null;
-        }
-        #end
-	}
+	public override function closeSubState()
+    {
+	    var e = event("onCloseSubState", EventManager.get(StateEvent).recycle(subState));
+
+	    if (!e.cancelled)
+	    {
+			#if mobile
+			FlxKeyboard.blockInputThisFrame = true;
+			#end
+		    super.closeSubState();
+    	}
+    }
 
 	public override function onResize(w:Int, h:Int) {
 		super.onResize(w, h);

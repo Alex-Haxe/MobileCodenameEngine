@@ -57,8 +57,8 @@ class Flags {
 
 	@:lazy public static var VERSION_MESSAGE:String = 'Codename Engine v$VERSION';
 
-	public static var REPO_NAME:String = "ChanceXML";
-	public static var REPO_OWNER:String = "MobileCodenameEngine";
+	public static var REPO_NAME:String = "MobileCodenameEngine";
+	public static var REPO_OWNER:String = "ChanceXML";
 	public static var REPO_URL:String = 'https://github.com/$REPO_OWNER/$REPO_NAME';
 
 	/**

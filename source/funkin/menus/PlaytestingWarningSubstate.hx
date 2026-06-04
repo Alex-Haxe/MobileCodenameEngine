@@ -14,7 +14,7 @@ import mobile.controls.FlxButton;
 class PlaytestingWarningSubstate extends MusicBeatSubstate
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 	
 	var titleAlphabet:Alphabet;

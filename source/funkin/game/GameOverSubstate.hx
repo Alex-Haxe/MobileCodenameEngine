@@ -20,7 +20,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var character:Character;
 
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 
 	public var characterName:String;

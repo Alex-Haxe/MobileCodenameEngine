@@ -20,6 +20,10 @@ class HScript extends Script {
 	public var parser:Parser;
 	public var expr:Expr;
 	public var code:String = null;
+
+	public static var currentScript:String = "";
+    public static var currentFunction:String = "";
+    public static var callLog:Array<String> = [];
 	//public var folderlessPath:String;
 	var __importedPaths:Array<String>;
 
@@ -64,107 +68,161 @@ class HScript extends Script {
 		#end
 
 		interp.variables.set("addCustomButton", function(x:Float, y:Float, assetPath:String, keyStr:String, animName:String = "", playOnlyWhenPressed:Dynamic = "true", size:Dynamic = 1.0) {
-
-            var vpad = interp.variables.get("virtualPad");
-            if (vpad == null) {
-                    trace("ERROR: virtualPad is null!");
-                    return null;
+             var btn:Dynamic = null;
+             try {
+                btn = new mobile.controls.MobileButton(x, y);
+                } catch(e:Dynamic) {
+                btn = new flixel.FlxSprite(x, y);
             }
-
-            var btn = new flixel.FlxSprite(x, y);
+    
             var hasXML = false;
-
             var onlyOnPress:Bool = (Std.string(playOnlyWhenPressed).toLowerCase() != "false");
 
             try {
-                    var atlas = Paths.getSparrowAtlas(assetPath);
-                    if (atlas != null && atlas.frames != null) {
-                            btn.frames = atlas;
-                            hasXML = true;
+                var atlas = Paths.getSparrowAtlas(assetPath);
+                if (atlas != null && atlas.frames != null) {
+                    btn.frames = atlas;
+                    hasXML = true;
 
                     if (animName != "") {
-                            btn.animation.addByPrefix(animName, animName, 24, !onlyOnPress);
-
-                            if (btn.animation.getByName("normal") == null) {
-                                    btn.animation.addByPrefix("normal", "normal", 24, false);
-                            }
-
-                            btn.animation.play(onlyOnPress ? "normal" : animName);
+                        btn.animation.addByPrefix(animName, animName, 24, !onlyOnPress);
+                        if (btn.animation.getByName("normal") == null) btn.animation.addByPrefix("normal", "normal", 24, false);
+                        btn.animation.play(onlyOnPress ? "normal" : animName);
                     } else {
-                            btn.animation.addByPrefix("normal", "normal", 24, false);
-                            btn.animation.addByPrefix("pressed", "pressed", 24, false);
+                        btn.animation.addByPrefix("normal", "normal", 24, false);
+                        btn.animation.addByPrefix("pressed", "pressed", 24, false);
 
-                            if (btn.animation.getByName("normal") == null) btn.animation.addByPrefix("normal", assetPath + " normal", 24, false);
-                            if (btn.animation.getByName("pressed") == null) btn.animation.addByPrefix("pressed", assetPath + " pressed", 24, false);
-
-                            btn.animation.play("normal");
+                        if (btn.animation.getByName("normal") == null) btn.animation.addByPrefix("normal", assetPath + " normal", 24, false);
+                        if (btn.animation.getByName("pressed") == null) btn.animation.addByPrefix("pressed", assetPath + " pressed", 24, false);
+                        btn.animation.play("normal");
                     }
                 }
-           } catch(e:Dynamic) {}
+            } catch(e:Dynamic) {}
 
-           if (!hasXML) {
+            if (!hasXML) {
                 try {
-                        var graphic = Paths.image(assetPath);
-                        if (graphic != null) {
-                                btn.loadGraphic(graphic);
-                        } else {
-                                trace("ERROR: Could not load graphic: " + assetPath);
-                                return null;
-                        }
-                } catch(e:Dynamic) {
-                        return null;
+                var graphic = Paths.image(assetPath);
+                if (graphic != null) {
+                    btn.loadGraphic(graphic);
+                    } else {
+                         return null;
+                    }
+                  } catch(e:Dynamic) {
+                 return null;
                 }
             }
 
             var scaleAmt:Float = Std.parseFloat(Std.string(size));
             if (Math.isNaN(scaleAmt)) scaleAmt = 1.0;
-
             btn.scale.set(scaleAmt, scaleAmt);
             btn.updateHitbox();
             btn.scrollFactor.set();
-            btn.cameras = vpad.cameras;
+
+			var vpCam:Dynamic = interp.variables.get("touchCam");
+			var vpad:Dynamic = interp.variables.get("virtualPad");
+			
+			if (vpCam == null) {
+                vpCam = new flixel.FlxCamera();
+                vpCam.bgColor = 0x00000000;
+                flixel.FlxG.cameras.add(vpCam, false);
+        
+                interp.variables.set("touchCam", vpCam);
+			}
+
+			try { btn.camera = vpCam; } catch(e:Dynamic) {}
+            try { btn.cameras = [vpCam]; } catch(e:Dynamic) {}
+    
+            if (vpad != null && vpad.exists) {
+                vpad.add(btn);
+            } else {
+                flixel.FlxG.state.add(btn);
+	        }
 
             var key = flixel.input.keyboard.FlxKey.fromString(keyStr.toUpperCase());
-            vpad.add(btn);
-  
+            var wasPressed = false;
+
             var updateHook:Void->Void = null;
-            updateHook = function() {
+              updateHook = function() {
+                try {
+                    if (btn == null || !btn.exists || !btn.visible) {
+                        flixel.FlxG.signals.preUpdate.remove(updateHook);
+                        return;
+                    } 
+					
+                    var isPressed = false;
+
+					if (flixel.FlxG.mouse.pressed && flixel.FlxG.mouse.overlaps(btn, vpCam)) {
+                        isPressed = true;
+                    }
+
                     try {
-                        if (btn == null || !btn.exists || vpad == null || !vpad.exists) {
-                                flixel.FlxG.signals.preUpdate.remove(updateHook);
-                                return;
+                        if (mobile.controls.VirtualPad.lastUpdateFrame != flixel.FlxG.game.ticks) {
+                            mobile.controls.VirtualPad.usedTouches = [];
+                            mobile.controls.VirtualPad.lastUpdateFrame = flixel.FlxG.game.ticks;
                         }
+                    } catch(e:Dynamic) {}
 
-                        var pressed = flixel.FlxG.mouse.overlaps(btn) && flixel.FlxG.mouse.pressed;
+                    for (touch in flixel.FlxG.touches.list) {
+                        if (touch.pressed) {
+                            var isUsed = false;
+                            try {
+                                if (mobile.controls.VirtualPad.usedTouches.contains(touch)) isUsed = true;
+                            } catch(e:Dynamic) {}
 
-                        if (hasXML) {
-                                if (animName != "") {
-                                        if (onlyOnPress) {
-                                                if (pressed) {
-                                                        btn.animation.play(animName, false);
-                                                } else {
-                                                        if (btn.animation.getByName("normal") != null) {
-                                                                btn.animation.play("normal");
-                                                        } else {
-                                                                if (btn.animation.curAnim != null) btn.animation.curAnim.curFrame = 0;
-                                                        }
-                                                }
-                                        }
-                                } else {
-                                        if (pressed) btn.animation.play("pressed");
-                                        else btn.animation.play("normal");
-                                }
+                            if (!isUsed) {
+                                var touchPos = touch.getWorldPosition(vpCam);
+                                if (btn.overlapsPoint(touchPos, true, vpCam)) {
+                                    isPressed = true;
+                                    try {
+                                       mobile.controls.VirtualPad.usedTouches.push(touch);
+                                       } catch(e:Dynamic) {}
+                                       touchPos.put(); 
+                                           break;
+                                           }
+						    touchPos.put();							
+                            }
                         }
+                    }
 
-                        @:privateAccess vpad.updateButtonKey(btn, key, "custom_" + assetPath, flixel.FlxG.elapsed);
+                    try {
+                        btn.justPressed = isPressed && !wasPressed;
+                        btn.justReleased = !isPressed && wasPressed;
+                        btn.pressed = isPressed;
+                    } catch(e:Dynamic) {}
+ 
+                    if (hasXML) {
+                        if (animName != "") {
+                            if (onlyOnPress) {
+                                if (isPressed) btn.animation.play(animName, false);
+                                else if (btn.animation.getByName("normal") != null) btn.animation.play("normal");
+                                else if (btn.animation.curAnim != null) btn.animation.curAnim.curFrame = 0;
+                            }
+                        } else {
+                            if (isPressed) btn.animation.play("pressed");
+                            else btn.animation.play("normal");
+                        }
+                    }
+
+                    if (key != flixel.input.keyboard.FlxKey.NONE) {
+                        var justPressed = isPressed && !wasPressed;
+                        var justReleased = !isPressed && wasPressed;
+
+                        @:privateAccess {
+                            if (justPressed) flixel.FlxG.keys._keyListMap[key].current = JUST_PRESSED;
+                            else if (justReleased) flixel.FlxG.keys._keyListMap[key].current = JUST_RELEASED;
+                            else if (isPressed && flixel.FlxG.keys._keyListMap[key].current == JUST_PRESSED) flixel.FlxG.keys._keyListMap[key].current = PRESSED;
+                            else if (!isPressed && flixel.FlxG.keys._keyListMap[key].current == JUST_RELEASED) flixel.FlxG.keys._keyListMap[key].current = RELEASED;
+                        } 
+                    }
+
+                    wasPressed = isPressed;
 
                 } catch(e:Dynamic) {
-                        flixel.FlxG.signals.preUpdate.remove(updateHook);
+                    flixel.FlxG.signals.preUpdate.remove(updateHook);
                 }
             };
 
             flixel.FlxG.signals.preUpdate.add(updateHook);
-
             return btn;
         });
 		
@@ -319,16 +377,25 @@ class HScript extends Script {
 	}
 
 	private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
-		if (interp == null) return null;
-		if (!interp.variables.exists(funcName)) return null;
+        if (interp == null) return null;
+        if (!interp.variables.exists(funcName)) return null;
 
-		var func = interp.variables.get(funcName);
-		if (func != null && Reflect.isFunction(func))
-			return Reflect.callMethod(null, func, parameters);
+        currentScript = fileName;
+        currentFunction = funcName;
 
-		return null;
+        callLog.push(fileName + " -> " + funcName);
+
+        while (callLog.length > 25)
+            callLog.shift();
+
+        var func = interp.variables.get(funcName);
+
+        if (func != null && Reflect.isFunction(func)) {
+            var result = Reflect.callMethod(null, func, parameters);
+            return result;
+        }
+        return null;
 	}
-
 	public override function get(val:String):Dynamic {
 		return interp.variables.get(val);
 	}

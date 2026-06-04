@@ -38,7 +38,9 @@ import haxe.io.Path;
 
 #if mobile
 import mobile.controls.PauseButton;
+import funkin.menus.MobileControlsSubstate;
 import mobile.controls.HitBox;
+import mobile.controls.VirtualPad;
 import flixel.input.keyboard.FlxKey;
 import funkin.options.Options;
 #end
@@ -58,6 +60,7 @@ class PlayState extends MusicBeatState
      * Mobile Hitbox.
      */
 	#if mobile
+    public var virtualPad:VirtualPad;
 	public var hitbox:HitBox;
 	#end
 
@@ -939,10 +942,7 @@ class PlayState extends MusicBeatState
 				FlxG.sound.load(Paths.sound(s));
 			
         #if mobile
-		// hitbox.
-		hitbox = new HitBox(Options.hitboxStyle, Options.hintStyle);
-        add(hitbox);
-        hitbox.setupCamera();
+		addMobileControls();
         // pausebutton.
 		var androidPause = new mobile.controls.Pause();
         add(androidPause);
@@ -1054,6 +1054,36 @@ class PlayState extends MusicBeatState
 		}
 		gameAndCharsCall("onPostStartCountdown");
 	}
+
+    #if mobile
+	function addMobileControls()
+	{
+		var controlMode:String = Options.mobilecontrols;
+		if (controlMode == null) controlMode = 'Hitbox';
+
+		switch (controlMode)
+		{
+			case 'Hitbox':
+				hitbox = new HitBox(Options.hitboxStyle, Options.hintStyle);
+                add(hitbox);
+                hitbox.setupCamera();
+
+			case 'Dpad':
+				virtualPad = new VirtualPad(FULL, NONE); 
+				add(virtualPad);
+
+			case 'Double Dpad':
+				virtualPad = new VirtualPad(DOUBLE, NONE);
+				add(virtualPad);
+
+			case 'Custom':
+				virtualPad = new VirtualPad(CUSTOM, NONE);
+				add(virtualPad);
+
+			case 'None':
+		}
+	}
+	#end
 
 	/**
 	 * Creates a fake countdown.
