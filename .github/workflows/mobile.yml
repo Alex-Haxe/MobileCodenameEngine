@@ -137,8 +137,8 @@ jobs:
 
       - name: debug
         run: |
-         find . -name "AndroidManifest.xml"
-         cat android/app/src/main/AndroidManifest.xml
+         #find . -name "AndroidManifest.xml"
+         cat export/release/android/bin/app/src/main/AndroidManifest.xml
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
