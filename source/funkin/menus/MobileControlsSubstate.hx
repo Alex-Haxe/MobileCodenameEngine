@@ -37,7 +37,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var isDragging:Bool = false;
 
 	var hiddenPads:Array<VirtualPad> = [];
-	var parentDisabler:FunkinParentDisabler;
+	var oldParentUpdate:Bool = false;
 
 	var leftArrow:Alphabet;
 	var rightArrow:Alphabet;
@@ -87,7 +87,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		FlxG.mouse.reset();
 		FlxG.touches.reset();
 
-		add(parentDisabler = new FunkinParentDisabler());
+		if (_parentState != null) {
+			oldParentUpdate = _parentState.persistentUpdate;
+			_parentState.persistentUpdate = false;
+		}
 
 		if (VirtualPad.activePads != null) {
 			for (pad in VirtualPad.activePads.copy())
@@ -425,6 +428,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		if (FlxG.cameras.list.contains(subCam))
 			FlxG.cameras.remove(subCam, true);
 
+		if (_parentState != null) {
+			_parentState.persistentUpdate = oldParentUpdate;
+		}
+		
 		super.destroy();
 	}
 }
