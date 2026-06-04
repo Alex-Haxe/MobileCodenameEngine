@@ -13,7 +13,7 @@ class MobileTrace
 	public static function init()
 	{
 		text = new FlxText(10, 10, FlxG.width - 20, "");
-		text.setFormat(null, 16, FlxColor.YELLOW);
+		text.setFormat(null, 16, FlxColor.GREEN); // doing green because its easy to see
 		text.scrollFactor.set();
 		text.alpha = 0.7;
 		text.borderSize = 1;
