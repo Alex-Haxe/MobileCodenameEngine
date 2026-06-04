@@ -135,13 +135,10 @@ jobs:
            -clean ${{ github.event.inputs.android_flags }}
          find . -name "*.apk"
 
-      - name: Show AndroidManifest.xml
+      - name: debug
         run: |
-         if [ -f AndroidManifest.xml ]; then
-           cat AndroidManifest.xml
-         else
-           echo "AndroidManifest.xml not found"
-         fi
+         find . -name "AndroidManifest.xml"
+         cat android/app/src/main/AndroidManifest.xml
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
