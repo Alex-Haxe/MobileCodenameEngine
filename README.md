@@ -1,7 +1,14 @@
 # Friday Night Funkin' - Codename Engine Mobile
+---
+> [!WARNING]
+> IOS may be buggy. if its bugging out then go to the [issues](https://github.com/ChanceXML/MobileCodenameEngine/issues) tab.
 
 > [!NOTE]
-> IOS may be buggy. if its bugging out then go to the [issues](https://github.com/ChanceXML/MobileCodenameEngine/issues) tab.
+> THESE ARE EXPERIMENTAL BUILDS. IF U WANT STABLE BUILDS GO HERE
+>
+> [Codename v1.0.1:](https://github.com/ChanceXML/codename-v1.0.1)
+>
+> Codename v0.1.0: [IN DEVELOPMENT]
 
 ---
 ![Animated-Banner](https://github.com/user-attachments/assets/5830221d-d954-4be3-afe8-caae364a5881)
