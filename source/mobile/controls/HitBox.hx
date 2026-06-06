@@ -70,36 +70,35 @@ class HitBox extends FlxSpriteGroup {
             btn.scrollFactor.set(0, 0);
         }
     }
-
+    // testing!
     private function applyGradientSafe(buttons:Array<HitboxButton>, width:Int, height:Int, isHint:Bool):Void {
-        var path:String = isHint 
-            ? 'game/hitbox/hint/hintgradient'
-            : 'game/hitbox/gradient';
-
-        var frames = Paths.getSparrowAtlas(path);
-
-        if (frames == null) {
-            trace("FAILED TO LOAD GRADIENT: " + path);
-            return;
-        }
-
-        var names:Array<String> = ["left", "down", "up", "right"];
-        var colors:Array<FlxColor> = [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F];
+        var colors:Array<Int> = [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F];
 
         for (i in 0...buttons.length) {
             var btn = buttons[i];
+            var shape = new Shape();
 
-            btn.makeGraphic(1, 1, FlxColor.TRANSPARENT);
+            shape.graphics.lineStyle(2, colors[i], 0.6);
+            shape.graphics.drawRect(0, 0, width, height);
 
-            btn.frames = frames;
-            btn.animation.addByPrefix('idle', names[i], 24, false);
-            btn.animation.play('idle', true);
-            
-            btn.color = colors[i];
+            shape.graphics.beginFill(colors[i], 0.08);
+            shape.graphics.drawRect(1, 1, width - 2, height - 2);
+            shape.graphics.endFill();
 
-            btn.setGraphicSize(width, height);
+            var glowMatrix = new Matrix();
+                glowMatrix.createGradientBox(width * 3, width * 3, 0, -width * 1.5, -width * 1.5);
+
+            shape.graphics.beginGradientFill(GradientType.RADIAL, [colors[i], 0x00000000], [0.7, 0], [0, 255], glowMatrix, SpreadMethod.PAD, InterpolationMethod.RGB);
+
+            shape.graphics.drawRect(1, 1, width - 2, height - 2);
+            shape.graphics.endFill();
+
+            var bitmap = new BitmapData(width, height, true, 0x00000000);
+            bitmap.draw(shape);
+
+            btn.pixels = bitmap;
             btn.updateHitbox();
-        }  
+        }
     }
     
     public function setupCamera():Void {
