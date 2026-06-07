@@ -6,9 +6,9 @@
 > [!NOTE]
 > THESE ARE EXPERIMENTAL BUILDS. IF U WANT STABLE BUILDS GO HERE
 >
-> [Codename v1.0.1:](https://github.com/ChanceXML/codename-v1.0.1)
+> [Codename v1.0.1:](https://github.com/ChanceXML/codename-v1.0.1) [ALMOST FINISHED/WORKING BUILD]
 >
-> Codename v0.1.0: [IN DEVELOPMENT]
+> [Codename v0.1.0:](https://github.com/ChanceXML/MobileCodenameEngine-Legacy) [STILL IN PROGRESS]
 
 ---
 ![Animated-Banner](https://github.com/user-attachments/assets/5830221d-d954-4be3-afe8-caae364a5881)
