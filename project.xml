@@ -239,14 +239,6 @@
 		<haxelib name="IOSTools" />
 		
 	    <set name="IPHONEOS_DEPLOYMENT_TARGET" value="12.0" />
-		
-		<section if="nosign">
-            <set name="CODE_SIGNING_REQUIRED" value="NO" />
-            <set name="CODE_SIGNING_ALLOWED" value="NO" />
-            <set name="CODE_SIGN_IDENTITY" value="" />
-            <set name="DEVELOPMENT_TEAM" value="" />
-            <set name="PROVISIONING_PROFILE_SPECIFIER" value="" />
-        </section>
 	</section>
 		
     <!-- Android Section -->
