@@ -1,15 +1,17 @@
 # Friday Night Funkin' - Codename Engine Mobile
 ---
-> [!WARNING]
-> IOS may be buggy. if its bugging out then go to the [issues](https://github.com/ChanceXML/MobileCodenameEngine/issues) tab.
+> [!CAUTION]
+> If u encounter any issues. Go [here](https://github.com/ChanceXML/MobileCodenameEngine/issues) and report them 
 
-> [!NOTE]
+> [!WARNING]
 > THESE ARE EXPERIMENTAL BUILDS. IF U WANT STABLE BUILDS GO HERE
 >
+> 
 > [Codename v1.0.1:](https://github.com/ChanceXML/codename-v1.0.1) [ALMOST FINISHED/WORKING BUILD]
 >
 > [Codename v0.1.0:](https://github.com/ChanceXML/MobileCodenameEngine-Legacy) [ALMOST FINISHED/WORKING BUILD]
 >
+
 > This Mobile Port Focuses On Being The Most User Friendly And Easiest To Use Port.
 > Like
 > - Easy To Use Chart Editor
