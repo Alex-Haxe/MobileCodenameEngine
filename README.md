@@ -9,6 +9,13 @@
 > [Codename v1.0.1:](https://github.com/ChanceXML/codename-v1.0.1) [ALMOST FINISHED/WORKING BUILD]
 >
 > [Codename v0.1.0:](https://github.com/ChanceXML/MobileCodenameEngine-Legacy) [STILL IN PROGRESS]
+>
+> This Mobile Port Focuses On Being The Most User Friendly And Easiest To Use Port.
+> Like
+> - Easy To Use Chart Editor
+> - Interactive Menus (not added yet)
+> - Custom Options (like middlescroll)
+> - And More. 
 
 ---
 ![Animated-Banner](https://github.com/user-attachments/assets/5830221d-d954-4be3-afe8-caae364a5881)
