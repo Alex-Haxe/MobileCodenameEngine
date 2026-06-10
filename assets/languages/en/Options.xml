@@ -28,7 +28,7 @@
 		<str id="optionsTree.debug-desc">Debug Options for Developer Mode.</str>
 
 		<str id="optionsTree.mobile-name">Mobile Options</str>
-        <str id="optionsTree.mobile-desc">Configure stuff related to mobile.</str>
+        <str id="optionsTree.mobile-desc">Change options related to mobile.</str>
 	</group>
 
 	<group name="KeybindOptions" prefix="KeybindsOptions.">
@@ -69,7 +69,7 @@
 	
     <group name="MobileOptions" prefix="MobileOptions">
 		<str id="mobilecontrols-name">Mobile Controls</str>
-		<str id="mobilecontrols-desc">Change the buttons that playstate will use to hit the notes.</str>
+		<str id="mobilecontrols-desc">Change the buttons that the gameplay is gonna use, hitbox is on by default.</str>
 		
    	    <str id="pauseButton-name">Pause Button</str>
 	    <str id="pauseButton-desc">If unchecked. the pause button will become invisible</str>
@@ -84,7 +84,7 @@
         <str id="hitboxStyle-desc">Changes the look of the hitbox.</str>
 	
         <str id="hintOpacity-name">Hint Opacity</str>
-        <str id="hintOpacity-desc">Changes the opacity of the hints. put on 0 if u dont want them.</str>
+        <str id="hintOpacity-desc">Pretty self explanatory, isn't it?</str>
     
         <str id="hitboxOpacity-name">Hitbox Opacity</str>
         <str id="hitboxOpacity-desc">Pretty self explanatory, isn't it?</str>
@@ -96,7 +96,7 @@
 		<str id="framerate-desc">Pretty self explanatory, isn't it?</str>
 		
 		<str id="fpsSize-name">Framerate Size</str>
-		<str id="fpsSize-name">Changes the size of the fps info depeding on the user's provided number.</str>
+		<str id="fpsSize-name">Changes the size of the framerate depending on the number.</str>
 
 		<str id="flashingMenu-name">Flashing Menu</str>
 		<str id="flashingMenu-desc">If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashes will be slower.</str>
@@ -133,13 +133,13 @@
 		<str id="downscroll-desc">If checked, notes will go from up to down instead of down to up, as if they're falling.</str>
     
 		<str id="middleScroll-name">Middlescroll</str>
-		<str id="middleScroll-desc">If checked, notes will go to the middle instead of the side.</str>
+		<str id="middleScroll-desc">If checked, notes will go to the middle.</str>
 	
 		<str id="ghostTapping-name">Ghost Tapping</str>
 		<str id="ghostTapping-desc">If unchecked, trying to hit any strum that have no note that can be hit will cause a miss.</str>
 
-		<str id="strumlineBackground-name">StrumLine Background</str>
-		<str id="strumlineBackground-desc">Changes the opacity of the Strumline Background.</str>
+		<str id="strumlineBackground-name">Strum Background</str>
+		<str id="strumlineBackground-desc">Changes the opacity of the Strum Background.</str>
 		
 		<str id="naughtyness-name">Naughtyness</str>
 		<str id="naughtyness-desc">If unchecked, will censor the Week 7 cutscenes or more.</str>
