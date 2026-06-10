@@ -75,3 +75,9 @@ import funkin.editors.charter.Charter;
 // OpenFL Imports
 import openfl.Lib;
 import openfl.Assets;
+import openfl.display.Shape;
+import openfl.display.GradientType;
+import openfl.display.SpreadMethod;
+import openfl.display.InterpolationMethod;
+import openfl.geom.Matrix;
+import openfl.display.BitmapData;
