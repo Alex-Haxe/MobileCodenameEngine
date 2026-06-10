@@ -26,6 +26,9 @@
 
 		<str id="optionsTree.debug-name">Opzioni di Debug</str>
 		<str id="optionsTree.debug-desc">Opzioni di Debug per la Modalità Sviluppatore.</str>
+
+		<str id="optionsTree.mobile-name">Opzioni mobili</str>
+        <str id="optionsTree.mobile-desc">Configurare elementi relativi al dispositivi mobili.</str>
 	</group>
 
 	<group name="KeybindOptions" prefix="KeybindsOptions.">
@@ -61,9 +64,37 @@
 		</group>
 	</group>
 
+	<group name="MobileOptions" prefix="MobileOptions">
+		<str id="mobilecontrols-name">Comandi mobili</str>
+		<str id="mobilecontrols-desc">Modifica i comandi utilizzati per il gioco. L'hitbox è attiva per impostazione predefinita.</str>
+		
+   	    <str id="pauseButton-name">Pulsante Pausa</str>
+	    <str id="pauseButton-desc">Se deselezionato, il pulsante diventerà invisibile.</str>
+
+		<str id="virtualPadOpacity-name">VirtualPad Opacità</str>
+		<str id="virtualPadOpacity-desc">È abbastanza autoesplicativo, non credi?</str>
+	
+        <str id="hintStyle-name">Hint Stile</str>
+        <str id="hintStyle-desc">Cambia l'aspetto di hint.</str>
+        
+        <str id="hitboxStyle-name">Hitbox Stile</str>
+        <str id="hitboxStyle-desc">Cambia l'aspetto di hitbox.</str>
+	
+        <str id="hintOpacity-name">Hint Opacità</str>
+        <str id="hintOpacity-desc">È abbastanza autoesplicativo, non credi?</str>
+    
+        <str id="hitboxOpacity-name">Hitbox Opacità</str>
+        <str id="hitboxOpacity-desc">È abbastanza autoesplicativo, non credi?</str
+
+	   <!-- <str id=" -->
+    </group>
+
 	<group name="AppearanceOptions" prefix="AppearanceOptions.">
 		<str id="framerate-name">Framerate</str>
 		<str id="framerate-desc">Non c'è proprio bisogno di una descrizione.</str>
+
+		<str id="fpsSize-name">Framerate Misurare</str>
+		<str id="fpsSize-name">Modifica la dimensione del framerate a seconda del numero.</str>
 
 		<str id="flashingMenu-name">Menu Flashing</str>
 		<str id="flashingMenu-desc">Se disattivato, disabiliterà le luci lampeggianti quando selezioni un'opzione nel Menu Principale, e le altre luci saranno più lente.</str>
@@ -97,6 +128,12 @@
 	<group name="GameplayOptions" prefix="GameplayOptions.">
 		<str id="downscroll-name">Downscroll</str>
 		<str id="downscroll-desc">Se attivato, le note andranno dall'alto al basso invece che dal basso all'alto, come se stessero cadendo.</str>
+
+		<str id="middleScroll-name">Middlescroll</str>
+		<str id="middleScroll-desc">Se attivato, le note andranno al centro.</str>
+
+		<str id="strumlineBackground-name">Strum Sfondo</str>
+		<str id="strumlineBackground-desc">Modifica l'opacità dello sfondo dello strimpellamento.</str>
 
 		<str id="ghostTapping-name">Ghost Tapping</str>
 		<str id="ghostTapping-desc">Se disattivato, cliccare una strum in assenza di una nota risulterà in un miss.</str>
