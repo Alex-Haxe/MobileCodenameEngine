@@ -11,7 +11,7 @@ using StringTools;
 
 class KeybindsOptions extends MusicBeatSubstate {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    //public var virtualPad:VirtualPad;
     #end
 	
 	public static var instance:KeybindsOptions;
