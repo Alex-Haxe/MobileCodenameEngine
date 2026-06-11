@@ -2,8 +2,8 @@ name: Mobile Build
 run-name: ${{ github.event.inputs.build_name }}
 
 on:
-  #push:
-    #branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
     
@@ -157,9 +157,9 @@ jobs:
         with:
           name: Android-Release
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
-
+  # only built if im doing a workflow run.
   buildiOS:
-    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
+    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || github.event_name != 'push'}}
     runs-on: macos-latest
 
     steps:
