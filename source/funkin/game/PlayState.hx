@@ -944,7 +944,7 @@ class PlayState extends MusicBeatState
         #if mobile
 		addMobileControls();
         // pausebutton.
-		var androidPause = new mobile.controls.Pause();
+		var androidPause = new mobile.ui.game.FunkinPause();
         add(androidPause);
         androidPause.setFunkinPause('true');
 		#end
