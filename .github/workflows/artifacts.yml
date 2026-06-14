@@ -1,38 +1,32 @@
-name: Cleanup Artifacts
+name: Replace Text
 
 on:
   workflow_dispatch:
+    inputs:
+      find_word:
+        description: 'Word to search for'
+        required: true
+        type: string
+      replace_word:
+        description: 'Word to replace with'
+        required: true
+        type: string
 
 jobs:
-  cleanup:
+  replace-text:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-
     steps:
-      - uses: actions/github-script@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Replace text in all files
+        run: |
+          echo "Searching for: ${{ github.event.inputs.find_word }}"
+          echo "Replacing with: ${{ github.event.inputs.replace_word }}"
+          
+          find . -type f -not -path '*/.*' -exec sed -i 's/${{ github.event.inputs.find_word }}/${{ github.event.inputs.replace_word }}/g' {} +
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          script: |
-            let page = 1;
-            while (true) {
-              const res = await github.rest.actions.listArtifactsForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                per_page: 100,
-                page
-              });
-
-              if (res.data.artifacts.length === 0) break;
-
-              for (const a of res.data.artifacts) {
-                await github.rest.actions.deleteArtifact({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  artifact_id: a.id
-                });
-                console.log(`Deleted: ${a.name}`);
-              }
-
-              page++;
-            }
-            
+          commit_message: "Changed: ${{ github.event.inputs.find_word }} to ${{ github.event.inputs.replace_word }}"
