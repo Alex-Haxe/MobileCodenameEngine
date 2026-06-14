@@ -43,7 +43,7 @@ on:
           
 jobs:
   buildAndroid:
-    if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' }}
+    if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event_name == 'push' }}
     runs-on: ubuntu-latest
 
     steps:
