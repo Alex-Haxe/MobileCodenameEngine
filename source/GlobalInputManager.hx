@@ -5,7 +5,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 import flixel.FlxBasic;
 import flixel.input.touch.FlxTouch;
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 //import mobile.controls.ui.BackButton;
 
 #if mobile
@@ -42,10 +42,10 @@ class GlobalInputManager extends FlxBasic {
             }
         }
         if (!isAnyFingerDown) {
-            VirtualPad.touchingPad = false;
+            FunkinPad.touchingPad = false;
         }
 
-        if (VirtualPad.touchingPad) {
+        if (FunkinPad.touchingPad) {
             isPressing = false;
             isDragging = false;
             trackedTouchID = -1;
