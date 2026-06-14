@@ -1,4 +1,4 @@
-package mobile.controls;
+package mobile.ui.menus;
 
 #if mobile
 class MobileButton extends FlxSprite 
@@ -8,7 +8,7 @@ class MobileButton extends FlxSprite
 	public var pressed:Bool = false;
 }
 
-class VirtualPad extends FlxSpriteGroup
+class FunkinPad extends FlxSpriteGroup
 {
 	public static var activePads:Array<VirtualPad> = [];
 	public static var inputBlockFrames:Int = 0;
