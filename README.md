@@ -15,7 +15,7 @@
 > This Mobile Port Focuses On Being The Most User Friendly And Easiest To Use Port.
 > Like
 > - Easy To Use Chart Editor
-> - Interactive Menus (not added yet)
+> - Interactive Menus (they are gonna be added when i have a fully working base)
 > - Custom Options (like middlescroll)
 > - And More. 
 
