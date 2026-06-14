@@ -20,7 +20,7 @@ on:
       ios_flags:
         description: Ios Flags
         required: false
-        default: -nosign
+        default: 
         
       platform:
         description: "Build platform"
@@ -127,18 +127,13 @@ jobs:
       - name: Build APK
         run: |
          haxelib run lime clean android
-         haxelib run lime build android -final -release \
+         haxelib run lime build android -DCOMPILE_EXPERIMENTAL -final -release \
            --certificate-path="keystore.jks" \
            --certificate-alias="${{ secrets.KEYSTORE_ALIAS }}" \
            --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
            --certificate-alias-password="${{ secrets.KEY_PASSWORD }}" \
            -clean ${{ github.event.inputs.android_flags }}
          find . -name "*.apk"
-
-      - name: debug
-        run: |
-         #find . -name "AndroidManifest.xml"
-         cat export/release/android/bin/app/src/main/AndroidManifest.xml
          
       - name: Save cache
         if: ${{ success() && (github.event.inputs.rebuild_cache != 'Yes' || github.event_name == 'push') }}
@@ -199,7 +194,7 @@ jobs:
       - name: Build iOS
         run: |
           #arch -x86_64 
-          haxelib run lime build ios ${{ github.event.inputs.ios_flags }}
+          haxelib run lime build ios -DCOMPILE_EXPERIMENTAL -nosign ${{ github.event.inputs.ios_flags }}
           find . -name "*.ipa"
            
       - name: Compile Xcode Project
