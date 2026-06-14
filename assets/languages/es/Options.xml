@@ -104,6 +104,9 @@
 	
         <str id="hintStyle-name">Estilo Del Hint</str>
         <str id="hintStyle-desc">Cambia el estilo del hint.</str>
+
+		<str id="fullHint-name">Hint Completo</str>
+		<str id="fullHint-desc">Si esta activado, el hint llenara toda la pantalla (solo si esta en normal y no en gradient).</str>
         
         <str id="hitboxStyle-name">Estilo Del Hitbox</str>
         <str id="hitboxStyle-desc">Cambia el estilo de la hitbox.</str>
