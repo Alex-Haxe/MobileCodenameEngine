@@ -16,7 +16,7 @@ import openfl.ui.MouseCursor;
 
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class UIState extends MusicBeatState {

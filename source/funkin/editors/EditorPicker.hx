@@ -4,7 +4,7 @@ import flixel.effects.FlxFlicker;
 import flixel.math.FlxPoint;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 import funkin.backend.MusicBeatState;
 #end
 class EditorPicker extends MusicBeatSubstate {

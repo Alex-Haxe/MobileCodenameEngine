@@ -22,7 +22,7 @@ import sys.io.File;
 
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class CharacterEditor extends UIState {

@@ -7,7 +7,7 @@ import funkin.options.categories.*;
 import funkin.options.type.*;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 //import mobile.controls.ui.BackButton;
 #end
 

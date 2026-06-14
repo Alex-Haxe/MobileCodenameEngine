@@ -11,7 +11,7 @@ import haxe.Json;
 
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 using StringTools;

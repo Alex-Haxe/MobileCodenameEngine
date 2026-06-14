@@ -12,7 +12,7 @@ import funkin.menus.FreeplayState;
 import funkin.menus.StoryMenuState;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 	
 class GameOverSubstate extends MusicBeatSubstate

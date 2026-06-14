@@ -4,7 +4,7 @@ import flixel.text.FlxTextBorderStyle;
 import flixel.util.FlxAxes;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 #if mobile

@@ -11,7 +11,7 @@ import funkin.options.type.OptionType;
 
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class CharacterSelection extends EditorTreeMenu {

@@ -9,7 +9,7 @@ import funkin.options.type.*;
 import haxe.xml.Access;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class CreditsMain extends TreeMenu {

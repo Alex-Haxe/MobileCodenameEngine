@@ -19,7 +19,7 @@ import lime.ui.MouseCursor;
 import openfl.ui.Mouse;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 using funkin.backend.utils.MatrixUtil;

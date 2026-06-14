@@ -26,7 +26,7 @@ import sys.FileSystem;
 
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 import flixel.util.FlxColor;

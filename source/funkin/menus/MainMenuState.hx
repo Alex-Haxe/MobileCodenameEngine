@@ -11,7 +11,7 @@ import funkin.options.OptionsMenu;
 import lime.app.Application;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 using StringTools;

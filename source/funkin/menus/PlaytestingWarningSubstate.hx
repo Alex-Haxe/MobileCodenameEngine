@@ -8,7 +8,7 @@ import funkin.backend.FunkinText;
 import funkin.editors.ui.UIWarningSubstate.WarningButton;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class PlaytestingWarningSubstate extends MusicBeatSubstate

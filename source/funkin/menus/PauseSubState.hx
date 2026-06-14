@@ -17,7 +17,7 @@ import funkin.options.OptionsMenu;
 import funkin.options.keybinds.KeybindsOptions;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 
 class PauseSubState extends MusicBeatSubstate

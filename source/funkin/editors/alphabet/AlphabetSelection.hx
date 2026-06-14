@@ -9,7 +9,7 @@ import funkin.options.type.TextOption;
 import funkin.options.type.OptionType;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 	
 class AlphabetSelection extends EditorTreeMenu {

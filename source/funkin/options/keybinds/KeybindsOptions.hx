@@ -4,7 +4,7 @@ import flixel.util.FlxColor;
 import haxe.xml.Access;
 #if mobile
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FlxButton;
+import mobile.ui.FunkinButton;
 #end
 using StringTools;
 

@@ -8,7 +8,7 @@ import funkin.options.PlayerSettings;
 import funkin.options.type.GithubIconOption;
 #if mobile
 //import mobile.ui.menus.FunkinPad;
-//import mobile.controls.FlxButton;
+//import mobile.ui.FunkinButton;
 #end
 
 using StringTools;
