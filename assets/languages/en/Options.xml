@@ -76,7 +76,10 @@
 
 		<str id="virtualPadOpacity-name">VirtualPad Opacity</str>
 		<str id="virtualPadOpacity-desc">Pretty self explanatory, isn't it?</str>
-	
+
+		<str id="fullHint-name">Full Hint</str>
+		<str id="fullHint-desc">If checked, the hint will cover the full screen. (only for the normal variation).</str>
+		
         <str id="hintStyle-name">Hint Style</str>
         <str id="hintStyle-desc">Changes the look of the hints.</str>
         
