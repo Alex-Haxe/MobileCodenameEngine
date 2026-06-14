@@ -1,4 +1,4 @@
-package mobile.controls.ui;
+package mobile.ui;
 
 interface IMobileButton
 {
