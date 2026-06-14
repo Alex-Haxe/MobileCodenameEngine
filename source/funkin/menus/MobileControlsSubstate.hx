@@ -8,7 +8,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.HitBox;
+import mobile.controls.FunkinHitbox;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;
 import funkin.backend.MusicBeatSubstate;
@@ -24,7 +24,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var subCam:FlxCamera;
 	var bg:FlxSprite;
 
-	var previewBox:HitBox;
+	var previewBox:FunkinHitbox;
 	var previewPad:FunkinPad;
 	var previewDoublePad:FunkinPad;
 	var customPad:FunkinPad;
@@ -133,7 +133,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		rightArrow.cameras = [subCam];
 		add(rightArrow);
 
-		previewBox = new HitBox(Options.hitboxStyle, Options.hintStyle);
+		previewBox = new FunkinHitbox(Options.hitboxStyle, Options.hintStyle);
 		previewBox.setupCamera();
 		previewBox.cameras = [subCam];
 		previewBox.forEachAlive(function(btn:FlxSprite) {

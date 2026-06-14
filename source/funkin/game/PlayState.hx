@@ -39,7 +39,7 @@ import haxe.io.Path;
 #if mobile
 import mobile.ui.game.FunkinPause;
 import funkin.menus.MobileControlsSubstate;
-import mobile.controls.HitBox;
+import mobile.controls.FunkinHitbox;
 import mobile.ui.menus.FunkinPad;
 import flixel.input.keyboard.FlxKey;
 import funkin.options.Options;
@@ -61,7 +61,7 @@ class PlayState extends MusicBeatState
      */
 	#if mobile
     public var virtualPad:FunkinPad;
-	public var hitbox:HitBox;
+	public var hitbox:FunkinHitbox;
 	#end
 
 	/**
@@ -1064,7 +1064,7 @@ class PlayState extends MusicBeatState
 		switch (controlMode)
 		{
 			case 'Hitbox':
-				hitbox = new HitBox(Options.hitboxStyle, Options.hintStyle);
+				hitbox = new FunkinHitbox(Options.hitboxStyle, Options.hintStyle);
                 add(hitbox);
                 hitbox.setupCamera();
 
