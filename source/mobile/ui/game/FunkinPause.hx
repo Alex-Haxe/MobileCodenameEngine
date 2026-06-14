@@ -1,4 +1,4 @@
-package mobile.controls;
+package mobile.ui.game;
 
 class FunkinPause extends FlxGroup
 {
