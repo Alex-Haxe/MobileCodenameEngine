@@ -1,11 +1,11 @@
-package mobile.controls;
+package mobile.controls.ui;
 
 interface IMobileButton
 {
 	public function updateButton():Bool;
 }
 
-class FlxButtonManager
+class FunkinButtonManager
 {
 	public static var activeButtons:Array<IMobileButton> = [];
 	public static var isGlobalHookInitialized:Bool = false;
@@ -64,7 +64,7 @@ class FlxButtonManager
 	}
 }
 
-class FlxButton extends FlxTypedButton<FlxText>
+class FunkinButton extends FunkinTypedButton<FlxText>
 {
 	public static inline var NORMAL:Int = 0;
 	public static inline var HIGHLIGHT:Int = 1;
@@ -123,7 +123,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 #if !display
 @:generic
 #end
-class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput implements IMobileButton
+class FunkinTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput implements IMobileButton
 {
 	public var label(default, set):T;
 
@@ -133,10 +133,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 	public var allowSwiping:Bool = true;
 	public var maxInputMovement:Float = Math.POSITIVE_INFINITY;
 	public var status(default, set):Int;
-	public var onUp(default, null):FlxButtonEvent;
-	public var onDown(default, null):FlxButtonEvent;
-	public var onOver(default, null):FlxButtonEvent;
-	public var onOut(default, null):FlxButtonEvent;
+	public var onUp(default, null):FunkinButtonEvent;
+	public var onDown(default, null):FunkinButtonEvent;
+	public var onOver(default, null):FunkinButtonEvent;
+	public var onOut(default, null):FunkinButtonEvent;
 	public var justReleased(get, never):Bool;
 	public var released(get, never):Bool;
 	public var pressed(get, never):Bool;
@@ -153,24 +153,24 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 
 		loadDefaultGraphic();
 
-		onUp = new FlxButtonEvent(OnClick);
-		onDown = new FlxButtonEvent();
-		onOver = new FlxButtonEvent();
-		onOut = new FlxButtonEvent();
+		onUp = new FunkinButtonEvent(OnClick);
+		onDown = new FunkinButtonEvent();
+		onOver = new FunkinButtonEvent();
+		onOut = new FunkinButtonEvent();
 
-		status = FlxButton.NORMAL;
+		status = FunkinButton.NORMAL;
 		scrollFactor.set();
 
-		statusAnimations[FlxButton.HIGHLIGHT] = "normal";
-		labelAlphas[FlxButton.HIGHLIGHT] = 1;
+		statusAnimations[FunkinButton.HIGHLIGHT] = "normal";
+		labelAlphas[FunkinButton.HIGHLIGHT] = 1;
 
 		input = new FlxInput(0);
 
-		FlxButtonManager.activeButtons.push(this);
-		if (!FlxButtonManager.isGlobalHookInitialized)
+		FunkinButtonManager.activeButtons.push(this);
+		if (!FunkinButtonManager.isGlobalHookInitialized)
 		{
-			FlxG.signals.preUpdate.add(FlxButtonManager.globalPreUpdate);
-			FlxButtonManager.isGlobalHookInitialized = true;
+			FlxG.signals.preUpdate.add(FunkinButtonManager.globalPreUpdate);
+			FunkinButtonManager.isGlobalHookInitialized = true;
 		}
 	}
 
@@ -178,9 +178,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 	{
 		super.graphicLoaded();
 
-		setupAnimation("normal", FlxButton.NORMAL);
-		setupAnimation("highlight", FlxButton.HIGHLIGHT);
-		setupAnimation("pressed", FlxButton.PRESSED);
+		setupAnimation("normal", FunkinButton.NORMAL);
+		setupAnimation("highlight", FunkinButton.HIGHLIGHT);
+		setupAnimation("pressed", FunkinButton.PRESSED);
 	}
 
 	function loadDefaultGraphic():Void
@@ -210,7 +210,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 		currentInput = null;
 		input = null;
 
-		FlxButtonManager.activeButtons.remove(this);
+		FunkinButtonManager.activeButtons.remove(this);
 
 		super.destroy();
 	}
@@ -292,7 +292,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
         if (inputJustReleased && overlapFound)
             onUpHandler();
 
-        if (status != FlxButton.NORMAL && (!overlapFound || inputJustReleased))
+        if (status != FunkinButton.NORMAL && (!overlapFound || inputJustReleased))
             onOutHandler();
 
         return (currentInput != null) || overlapFound;
@@ -366,7 +366,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 			currentInput = input;
 			onDownHandler();
 		}
-		else if (status == FlxButton.NORMAL)
+		else if (status == FunkinButton.NORMAL)
 		{
 			if (allowSwiping && input.pressed)
 			{
@@ -395,7 +395,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 
 	function onUpHandler():Void
 	{
-		status = FlxButton.HIGHLIGHT;
+		status = FunkinButton.HIGHLIGHT;
 		input.release();
 		currentInput = null;
 		onUp.fire();
@@ -403,20 +403,20 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 
 	function onDownHandler():Void
 	{
-		status = FlxButton.PRESSED;
+		status = FunkinButton.PRESSED;
 		input.press();
 		onDown.fire();
 	}
 
 	function onOverHandler():Void
 	{
-		status = FlxButton.HIGHLIGHT;
+		status = FunkinButton.HIGHLIGHT;
 		onOver.fire();
 	}
 
 	function onOutHandler():Void
 	{
-		status = FlxButton.NORMAL;
+		status = FunkinButton.NORMAL;
 		input.release();
 		currentInput = null;
 		onOut.fire();
@@ -485,7 +485,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput impleme
 	}
 }
 
-private class FlxButtonEvent implements IFlxDestroyable
+private class FunkinButtonEvent implements IFlxDestroyable
 {
 	public var callback:Void->Void;
 
