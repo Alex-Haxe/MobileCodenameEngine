@@ -15,7 +15,7 @@ import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
 
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

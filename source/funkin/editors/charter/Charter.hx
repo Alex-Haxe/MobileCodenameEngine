@@ -25,7 +25,7 @@ import sys.FileSystem;
 #end
 
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

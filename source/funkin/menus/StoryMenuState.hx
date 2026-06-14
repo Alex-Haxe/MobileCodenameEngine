@@ -15,7 +15,7 @@ import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 import haxe.xml.Access;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

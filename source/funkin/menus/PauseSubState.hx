@@ -16,7 +16,7 @@ import funkin.menus.StoryMenuState;
 import funkin.options.OptionsMenu;
 import funkin.options.keybinds.KeybindsOptions;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

@@ -10,7 +10,7 @@ import funkin.backend.system.Conductor;
 import funkin.game.HealthIcon;
 import funkin.savedata.FunkinSave;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

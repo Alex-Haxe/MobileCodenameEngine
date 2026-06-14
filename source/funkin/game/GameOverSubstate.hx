@@ -11,7 +11,7 @@ import funkin.editors.charter.Charter;
 import funkin.menus.FreeplayState;
 import funkin.menus.StoryMenuState;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 	

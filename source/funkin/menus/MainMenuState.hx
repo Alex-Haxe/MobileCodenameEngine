@@ -10,7 +10,7 @@ import funkin.menus.credits.CreditsMain;
 import funkin.options.OptionsMenu;
 import lime.app.Application;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

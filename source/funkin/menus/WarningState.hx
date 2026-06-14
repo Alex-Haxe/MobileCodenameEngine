@@ -4,7 +4,7 @@ import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import funkin.backend.FunkinText;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

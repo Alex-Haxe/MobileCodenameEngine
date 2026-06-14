@@ -3,7 +3,7 @@ package funkin.options.keybinds;
 import flixel.util.FlxColor;
 import haxe.xml.Access;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 using StringTools;

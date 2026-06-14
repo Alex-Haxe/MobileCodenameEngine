@@ -18,7 +18,7 @@ import haxe.xml.Printer;
 import lime.ui.MouseCursor;
 import openfl.ui.Mouse;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

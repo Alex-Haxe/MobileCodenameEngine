@@ -40,7 +40,7 @@ import haxe.io.Path;
 import mobile.controls.PauseButton;
 import funkin.menus.MobileControlsSubstate;
 import mobile.controls.HitBox;
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import flixel.input.keyboard.FlxKey;
 import funkin.options.Options;
 #end

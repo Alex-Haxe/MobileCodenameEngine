@@ -5,7 +5,7 @@ import hscript.Expr.Error;
 import hscript.Parser;
 import openfl.Assets;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import funkin.backend.utils.NativeAPI;
 import flixel.input.keyboard.FlxKey;
 import flixel.ui.FlxButton;

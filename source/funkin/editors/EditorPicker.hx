@@ -3,7 +3,7 @@ package funkin.editors;
 import flixel.effects.FlxFlicker;
 import flixel.math.FlxPoint;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 import funkin.backend.MusicBeatState;
 #end

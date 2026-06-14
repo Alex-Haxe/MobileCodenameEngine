@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 import funkin.backend.FunkinText;
 import funkin.editors.ui.UIWarningSubstate.WarningButton;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

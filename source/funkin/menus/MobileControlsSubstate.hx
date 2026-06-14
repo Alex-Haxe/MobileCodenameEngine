@@ -7,7 +7,7 @@ import flixel.FlxCamera;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.HitBox;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;

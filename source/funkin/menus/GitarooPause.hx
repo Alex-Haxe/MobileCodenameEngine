@@ -2,7 +2,7 @@ package funkin.menus;
 
 import funkin.editors.charter.Charter;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

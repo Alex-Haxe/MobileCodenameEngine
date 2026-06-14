@@ -7,7 +7,7 @@ import funkin.backend.assets.ModsFolder;
 import haxe.io.Path;
 import sys.FileSystem;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 

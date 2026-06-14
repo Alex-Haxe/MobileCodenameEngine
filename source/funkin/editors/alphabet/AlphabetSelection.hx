@@ -8,7 +8,7 @@ import funkin.options.type.NewOption;
 import funkin.options.type.TextOption;
 import funkin.options.type.OptionType;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 	

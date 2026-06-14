@@ -12,7 +12,7 @@ import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IBeatCancellableReceiver;
 import funkin.options.PlayerSettings;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 import flixel.input.keyboard.FlxKeyboard;
 #end

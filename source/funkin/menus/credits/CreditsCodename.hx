@@ -7,7 +7,7 @@ import funkin.backend.system.github.GitHubContributor.CreditsGitHubContributor;
 import funkin.options.PlayerSettings;
 import funkin.options.type.GithubIconOption;
 #if mobile
-//import mobile.controls.VirtualPad;
+//import mobile.ui.menus.FunkinPad;
 //import mobile.controls.FlxButton;
 #end
 

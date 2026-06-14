@@ -6,7 +6,7 @@ import funkin.editors.ui.UIState;
 import funkin.options.categories.*;
 import funkin.options.type.*;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 //import mobile.controls.ui.BackButton;
 #end

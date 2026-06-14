@@ -8,7 +8,7 @@ import funkin.options.TreeMenuScreen;
 import funkin.options.type.*;
 import haxe.xml.Access;
 #if mobile
-import mobile.controls.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 import mobile.controls.FlxButton;
 #end
 
