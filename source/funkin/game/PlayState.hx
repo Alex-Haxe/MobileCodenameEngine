@@ -37,7 +37,7 @@ import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 
 #if mobile
-import mobile.controls.PauseButton;
+import mobile.ui.game.FunkinPause;
 import funkin.menus.MobileControlsSubstate;
 import mobile.controls.HitBox;
 import mobile.ui.menus.FunkinPad;
