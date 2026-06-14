@@ -26,6 +26,7 @@ import sys.io.File;
 #if mobile
 import mobile.backend.utils.MobileTrace;
 import GlobalInputManager;
+import funkin.backend.utils.NativeAPI;
 #end
 #if android
 import extension.androidtools.content.Context;
@@ -78,7 +79,11 @@ class Main extends Sprite
 		CrashHandler.init();
 
 		#if android
-	    checkPermissions();
+		if (!Permissions.hasManageAllFiles()) {
+	        NativeAPI.showMessageBox("Permission Required!", "Please grant the following permission so the app can work correctly.", "Got It!");
+
+            openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, function(_) { checkPermissions(); });
+    	}
 
     	if (Permissions.hasManageAllFiles()) {
 		    finalizeSetup();
@@ -111,11 +116,8 @@ class Main extends Sprite
     
 	private function checkPermissions():Void {
 		if (!extension.androidtools.Permissions.hasManageAllFiles()) {
-            haxe.Timer.delay(function() {
                openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onResult);
-
             extension.androidtools.Permissions.requestManageAllFiles(); 
-			}, 2000);
 		} else {
 			finalizeSetup();
 		}
