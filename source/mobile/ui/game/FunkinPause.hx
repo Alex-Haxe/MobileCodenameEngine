@@ -1,6 +1,6 @@
 package mobile.controls;
 
-class Pause extends FlxGroup
+class FunkinPause extends FlxGroup
 {
     public var pauseButton:FlxSprite;
     public var pauseCircle:FlxSprite;
