@@ -84,6 +84,11 @@ class EditorPicker extends MusicBeatSubstate {
 		sprites[0].selected = true;
 
 		FlxG.mouse.getScreenPosition(subCam, oldMousePos);
+
+		#if mobile
+        virtualPad = new VirtualPad(NONE, B);
+        add(virtualPad);
+        #end
 	}
 
 	public override function update(elapsed:Float) {
