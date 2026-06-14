@@ -11,7 +11,7 @@ typedef HitboxCallback = {
     var callback:Void->Void;
 }
 
-class HitBox extends FlxSpriteGroup {
+class FunkinHitbox extends FlxSpriteGroup {
     public var hitboxCamera:FlxCamera;
 
     public var buttonLeft:HitboxButton;
