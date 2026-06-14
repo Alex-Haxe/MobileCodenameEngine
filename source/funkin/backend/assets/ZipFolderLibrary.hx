@@ -32,13 +32,17 @@ class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 
 		var root:String = "";
 		#if android
-		root = haxe.io.Path.normalize("/storage/emulated/0/.CodenameEngine-v1.0.1/");
+		root = haxe.io.Path.normalize("/storage/emulated/0/.CodenameEngine-v1.0.1/mods/");
 		#elseif ios
 		root = System.documentsDirectory;
 		if (root != null && !root.endsWith("/")) root += "/";
+		root += "mods/";
 		#end
 
 		if (root != "" && !Path.isAbsolute(basePath)) {
+			if (basePath.startsWith("mods/")) {
+				basePath = basePath.substr(5);
+			}
 			basePath = Path.join([root, basePath]);
 		}
 
