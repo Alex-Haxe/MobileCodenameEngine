@@ -38,6 +38,12 @@ class MobileOptions extends TreeMenuScreen
 			'virtualPadOpacity',
 		));
 
+		add(new Checkbox(
+            getNameID('fullHint'),
+            getDescID('fullHint'),
+            'fullHint'
+        ));
+
         add(new ArrayOption(
             getNameID('hintStyle'),
             getDescID('hintStyle'),
