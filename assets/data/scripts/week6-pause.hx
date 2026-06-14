@@ -65,7 +65,7 @@ function create(event) {
 	FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
 
 	#if mobile
-	addFunkinPad('UP_DOWN', 'A_B');
+	addVirtualPad('UP_DOWN', 'A_B');
 	#end
 }
 
