@@ -21,6 +21,7 @@ class Options
 	 * SETTINGS
 	 */
 	public static var pauseButton:Bool = true;
+	public static var fullHint:Bool = true;
 	public static var hitboxStyle:String = "Simple";
 	public static var hintStyle:String = "Simple";
 	public static var mobilecontrols:String = "Hitbox";
