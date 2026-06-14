@@ -5,11 +5,9 @@ import flixel.math.FlxPoint;
 #if mobile
 import mobile.controls.VirtualPad;
 import mobile.controls.FlxButton;
+import funkin.backend.MusicBeatState;
 #end
 class EditorPicker extends MusicBeatSubstate {
-	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
 	public var bg:FlxSprite;
 
 	// Name is for backwards compatibility, don't use it, use id instead
