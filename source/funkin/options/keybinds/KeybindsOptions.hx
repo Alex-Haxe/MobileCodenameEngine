@@ -11,7 +11,7 @@ using StringTools;
 
 class KeybindsOptions extends MusicBeatSubstate {
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    //public var virtualPad:FunkinPad;
     #end
 	
 	public static var instance:KeybindsOptions;
@@ -233,7 +233,7 @@ class KeybindsOptions extends MusicBeatSubstate {
 		FlxG.sound.muteKeys = [];
 
 		#if mobile
-        virtualPad = new VirtualPad(FULL, A_B);
+        virtualPad = new FunkinPad(FULL, A_B);
         add(virtualPad);
         #end
 	}

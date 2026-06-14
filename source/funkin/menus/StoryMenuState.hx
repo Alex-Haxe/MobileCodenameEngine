@@ -21,7 +21,7 @@ import mobile.ui.FunkinButton;
 
 class StoryMenuState extends MusicBeatState {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	
 	public var characters:Map<String, WeekData.WeekCharacter> = [];
@@ -143,7 +143,7 @@ class StoryMenuState extends MusicBeatState {
 		CoolUtil.playMenuSong();
 
 		#if mobile
-		virtualPad = new VirtualPad(FULL, A_B_C);
+		virtualPad = new FunkinPad(FULL, A_B_C);
         add(virtualPad);
 		virtualPad.rebind('C', 'R');
 		#end

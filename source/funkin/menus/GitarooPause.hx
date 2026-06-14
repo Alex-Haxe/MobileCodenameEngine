@@ -9,7 +9,7 @@ import mobile.ui.FunkinButton;
 class GitarooPause extends MusicBeatState
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 		
 	var replayButton:FlxSprite;
@@ -54,7 +54,7 @@ class GitarooPause extends MusicBeatState
 		changeThing();
 		
         #if mobile
-		virtualPad = new VirtualPad(LEFT_RIGHT, A);
+		virtualPad = new FunkinPad(LEFT_RIGHT, A);
         add(virtualPad);
         #end
 		

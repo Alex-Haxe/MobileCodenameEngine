@@ -21,7 +21,7 @@ typedef OptionCategory = {
 
 class OptionsMenu extends TreeMenu {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	public static var mainOptions:Array<OptionCategory> = [
 		{  // name and desc are actually the translations ids!  - Nex
@@ -77,7 +77,7 @@ class OptionsMenu extends TreeMenu {
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
 		#if mobile
-		virtualPad = new VirtualPad(FULL, A_B);
+		virtualPad = new FunkinPad(FULL, A_B);
         add(virtualPad);
 
 		//add(new BackButton());

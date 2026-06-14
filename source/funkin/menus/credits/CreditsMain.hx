@@ -14,7 +14,7 @@ import mobile.ui.FunkinButton;
 
 class CreditsMain extends TreeMenu {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	var bg:FlxSprite;
 	var items:Array<OptionType> = [];
@@ -47,7 +47,7 @@ class CreditsMain extends TreeMenu {
 		first.add(new TextOption('Friday Night Funkin\'', 'credits.selectBase', ' >', () -> CoolUtil.openURL(Flags.URL_FNF_ITCH)));
 
 		#if mobile
-        virtualPad = new VirtualPad(UP_DOWN, A_B);
+        virtualPad = new FunkinPad(UP_DOWN, A_B);
         add(virtualPad);
         #end
 	}

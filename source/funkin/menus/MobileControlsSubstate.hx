@@ -25,10 +25,10 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var bg:FlxSprite;
 
 	var previewBox:HitBox;
-	var previewPad:VirtualPad;
-	var previewDoublePad:VirtualPad;
-	var customPad:VirtualPad;
-	var menuButtons:VirtualPad;
+	var previewPad:FunkinPad;
+	var previewDoublePad:FunkinPad;
+	var customPad:FunkinPad;
+	var menuButtons:FunkinPad;
 
 	var isCustomizing:Bool = false;
 	var acceptBlocked:Bool = true;
@@ -36,7 +36,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 	var bindButton:FlxSprite;
 	var isDragging:Bool = false;
 
-	var hiddenPads:Array<VirtualPad> = [];
+	var hiddenPads:Array<FunkinPad> = [];
 	var oldParentUpdate:Bool = false;
 
 	var leftArrow:Alphabet;
@@ -48,7 +48,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		this.persistentUpdate = false;
 	}
 
-	private function setupPadCamera(pad:VirtualPad):Void
+	private function setupPadCamera(pad:FunkinPad):Void
 	{
 		if (pad == null) return;
 
@@ -64,7 +64,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		});
 	}
 
-	function setPadEnabled(pad:VirtualPad, enabled:Bool, targetAlpha:Float = 1.0)
+	function setPadEnabled(pad:FunkinPad, enabled:Bool, targetAlpha:Float = 1.0)
 	{
 		if (pad == null) return;
 
@@ -92,8 +92,8 @@ class MobileControlsSubstate extends MusicBeatSubstate
 			_parentState.persistentUpdate = false;
 		}
 
-		if (VirtualPad.activePads != null) {
-			for (pad in VirtualPad.activePads.copy())
+		if (FunkinPad.activePads != null) {
+			for (pad in FunkinPad.activePads.copy())
 			{
 				if (pad == null) continue;
 				pad.visible = false;
@@ -143,22 +143,22 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		previewBox.active = false;
 		add(previewBox);
 
-		previewPad = new VirtualPad(FULL, NONE);
+		previewPad = new FunkinPad(FULL, NONE);
 		previewPad.blockInput = true;
 		setupPadCamera(previewPad);
 		add(previewPad);
 
-		previewDoublePad = new VirtualPad(DOUBLE, NONE);
+		previewDoublePad = new FunkinPad(DOUBLE, NONE);
 		previewDoublePad.blockInput = true;
 		setupPadCamera(previewDoublePad);
 		add(previewDoublePad);
 
-		customPad = new VirtualPad(CUSTOM, NONE);
+		customPad = new FunkinPad(CUSTOM, NONE);
 		customPad.blockInput = true;
 		setupPadCamera(customPad);
 		add(customPad);
 
-		menuButtons = new VirtualPad(NONE, A_B);
+		menuButtons = new FunkinPad(NONE, A_B);
 		setupPadCamera(menuButtons);
 		add(menuButtons);
 
@@ -213,7 +213,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 			if (controls.ACCEPT || (menuButtons.buttonA != null && menuButtons.buttonA.justPressed)) 
 			{
-				VirtualPad.inputBlockFrames = 2;
+				FunkinPad.inputBlockFrames = 2;
 				FlxG.mouse.reset();
 				FlxG.touches.reset();
 				acceptSelection();
@@ -221,7 +221,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 
 			if (controls.BACK || (menuButtons.buttonB != null && menuButtons.buttonB.justPressed)) 
 			{
-				VirtualPad.inputBlockFrames = 2;
+				FunkinPad.inputBlockFrames = 2;
 				FlxG.mouse.reset();
 				FlxG.touches.reset();
 				close();
@@ -355,7 +355,7 @@ class MobileControlsSubstate extends MusicBeatSubstate
 		Options.mobilecontrols = options[curSelected];
 		FlxG.save.data.mobileControlsMode = options[curSelected];
 		FlxG.save.flush();
-		VirtualPad.inputBlockFrames = 2;
+		FunkinPad.inputBlockFrames = 2;
 		FlxG.mouse.reset();
 		FlxG.touches.reset();
 		close();

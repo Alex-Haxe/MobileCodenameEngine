@@ -23,7 +23,7 @@ import mobile.ui.FunkinButton;
 class PauseSubState extends MusicBeatSubstate
 {
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    //public var virtualPad:FunkinPad;
     #end
 	
 	public static var script:String = Flags.DEFAULT_PAUSE_SCRIPT;
@@ -131,7 +131,7 @@ class PauseSubState extends MusicBeatSubstate
 		FlxG.cameras.add(camera, false);
 
 		#if mobile
-		virtualPad = new VirtualPad(UP_DOWN, A_B);
+		virtualPad = new FunkinPad(UP_DOWN, A_B);
         add(virtualPad);
 		#end
 	}

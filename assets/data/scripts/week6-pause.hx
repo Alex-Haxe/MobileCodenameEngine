@@ -8,7 +8,7 @@ import mobile.ui.FunkinButton;
 #end
 
 #if mobile
-var virtualPad:VirtualPad;
+var virtualPad:FunkinPad;
 #end
 
 var pixelScript:Script = game.scripts.getByName("pixel.hx");
@@ -65,7 +65,7 @@ function create(event) {
 	FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
 
 	#if mobile
-	addVirtualPad('UP_DOWN', 'A_B');
+	addFunkinPad('UP_DOWN', 'A_B');
 	#end
 }
 

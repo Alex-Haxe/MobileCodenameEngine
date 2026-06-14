@@ -16,7 +16,7 @@ using StringTools;
 
 class StageSelection extends EditorTreeMenu {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 		
 	override function create() {
@@ -24,7 +24,7 @@ class StageSelection extends EditorTreeMenu {
 		DiscordUtil.call("onEditorTreeLoaded", ["Stage Editor"]);
 		addMenu(new StageSelectionScreen());
 		#if mobile
-		virtualPad = new VirtualPad(UP_DOWN, A_B);
+		virtualPad = new FunkinPad(UP_DOWN, A_B);
         add(virtualPad);
 		#end
 	}

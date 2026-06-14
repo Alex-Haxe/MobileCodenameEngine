@@ -27,7 +27,7 @@ using funkin.backend.utils.MatrixUtil;
 @:access(flixel.FlxSprite)
 class StageEditor extends UIState {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	static var __stage:String;
 	public var stage:Stage;
@@ -293,7 +293,7 @@ class StageEditor extends UIState {
 		}
 
 		#if mobile
-        virtualPad = new VirtualPad(FULL, A_B_X_Y);
+        virtualPad = new FunkinPad(FULL, A_B_X_Y);
         add(virtualPad);
 		virtualPad.rebind('UP', 'W');
 		virtualPad.rebind('DOWN', 'S');

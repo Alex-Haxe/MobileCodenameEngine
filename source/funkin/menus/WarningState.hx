@@ -10,7 +10,7 @@ import mobile.ui.FunkinButton;
 
 class WarningState extends MusicBeatState {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	
 	var titleAlphabet:Alphabet;
@@ -45,7 +45,7 @@ class WarningState extends MusicBeatState {
 		DiscordUtil.call("onMenuLoaded", ["Beta Warning"]);
 
 		#if mobile
-		//virtualPad = new VirtualPad(NONE, A);
+		//virtualPad = new FunkinPad(NONE, A);
         //add(virtualPad);
 		#end
 	}

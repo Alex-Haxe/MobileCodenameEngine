@@ -27,7 +27,7 @@ import mobile.ui.FunkinButton;
 
 class CharacterEditor extends UIState {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	static var __character:String;
 	public var character:CharacterGhost;
@@ -345,7 +345,7 @@ class CharacterEditor extends UIState {
 		DiscordUtil.call("onEditorLoaded", ["Character Editor", __character]);
 
 		#if mobile
-		virtualPad = new VirtualPad(FULL, A_B_X_Y);
+		virtualPad = new FunkinPad(FULL, A_B_X_Y);
         add(virtualPad);
 
 		virtualPad.rebind('A', 'SPACE');

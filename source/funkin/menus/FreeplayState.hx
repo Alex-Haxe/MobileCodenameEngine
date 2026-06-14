@@ -24,10 +24,10 @@ class FreeplayState extends MusicBeatState
 	public var songs:Array<ChartMetaData> = [];
 
 	/**
-     * Mobile VirtualPad
+     * Mobile FunkinPad
      */
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 
 	/**
@@ -200,7 +200,7 @@ class FreeplayState extends MusicBeatState
 		interpColor = new FlxInterpolateColor(bg.color);
 
 		#if mobile
-		virtualPad = new VirtualPad(FULL, A_B_X_Y);
+		virtualPad = new FunkinPad(FULL, A_B_X_Y);
         add(virtualPad);
 		virtualPad.rebind('X', 'R');
 		virtualPad.rebind('Y', 'TAB');

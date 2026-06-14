@@ -90,7 +90,7 @@ class EditorPicker extends MusicBeatSubstate {
 		FlxG.mouse.getScreenPosition(subCam, oldMousePos);
 
 		#if mobile
-        virtualPad = new VirtualPad(NONE, B);
+        virtualPad = new FunkinPad(NONE, B);
         add(virtualPad);
         #end
 	}

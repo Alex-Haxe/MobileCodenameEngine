@@ -10,7 +10,7 @@ class MobileButton extends FlxSprite
 
 class FunkinPad extends FlxSpriteGroup
 {
-	public static var activePads:Array<VirtualPad> = [];
+	public static var activePads:Array<FunkinPad> = [];
 	public static var inputBlockFrames:Int = 0;
 	public static var usedTouches:Array<flixel.input.touch.FlxTouch> = [];
 	public static var lastUpdateFrame:Int = 0;
@@ -61,7 +61,7 @@ class FunkinPad extends FlxSpriteGroup
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{
 		super();
-		VirtualPad.activePads.push(this);
+		FunkinPad.activePads.push(this);
 
 		virtualpadCamera = new FlxCamera();
 		virtualpadCamera.bgColor = 0x00000000;
@@ -225,9 +225,9 @@ class FunkinPad extends FlxSpriteGroup
 		this.alpha = funkin.options.Options.virtualPadOpacity; 
 		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
 
-		if (VirtualPad.lastUpdateFrame != FlxG.game.ticks) {
-			VirtualPad.usedTouches = [];
-			VirtualPad.lastUpdateFrame = FlxG.game.ticks;
+		if (FunkinPad.lastUpdateFrame != FlxG.game.ticks) {
+			FunkinPad.usedTouches = [];
+			FunkinPad.lastUpdateFrame = FlxG.game.ticks;
 		}
 
 		if (blockInput || inputBlockFrames > 0)
@@ -254,12 +254,12 @@ class FunkinPad extends FlxSpriteGroup
 
 
 			for (touch in FlxG.touches.list) {
-				if (touch.pressed && !VirtualPad.usedTouches.contains(touch)) { 
+				if (touch.pressed && !FunkinPad.usedTouches.contains(touch)) { 
 					var point = touch.getWorldPosition(cam);
 					if (btn.overlapsPoint(point, true, cam)) {
 						isPressed = true;
 						overlappingPad = true;
-						VirtualPad.usedTouches.push(touch);
+						FunkinPad.usedTouches.push(touch);
 						point.put();
 						break;
 					}
@@ -307,7 +307,7 @@ class FunkinPad extends FlxSpriteGroup
 			FlxG.mouse._leftButton.current = FlxInputState.RELEASED;
 		}
 
-		VirtualPad.touchingPad = overlappingPad;
+		FunkinPad.touchingPad = overlappingPad;
 		super.update(elapsed);
 	}
 	
@@ -469,7 +469,7 @@ class FunkinPad extends FlxSpriteGroup
 	
 	override public function destroy():Void
 	{
-		VirtualPad.activePads.remove(this);
+		FunkinPad.activePads.remove(this);
 		
 		if (boundActions != null) {
 			boundActions.clear();

@@ -20,7 +20,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var character:Character;
 
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    //public var virtualPad:FunkinPad;
     #end
 
 	public var characterName:String;
@@ -101,7 +101,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		gameoverScript.call("postCreate");
 
 		#if mobile
-		virtualPad = new VirtualPad(NONE, B);
+		virtualPad = new FunkinPad(NONE, B);
         add(virtualPad);
 		#end
 	}

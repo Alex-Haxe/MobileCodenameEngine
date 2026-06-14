@@ -79,7 +79,7 @@ class UIState extends MusicBeatState {
 
 	public function isOverlapping(spr:UISprite, rect:FlxRect) {
 		#if mobile
-	    if (VirtualPad.touchingPad)
+	    if (FunkinPad.touchingPad)
 		    return false;
     	#end
 			
@@ -112,7 +112,7 @@ class UIState extends MusicBeatState {
 
 		if (buttonHandler != null 
 			#if mobile
-			&& !VirtualPad.touchingPad
+			&& !FunkinPad.touchingPad
 			#end
 		    ) {
 			buttonHandler();
@@ -124,7 +124,7 @@ class UIState extends MusicBeatState {
 
 		if (FlxG.mouse.justPressed 
 			#if mobile
-			&& !VirtualPad.touchingPad
+			&& !FunkinPad.touchingPad
 		    #end
 		    ) {
 			playEditorSound(Flags.DEFAULT_EDITOR_CLICK_SOUND);
@@ -132,7 +132,7 @@ class UIState extends MusicBeatState {
 
 		if (FlxG.mouse.justReleased 
 		   #if mobile
-		   && !VirtualPad.touchingPad
+		   && !FunkinPad.touchingPad
 		   #end
 		   )
 			currentFocus = (hoveredSprite is IUIFocusable) ? (cast hoveredSprite) : null;

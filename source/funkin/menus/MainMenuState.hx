@@ -21,7 +21,7 @@ class MainMenuState extends MusicBeatState
 	var curSelected:Int = 0;
 
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -102,7 +102,7 @@ class MainMenuState extends MusicBeatState
 		devModeWarning.scrollFactor.set();
 		devModeWarning.alpha = 0;
 		#if mobile
-		virtualPad = new VirtualPad(UP_DOWN, A_B_X_Y);
+		virtualPad = new FunkinPad(UP_DOWN, A_B_X_Y);
         add(virtualPad);
 		#end
 	}

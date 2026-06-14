@@ -71,7 +71,7 @@
    	    <str id="pauseButton-name">Pulsante Pausa</str>
 	    <str id="pauseButton-desc">Se deselezionato, il pulsante diventerà invisibile.</str>
 
-		<str id="virtualPadOpacity-name">VirtualPad Opacità</str>
+		<str id="virtualPadOpacity-name">FunkinPad Opacità</str>
 		<str id="virtualPadOpacity-desc">È abbastanza autoesplicativo, non credi?</str>
 	
         <str id="hintStyle-name">Hint Stile</str>

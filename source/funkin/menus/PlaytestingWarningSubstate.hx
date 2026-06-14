@@ -14,7 +14,7 @@ import mobile.ui.FunkinButton;
 class PlaytestingWarningSubstate extends MusicBeatSubstate
 {
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    //public var virtualPad:FunkinPad;
     #end
 	
 	var titleAlphabet:Alphabet;
@@ -77,7 +77,7 @@ class PlaytestingWarningSubstate extends MusicBeatSubstate
 		curSelected = options.length-1;
 		changeSelection(0);
         #if mobile
-		virtualPad = new VirtualPad(LEFT_RIGHT, A);
+		virtualPad = new FunkinPad(LEFT_RIGHT, A);
         add(virtualPad);
 		#end
 	}

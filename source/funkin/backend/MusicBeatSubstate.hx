@@ -24,7 +24,7 @@ import flixel.input.keyboard.FlxKeyboard;
 class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 		
 	private var lastBeat:Float = 0;
@@ -169,7 +169,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatCancellableReceiver
 	override function close() {
 		var event = event("onClose", new CancellableEvent());
 		if (!event.cancelled) {
-			VirtualPad.inputBlockFrames = 2;
+			FunkinPad.inputBlockFrames = 2;
 
             FlxG.mouse.reset();
             FlxG.touches.reset();

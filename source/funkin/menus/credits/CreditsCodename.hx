@@ -15,7 +15,7 @@ using StringTools;
 
 class CreditsCodename extends funkin.options.TreeMenuScreen {
 	#if mobile
-	//public var virtualPad:VirtualPad;
+	//public var virtualPad:FunkinPad;
     #end
 	public var error:Bool = false;
 	public var totalContributions:Int = 0;
@@ -26,7 +26,7 @@ class CreditsCodename extends funkin.options.TreeMenuScreen {
 		tryUpdating(true);
 
 		#if mobile
-        //virtualPad = new VirtualPad(FULL, A_B);
+        //virtualPad = new FunkinPad(FULL, A_B);
         //add(virtualPad);
         #end
 	}

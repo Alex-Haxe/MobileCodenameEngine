@@ -13,7 +13,7 @@ import mobile.ui.FunkinButton;
 
 class ModSwitchMenu extends MusicBeatSubstate {
 	#if mobile
-    //public var virtualPad:VirtualPad;
+    //public var virtualPad:FunkinPad;
     #end
 	var mods:Array<String> = [];
 	var alphabets:FlxTypedGroup<Alphabet>;
@@ -52,7 +52,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 		changeSelection(0, true);
 
 		#if mobile
-	    virtualPad = new VirtualPad(UP_DOWN, A_B);
+	    virtualPad = new FunkinPad(UP_DOWN, A_B);
         add(virtualPad);
 		#end
 	}

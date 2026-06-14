@@ -74,7 +74,7 @@
    	    <str id="pauseButton-name">Pause Button</str>
 	    <str id="pauseButton-desc">If unchecked. the pause button will become invisible</str>
 
-		<str id="virtualPadOpacity-name">VirtualPad Opacity</str>
+		<str id="virtualPadOpacity-name">FunkinPad Opacity</str>
 		<str id="virtualPadOpacity-desc">Pretty self explanatory, isn't it?</str>
 
 		<str id="fullHint-name">Full Hint</str>

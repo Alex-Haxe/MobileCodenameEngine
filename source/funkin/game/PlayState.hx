@@ -60,7 +60,7 @@ class PlayState extends MusicBeatState
      * Mobile Hitbox.
      */
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
 	public var hitbox:HitBox;
 	#end
 
@@ -1069,15 +1069,15 @@ class PlayState extends MusicBeatState
                 hitbox.setupCamera();
 
 			case 'Dpad':
-				virtualPad = new VirtualPad(FULL, NONE); 
+				virtualPad = new FunkinPad(FULL, NONE); 
 				add(virtualPad);
 
 			case 'Double Dpad':
-				virtualPad = new VirtualPad(DOUBLE, NONE);
+				virtualPad = new FunkinPad(DOUBLE, NONE);
 				add(virtualPad);
 
 			case 'Custom':
-				virtualPad = new VirtualPad(CUSTOM, NONE);
+				virtualPad = new FunkinPad(CUSTOM, NONE);
 				add(virtualPad);
 
 			case 'None':
