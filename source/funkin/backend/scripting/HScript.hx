@@ -70,7 +70,7 @@ class HScript extends Script {
 		interp.variables.set("addCustomButton", function(x:Float, y:Float, assetPath:String, keyStr:String, animName:String = "", playOnlyWhenPressed:Dynamic = "true", size:Dynamic = 1.0) {
              var btn:Dynamic = null;
              try {
-                btn = new mobile.controls.FunkinPad.MobileButton(x, y);
+                btn = new mobile.ui.menus.FunkinPad.MobileButton(x, y);
                 } catch(e:Dynamic) {
                 btn = new flixel.FlxSprite(x, y);
             }
