@@ -8,7 +8,7 @@ import funkin.options.type.*;
 #if mobile
 import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
-//import mobile.controls.ui.BackButton;
+import mobile.ui.menus.FunkinBackButton;
 #end
 
 typedef OptionCategory = {
@@ -61,6 +61,25 @@ class OptionsMenu extends TreeMenu {
 
 	var bg:FlxSprite;
 	var debugOption:TextOption;
+
+	#if mobile
+	public var backButton:Null<FunkinBackButton>;
+	#end
+
+	public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void = null, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
+        if (backButton != null) remove(backButton);
+
+        if (camControls == null)
+        {
+          camControls = new FunkinCamera('camControls');
+          FlxG.cameras.add(camControls, false);
+          camControls.bgColor = 0x0;
+        }
+     
+        backButton = new FunkinBackButton(xPos, yPos, color, confirmCallback, restOpacity, instant);
+        backButton.cameras = [camControls];
+        add(backButton);
+	}
 
 	override function create() {
 		super.create();
