@@ -96,16 +96,6 @@ class FunkinBackButton extends FunkinButton
     if (FlxG.sound != null) FlxG.sound.play(Paths.sound('cancelMenu'));
 
     onConfirmStart.dispatch();
-
-    animation.onFinish.addOnce(function(name:String)
-    {
-      if (name != 'confirm') return;
-      
-      triggerFakeBackspace();
-      
-      _confirming = false;
-      onConfirmEnd.dispatch();
-    });
   }
 
   function triggerFakeBackspace():Void 
@@ -148,6 +138,13 @@ class FunkinBackButton extends FunkinButton
     }
 
     super.update(elapsed);
+
+    if (_confirming && animation.curAnim != null && animation.curAnim.name == 'confirm' && animation.finished)
+    {
+      _confirming = false;
+      triggerFakeBackspace();
+      onConfirmEnd.dispatch();
+    }
   }
 
   override public function destroy():Void
@@ -156,7 +153,5 @@ class FunkinBackButton extends FunkinButton
 
     onConfirmStart.removeAll();
     onConfirmEnd.removeAll();
-
-    if (animation != null && animation.onFinish != null) animation.onFinish.removeAll();
   }
 }
