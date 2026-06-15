@@ -63,10 +63,6 @@ class OptionsMenu extends TreeMenu {
 	var bg:FlxSprite;
 	var debugOption:TextOption;
 
-	#if mobile
-	public var backButton:Null<FunkinBackButton>;
-	#end
-
 	override public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
         if (backButton != null) remove(backButton);
 
@@ -102,10 +98,7 @@ class OptionsMenu extends TreeMenu {
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
 		#if mobile
-		//virtualPad = new FunkinPad(FULL, A_B);
-        //add(virtualPad);
-
-		addBackButton(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, 1.0);
+		FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {
