@@ -10,6 +10,7 @@ import haxe.xml.Access;
 #if mobile
 import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
+import mobile.ui.menus.FunkinBackButton;
 #end
 
 class CreditsMain extends TreeMenu {
@@ -47,8 +48,12 @@ class CreditsMain extends TreeMenu {
 		first.add(new TextOption('Friday Night Funkin\'', 'credits.selectBase', ' >', () -> CoolUtil.openURL(Flags.URL_FNF_ITCH)));
 
 		#if mobile
-        virtualPad = new FunkinPad(UP_DOWN, A_B);
-        add(virtualPad);
+	    if (Options.useVirtualPad) {
+            virtualPad = new FunkinPad(UP_DOWN, A_B);
+            add(virtualPad);
+		} else {
+		    FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
+		}
         #end
 	}
 
