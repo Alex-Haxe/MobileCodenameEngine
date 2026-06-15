@@ -538,6 +538,6 @@ enum FlxDPadMode {
 }
 
 enum FlxActionMode {
-	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y;
+	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; X_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y;
 }
 #end
