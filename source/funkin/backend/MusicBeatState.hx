@@ -15,6 +15,7 @@ import funkin.backend.system.interfaces.IBeatCancellableReceiver;
 import funkin.options.PlayerSettings;
 #if mobile
 import flixel.input.keyboard.FlxKeyboard;
+import mobile.ui.menus.FunkinBackButton;
 #end
 
 /**
@@ -111,6 +112,10 @@ class MusicBeatState extends FlxState implements IBeatCancellableReceiver
 
 	public static var ALLOW_DEV_RELOAD:Bool = true;
 
+	#if mobile
+	public var backButton:Null<FunkinBackButton>;
+	#end
+
 	inline function get_controls():Controls
 		return PlayerSettings.solo.controls;
 	inline function get_controlsP1():Controls
@@ -128,6 +133,21 @@ class MusicBeatState extends FlxState implements IBeatCancellableReceiver
 		this.scriptName = scriptName != null ? scriptName : lastScriptName;
 		lastScriptName = this.scriptName;
 	}
+
+	public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void = null, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
+      if (backButton != null) remove(backButton);
+
+      if (camControls == null)
+      {
+        camControls = new FunkinCamera('camControls');
+        FlxG.cameras.add(camControls, false);
+        camControls.bgColor = 0x0;
+      }
+     
+      backButton = new FunkinBackButton(xPos, yPos, color, confirmCallback, restOpacity, instant);
+      backButton.cameras = [camControls];
+      add(backButton);
+    }
 
 	function loadScript() {
 		var className = Type.getClassName(Type.getClass(this));
