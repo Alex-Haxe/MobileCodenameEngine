@@ -19,7 +19,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
+    public var virtualPad:FunkinPad;
     #end
 	
 	var curSelected:Int = 0;
