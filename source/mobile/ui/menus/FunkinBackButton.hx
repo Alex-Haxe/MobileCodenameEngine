@@ -5,9 +5,10 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
+import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 
-// originally made by the official dev team for fnf
+// originally made by rhe official dev team of fnf
 class FunkinBackButton extends FunkinButton
 {
   public static function add(x:Float = 0, y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
@@ -41,9 +42,11 @@ class FunkinBackButton extends FunkinButton
     super(x, y);
 
     frames = Paths.getSparrowAtlas("menus/backButton");
+
     animation.addByIndices('idle', 'back', [0], "", 24, false);
     animation.addByIndices('hold', 'back', [5], "", 24, false);
     animation.addByIndices('confirm', 'back', [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], "", 24, false);
+    
     animation.play("idle");
 
     scale.set(0.7, 0.7);
@@ -96,6 +99,15 @@ class FunkinBackButton extends FunkinButton
     if (FlxG.sound != null) FlxG.sound.play(Paths.sound('cancelMenu'));
 
     onConfirmStart.dispatch();
+
+    new FlxTimer().start(0.7, function(tmr:FlxTimer)
+    {
+      if (this.exists) {
+        triggerFakeBackspace();
+        onConfirmEnd.dispatch();
+        _confirming = false;
+      }
+    });
   }
 
   function triggerFakeBackspace():Void 
@@ -138,13 +150,6 @@ class FunkinBackButton extends FunkinButton
     }
 
     super.update(elapsed);
-
-    if (_confirming && animation.curAnim != null && animation.curAnim.name == 'confirm' && animation.finished)
-    {
-      _confirming = false;
-      triggerFakeBackspace();
-      onConfirmEnd.dispatch();
-    }
   }
 
   override public function destroy():Void
