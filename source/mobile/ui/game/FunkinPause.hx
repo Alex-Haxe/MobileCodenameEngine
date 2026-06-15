@@ -51,21 +51,21 @@ class FunkinPause extends FlxGroup
         pauseCircle.visible = false;
     }
 
-    public function setPauseButton(state:String)
-{
-    isButtonActive = (state == 'true');
+    public function setFunkinPause(state:String)
+    {
+        isButtonActive = (state == 'true');
 
-    pauseButton.visible = isButtonActive;
-    pauseCircle.visible = isButtonActive;
+        pauseButton.visible = isButtonActive;
+        pauseCircle.visible = isButtonActive;
 
-    if (Options.pauseButton == false) {
-        pauseButton.alpha = 0;
-        pauseCircle.alpha = 0;
-    } else {
-        pauseButton.alpha = 1;
-        pauseCircle.alpha = 0.2;
+        if (Options.pauseButton == false) {
+            pauseButton.alpha = 0;
+            pauseCircle.alpha = 0;
+        } else {
+            pauseButton.alpha = 1;
+            pauseCircle.alpha = 0.2;
+        }
     }
-}
     
     override public function update(elapsed:Float)
     {
