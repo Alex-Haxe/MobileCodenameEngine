@@ -61,12 +61,15 @@ class Files
 		var assetsBase = Path.addTrailingSlash(getAssetsDir());
 		var modsBase = Path.addTrailingSlash(getModsDir());
 
+		createDirRecursive(assetsBase);
+		createDirRecursive(modsBase + "mods/");
+
 		trace("Assets target path: " + assetsBase);
 		trace("Mods target path: " + modsBase);
 
 		copyFolderOnce("assets", assetsBase + "assets/");
 	}
-
+	
 	static function copyFolderOnce(folder:String, target:String):Void
 	{
 		#if sys
