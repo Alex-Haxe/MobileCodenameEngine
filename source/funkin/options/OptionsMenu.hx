@@ -67,7 +67,7 @@ class OptionsMenu extends TreeMenu {
 	public var backButton:Null<FunkinBackButton>;
 	#end
 
-	public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void = null, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
+	public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
         if (backButton != null) remove(backButton);
 
         if (camControls == null)
@@ -81,6 +81,11 @@ class OptionsMenu extends TreeMenu {
         backButton.cameras = [camControls];
         add(backButton);
 	}
+
+	// In OptionsMenu.hx:
+    function goBack():Void {
+        FlxG.switchState(new MainMenuState());
+    }
 
 	override function create() {
 		super.create();
@@ -100,7 +105,7 @@ class OptionsMenu extends TreeMenu {
 		//virtualPad = new FunkinPad(FULL, A_B);
         //add(virtualPad);
 
-		addBackButton(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, goBack, 1.0);
+		addBackButton(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, 1.0);
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {
