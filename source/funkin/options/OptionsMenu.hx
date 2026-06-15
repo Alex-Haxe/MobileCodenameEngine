@@ -19,7 +19,7 @@ typedef OptionCategory = {
 	var ?state:OneOfThree<TreeMenuScreen, Class<TreeMenuScreen>, (name:String, desc:String) -> TreeMenuScreen>;
 	var ?substate:OneOfThree<MusicBeatSubstate, Class<MusicBeatSubstate>, (name:String, desc:String) -> MusicBeatSubstate>;
 	var ?suffix:String;
-}
+} 
 
 class OptionsMenu extends TreeMenu {
 	#if mobile
