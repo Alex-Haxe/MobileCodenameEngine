@@ -10,19 +10,19 @@ import funkin.menus.credits.CreditsMain;
 import funkin.options.OptionsMenu;
 import lime.app.Application;
 #if mobile
-import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
+import mobile.ui.menus.FunkinButton;
 #end
 
 using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var curSelected:Int = 0;
-
 	#if mobile
-    public var virtualPad:FunkinPad;
+    public var virtualPad:VirtualPad;
     #end
+	
+	var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
@@ -39,7 +39,6 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-
 		super.create();
 
 		DiscordUtil.call("onMenuLoaded", ["Main Menu"]);
@@ -101,15 +100,28 @@ class MainMenuState extends MusicBeatState
 		add(devModeWarning);
 		devModeWarning.scrollFactor.set();
 		devModeWarning.alpha = 0;
+		
+		if (!Options.useVirtualPad) {
+			FlxG.mouse.visible = true;
+		}
+
 		#if mobile
-		virtualPad = new FunkinPad(UP_DOWN, A_B_X_Y);
-        add(virtualPad);
-		#end
+		if (Options.useVirtualPad) {
+            virtualPad = new FunkinPad(UP_DOWN, A_B_X_Y);
+            add(virtualPad);
+		} else {
+			virtualPad = new FunkinPad(NONE, X_Y);
+            add(virtualPad);
+		}
+        #end
 	}
 
 	var selectedSomethin:Bool = false;
 	var forceCenterX:Bool = true;
 	var devModeCount:Int = 0;
+	
+	var lastMouseX:Float = 0;
+	var lastMouseY:Float = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -124,13 +136,6 @@ class MainMenuState extends MusicBeatState
 					persistentDraw = true;
 					openSubState(new funkin.editors.EditorPicker());
 				}
-				/*
-				if (FlxG.keys.justPressed.SEVEN)
-					FlxG.switchState(new funkin.desktop.DesktopMain());
-				if (FlxG.keys.justPressed.EIGHT) {
-					CoolUtil.safeSaveFile("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
-				}
-				*/
 			}
 			if (!Options.devMode && FlxG.keys.justPressed.SEVEN) {
 				FlxG.sound.play(Paths.sound(Flags.DEFAULT_EDITOR_DELETE_SOUND));
@@ -148,8 +153,35 @@ class MainMenuState extends MusicBeatState
 			var downP = controls.DOWN_P;
 			var scroll = FlxG.mouse.wheel;
 
-			if (upP || downP || scroll != 0)  // like this we wont break mods that expect a 0 change event when calling sometimes  - Nex
+			if (upP || downP || scroll != 0)
 				changeItem((upP ? -1 : 0) + (downP ? 1 : 0) - scroll);
+
+			if (!Options.useVirtualPad)
+			{
+				var mouseMoved:Bool = (FlxG.mouse.screenX != lastMouseX || FlxG.mouse.screenY != lastMouseY);
+				lastMouseX = FlxG.mouse.screenX;
+				lastMouseY = FlxG.mouse.screenY;
+
+				menuItems.forEach(function(spr:FlxSprite)
+				{
+					if (FlxG.mouse.overlaps(spr))
+					{
+						if (mouseMoved && curSelected != spr.ID)
+						{
+							changeItem(spr.ID - curSelected);
+						}
+
+						if (FlxG.mouse.justPressed)
+						{
+							if (curSelected != spr.ID)
+							{
+								changeItem(spr.ID - curSelected);
+							}
+							selectItem();
+						}
+					}
+				});
+			}
 
 			if (controls.BACK)
 				FlxG.switchState(new TitleState());
@@ -200,11 +232,12 @@ class MainMenuState extends MusicBeatState
 			{
 				case 'story mode': FlxG.switchState(new StoryMenuState());
 				case 'freeplay': FlxG.switchState(new FreeplayState());
-				case 'donate', 'credits': FlxG.switchState(new CreditsMain());  // kept donate for not breaking scripts, if you don't want donate to bring you to the credits menu, thats easy softcodable  - Nex
+				case 'donate', 'credits': FlxG.switchState(new CreditsMain());
 				case 'options': FlxG.switchState(new OptionsMenu());
 			}
 		});
 	}
+	
 	function changeItem(huh:Int = 0)
 	{
 		var event = event("onChangeItem", EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + huh, 0, menuItems.length-1), huh, huh != 0));
