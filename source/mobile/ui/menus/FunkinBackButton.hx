@@ -1,4 +1,4 @@
-package mobile.ui.menus;
+package mobile.ui;
 
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
@@ -6,11 +6,17 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
 import flixel.input.keyboard.FlxKey;
-import mobile.ui.FunkinButton;
 
 // original by the official fnf dev team
 class FunkinBackButton extends FunkinButton
 {
+  public static function add(x:Float = 0, y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
+  {
+    var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
+    FlxG.state.add(btn);
+    return btn;
+  }
+
   public var onConfirmStart(default, null):FlxSignal = new FlxSignal();
   public var onConfirmEnd(default, null):FlxSignal = new FlxSignal();
 
@@ -48,13 +54,19 @@ class FunkinBackButton extends FunkinButton
     this.restingOpacity = restingOpacity;
     this.instant = instant;
     this.alpha = restingOpacity;
-    this.ignoreDownHandler = true;
 
-    onUp.add(playConfirmAnim);
-    onDown.add(playHoldAnim);
-    onOut.add(playOutAnim);
+    onUp.callback = playConfirmAnim;
+    onDown.callback = playHoldAnim;
+    onOut.callback = playOutAnim;
 
-    onConfirmEnd.add(confirmCallback);
+    if (confirmCallback != null)
+    {
+      onConfirmEnd.add(confirmCallback);
+    }
+  }
+
+  override function updateStatusAnimation():Void
+  {
   }
 
   function playHoldAnim():Void
@@ -127,16 +139,12 @@ class FunkinBackButton extends FunkinButton
 
   public function resetCallbacks():Void
   {
-    onUp.removeAll();
-    onDown.removeAll();
-    onOut.removeAll();
+    onUp.callback = playConfirmAnim;
+    onDown.callback = playHoldAnim;
+    onOut.callback = playOutAnim;
 
     _confirming = false;
     held = false;
-
-    onUp.add(playConfirmAnim);
-    onDown.add(playHoldAnim);
-    onOut.add(playOutAnim);
   }
 
   override public function update(elapsed:Float):Void
@@ -148,7 +156,7 @@ class FunkinBackButton extends FunkinButton
     super.update(elapsed);
   }
 
-  override function destroy():Void
+  override public function destroy():Void
   {
     super.destroy();
 
