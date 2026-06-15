@@ -17,16 +17,16 @@ class MobileOptions extends TreeMenuScreen
 	public function new()
 	{
 		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
+		
+		add(new MobileControlsOption(
+	        getNameID('mobilecontrols'),
+        	getDescID('mobilecontrols')
+        ));
 
 		add(new Checkbox(
             getNameID('useVirtualPad'),
             getDescID('useVirtualPad'),
             'useVirtualPad'
-        ));
-		
-		add(new MobileControlsOption(
-	        getNameID('mobilecontrols'),
-        	getDescID('mobilecontrols')
         ));
 		
         add(new Checkbox(
