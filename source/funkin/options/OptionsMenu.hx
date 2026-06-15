@@ -9,6 +9,7 @@ import funkin.options.type.*;
 import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
 import mobile.ui.menus.FunkinBackButton;
+import flixel.util.FlxColor;
 #end
 
 typedef OptionCategory = {
@@ -96,10 +97,10 @@ class OptionsMenu extends TreeMenu {
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
 		#if mobile
-		virtualPad = new FunkinPad(FULL, A_B);
-        add(virtualPad);
+		//virtualPad = new FunkinPad(FULL, A_B);
+        //add(virtualPad);
 
-		//add(new BackButton());
+		addBackButton(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, goBack, 1.0);
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {
