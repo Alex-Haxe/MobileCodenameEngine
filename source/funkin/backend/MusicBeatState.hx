@@ -115,6 +115,7 @@ class MusicBeatState extends FlxState implements IBeatCancellableReceiver
 
 	#if mobile
 	public var backButton:Null<FunkinBackButton>;
+    public var camControls:FlxCamera;
 	#end
 
 	inline function get_controls():Controls
