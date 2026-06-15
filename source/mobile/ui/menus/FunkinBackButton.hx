@@ -1,4 +1,4 @@
-package mobile.ui;
+package mobile.ui.menus;
 
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
