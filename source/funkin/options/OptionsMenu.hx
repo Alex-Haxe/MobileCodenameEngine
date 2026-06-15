@@ -63,26 +63,6 @@ class OptionsMenu extends TreeMenu {
 	var bg:FlxSprite;
 	var debugOption:TextOption;
 
-	override public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
-        if (backButton != null) remove(backButton);
-
-        if (camControls == null)
-        {
-          camControls = new FunkinCamera('camControls');
-          FlxG.cameras.add(camControls, false);
-          camControls.bgColor = 0x0;
-        }
-     
-        backButton = new FunkinBackButton(xPos, yPos, color, confirmCallback, restOpacity, instant);
-        backButton.cameras = [camControls];
-        add(backButton);
-	}
-
-	// In OptionsMenu.hx:
-    function goBack():Void {
-        FlxG.switchState(new MainMenuState());
-    }
-
 	override function create() {
 		super.create();
 
