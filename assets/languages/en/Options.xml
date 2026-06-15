@@ -68,13 +68,16 @@
 	</group>
 	
     <group name="MobileOptions" prefix="MobileOptions">
+		<str id="useVirtualPad-name">Use VirtualPad</str>
+		<str id="useVirtualPad-name">If checked. the game will use the pad for menus, instead of them being interactive.</str>
+		
 		<str id="mobilecontrols-name">Mobile Controls</str>
 		<str id="mobilecontrols-desc">Change the buttons that the gameplay is gonna use, hitbox is on by default.</str>
 		
    	    <str id="pauseButton-name">Pause Button</str>
 	    <str id="pauseButton-desc">If unchecked. the pause button will become invisible</str>
 
-		<str id="virtualPadOpacity-name">FunkinPad Opacity</str>
+		<str id="virtualPadOpacity-name">VirtualPad Opacity</str>
 		<str id="virtualPadOpacity-desc">Pretty self explanatory, isn't it?</str>
 
 		<str id="fullHint-name">Full Hint</str>
