@@ -67,7 +67,7 @@ class OptionsMenu extends TreeMenu {
 	public var backButton:Null<FunkinBackButton>;
 	#end
 
-	public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
+	override public function addBackButton(?xPos:Float = 0, ?yPos:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?restOpacity:Float = 0.3, ?instant:Bool = false):Void {
         if (backButton != null) remove(backButton);
 
         if (camControls == null)
