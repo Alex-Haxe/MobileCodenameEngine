@@ -53,13 +53,13 @@ class HScript extends Script {
 		interp.staticVariables = Script.staticVariables;
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		#if mobile
-		interp.variables.set("VirtualPad", mobile.controls.FunkinPad);
+		interp.variables.set("VirtualPad", mobile.ui.menus.FunkinPad);
 
         interp.variables.set("addVirtualPad", function(dpadModeStr:String, actionModeStr:String) {
-            var dpadMode = Type.createEnum(mobile.controls.FunkinPad.FlxDPadMode, dpadModeStr);
-            var actionMode = Type.createEnum(mobile.controls.FunkinPad.FlxActionMode, actionModeStr);
+            var dpadMode = Type.createEnum(mobile.ui.menus.FunkinPad.FlxDPadMode, dpadModeStr);
+            var actionMode = Type.createEnum(mobile.ui.menus.FunkinPad.FlxActionMode, actionModeStr);
     
-            var vpad = new mobile.controls.FunkinPad(dpadMode, actionMode);
+            var vpad = new mobile.ui.menus.FunkinPad(dpadMode, actionMode);
             flixel.FlxG.state.add(vpad); 
             interp.variables.set("virtualPad", vpad);
     
@@ -156,9 +156,9 @@ class HScript extends Script {
                     }
 
                     try {
-                        if (mobile.controls.FunkinPad.lastUpdateFrame != flixel.FlxG.game.ticks) {
-                            mobile.controls.FunkinPad.usedTouches = [];
-                            mobile.controls.FunkinPad.lastUpdateFrame = flixel.FlxG.game.ticks;
+                        if (mobile.ui.menus.FunkinPad.lastUpdateFrame != flixel.FlxG.game.ticks) {
+                            mobile.ui.menus.FunkinPad.usedTouches = [];
+                            mobile.ui.menus.FunkinPad.lastUpdateFrame = flixel.FlxG.game.ticks;
                         }
                     } catch(e:Dynamic) {}
 
@@ -166,7 +166,7 @@ class HScript extends Script {
                         if (touch.pressed) {
                             var isUsed = false;
                             try {
-                                if (mobile.controls.FunkinPad.usedTouches.contains(touch)) isUsed = true;
+                                if (mobile.ui.menus.FunkinPad.usedTouches.contains(touch)) isUsed = true;
                             } catch(e:Dynamic) {}
 
                             if (!isUsed) {
@@ -174,7 +174,7 @@ class HScript extends Script {
                                 if (btn.overlapsPoint(touchPos, true, vpCam)) {
                                     isPressed = true;
                                     try {
-                                       mobile.controls.FunkinPad.usedTouches.push(touch);
+                                       mobile.ui.menus.FunkinPad.usedTouches.push(touch);
                                        } catch(e:Dynamic) {}
                                        touchPos.put(); 
                                            break;
