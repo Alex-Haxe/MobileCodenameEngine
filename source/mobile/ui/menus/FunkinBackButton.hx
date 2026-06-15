@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
 import flixel.input.keyboard.FlxKey;
 
-// original by the official fnf dev team
+// originally made by the official dev team for fnf
 class FunkinBackButton extends FunkinButton
 {
   public static function add(x:Float = 0, y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
@@ -30,11 +30,10 @@ class FunkinBackButton extends FunkinButton
   }
 
   var _confirming:Bool = false;
+  var _releaseBackspace:Bool = false;
 
   public var restingOpacity:Float;
-
   var instant:Bool = false;
-  var held:Bool = false;
 
   public function new(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3,
       instant:Bool = false):Void
@@ -71,30 +70,21 @@ class FunkinBackButton extends FunkinButton
 
   function playHoldAnim():Void
   {
-    if (confirming || held || !enabled) return;
-
-    held = true;
-    FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+    if (confirming || !enabled) return;
 
     FlxTween.cancelTweensOf(this);
     animation.play('hold');
-
     alpha = 1;
   }
 
   function playConfirmAnim():Void
   {
-    if (!enabled) return;
-
-    FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+    if (!enabled || confirming) return;
 
     if (instant)
     {
+      triggerFakeBackspace();
       onConfirmEnd.dispatch();
-      return;
-    }
-    else if (confirming)
-    {
       return;
     }
 
@@ -110,30 +100,29 @@ class FunkinBackButton extends FunkinButton
     animation.onFinish.addOnce(function(name:String)
     {
       if (name != 'confirm') return;
+      
+      triggerFakeBackspace();
+      
       _confirming = false;
-      held = false;
       onConfirmEnd.dispatch();
     });
+  }
+
+  function triggerFakeBackspace():Void 
+  {
+    FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+    _releaseBackspace = true;
   }
 
   function playOutAnim():Void
   {
     if (confirming || !enabled) return;
 
-    if (held)
-    {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
-    }
-
     FlxTween.cancelTweensOf(this);
     animation.play('idle');
 
     FlxTween.tween(this, {alpha: restingOpacity}, 0.5, {
-      ease: FlxEase.expoOut,
-      onComplete: function(tween:FlxTween):Void
-      {
-        held = false;
-      }
+      ease: FlxEase.expoOut
     });
   }
 
@@ -144,7 +133,6 @@ class FunkinBackButton extends FunkinButton
     onOut.callback = playOutAnim;
 
     _confirming = false;
-    held = false;
   }
 
   override public function update(elapsed:Float):Void
@@ -152,6 +140,12 @@ class FunkinBackButton extends FunkinButton
     #if android
     if (FlxG.android.justReleased.BACK) onConfirmEnd.dispatch();
     #end
+
+    if (_releaseBackspace)
+    {
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+      _releaseBackspace = false;
+    }
 
     super.update(elapsed);
   }
