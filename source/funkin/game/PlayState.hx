@@ -39,7 +39,7 @@ import haxe.io.Path;
 #if mobile
 import mobile.ui.game.FunkinPause;
 import funkin.menus.MobileControlsSubstate;
-import mobile.controls.FunkinHitbox;
+import mobile.ui.game.FunkinHitbox;
 import mobile.ui.menus.FunkinPad;
 import flixel.input.keyboard.FlxKey;
 import funkin.options.Options;

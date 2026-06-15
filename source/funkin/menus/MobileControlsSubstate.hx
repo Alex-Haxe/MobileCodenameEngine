@@ -8,7 +8,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import mobile.ui.menus.FunkinPad;
-import mobile.controls.FunkinHitbox;
+import mobile.ui.game.FunkinHitbox;
 import funkin.backend.assets.Paths;
 import funkin.options.Options;
 import funkin.backend.MusicBeatSubstate;
