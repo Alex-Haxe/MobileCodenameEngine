@@ -20,6 +20,7 @@ class Options
 	/**
 	 * SETTINGS
 	 */
+	public static var useVirtualPad:Bool = false;
 	public static var pauseButton:Bool = true;
 	public static var fullHint:Bool = true;
 	public static var hitboxStyle:String = "Simple";
