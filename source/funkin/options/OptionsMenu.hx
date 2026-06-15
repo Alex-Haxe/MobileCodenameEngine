@@ -7,6 +7,7 @@ import funkin.options.categories.*;
 import funkin.options.type.*;
 #if mobile
 import mobile.ui.menus.FunkinPad;
+import funkin.options.Options;
 import mobile.ui.FunkinButton;
 import mobile.ui.menus.FunkinBackButton;
 import flixel.util.FlxColor;
@@ -78,7 +79,12 @@ class OptionsMenu extends TreeMenu {
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
 		#if mobile
-		FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
+		if (Options.useVirtualPad) {
+            virtualPad = new VirtualPad(FULL, A_B_X_Y);
+            add(virtualPad);
+		} else {
+		    FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
+		}
 		#end
 
 		addMenu(new TreeMenuScreen('optionsMenu.header.title', 'optionsMenu.header.desc', [for (o in mainOptions) new TextOption(o.name, o.desc, o.suffix != null ? o.suffix : " >", () -> {
