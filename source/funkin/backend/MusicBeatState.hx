@@ -16,6 +16,7 @@ import funkin.options.PlayerSettings;
 #if mobile
 import flixel.input.keyboard.FlxKeyboard;
 import mobile.ui.menus.FunkinBackButton;
+import flixel.util.FlxColor;
 #end
 
 /**
