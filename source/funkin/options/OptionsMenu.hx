@@ -80,7 +80,7 @@ class OptionsMenu extends TreeMenu {
 
 		#if mobile
 		if (Options.useVirtualPad) {
-            virtualPad = new FunkinPad(FULL, A_B_X_Y);
+            virtualPad = new FunkinPad(FULL, A_B);
             add(virtualPad);
 		} else {
 		    FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
