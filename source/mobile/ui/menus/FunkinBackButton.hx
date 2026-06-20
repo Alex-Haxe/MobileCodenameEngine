@@ -15,10 +15,6 @@ class FunkinBackButton extends FunkinButton
 
   public var enabled:Bool = true;
 
-  public var justPressed:Bool = false;
-  public var justReleased:Bool = false;
-  public var pressed:Bool = false;
-
   public var confirming(get, never):Bool;
 
   function get_confirming():Bool
