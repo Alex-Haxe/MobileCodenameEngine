@@ -1,12 +1,5 @@
 package mobile.ui.game;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
-import flixel.FlxCamera;
-
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
@@ -71,7 +64,7 @@ class FunkinHitbox extends FlxSpriteGroup {
             btn.scrollFactor.set(0, 0);
         }
     }
-    // testing!
+    
     private function applyGradientSafe(buttons:Array<HitboxButton>, width:Int, height:Int, isHint:Bool):Void {
         var colors:Array<Int> = [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F];
 
@@ -165,10 +158,19 @@ class HitboxButton extends FlxSprite {
 
         var effectivePressed:Bool = pressed || (parentButton != null && parentButton.pressed);
 
-        if (isHint) {
-            alpha = effectivePressed ? 0.00001 : Options.hintOpacity;
+        if (effectivePressed) {
+            alpha = isHint ? 0.00001 : Options.hitboxOpacity;
         } else {
-            alpha = effectivePressed ? Options.hitboxOpacity : 0.00001;
+            if (isHint) {
+                alpha = Options.hintOpacity;
+            } else {
+                if (alpha > 0.00001) {
+                    alpha -= (Options.hitboxOpacity / 0.10) * elapsed;
+                    if (alpha < 0.00001) {
+                        alpha = 0.00001;
+                    }
+                }
+            }
         }
 
         super.update(elapsed);
