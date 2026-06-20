@@ -21,6 +21,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxSignal;
 import flixel.ui.FlxButton;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
