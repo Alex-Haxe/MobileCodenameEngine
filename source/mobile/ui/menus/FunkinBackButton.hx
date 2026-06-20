@@ -1,14 +1,6 @@
 package mobile.ui.menus;
 
-import flixel.FlxG;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import flixel.util.FlxSignal;
-import flixel.util.FlxTimer;
-import flixel.input.keyboard.FlxKey;
-
-// originally made by rhe official dev team of fnf
+#if mobile
 class FunkinBackButton extends FunkinButton
 {
   public static function add(x:Float = 0, y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
@@ -22,6 +14,10 @@ class FunkinBackButton extends FunkinButton
   public var onConfirmEnd(default, null):FlxSignal = new FlxSignal();
 
   public var enabled:Bool = true;
+
+  public var justPressed:Bool = false;
+  public var justReleased:Bool = false;
+  public var pressed:Bool = false;
 
   public var confirming(get, never):Bool;
 
@@ -57,9 +53,9 @@ class FunkinBackButton extends FunkinButton
     this.instant = instant;
     this.alpha = restingOpacity;
 
-    onUp.callback = playConfirmAnim;
-    onDown.callback = playHoldAnim;
-    onOut.callback = playOutAnim;
+    if (onUp != null) onUp.callback = null;
+    if (onDown != null) onDown.callback = null;
+    if (onOut != null) onOut.callback = null;
 
     if (confirmCallback != null)
     {
@@ -130,15 +126,58 @@ class FunkinBackButton extends FunkinButton
 
   public function resetCallbacks():Void
   {
-    onUp.callback = playConfirmAnim;
-    onDown.callback = playHoldAnim;
-    onOut.callback = playOutAnim;
-
     _confirming = false;
+    pressed = false;
+    justPressed = false;
+    justReleased = false;
   }
 
   override public function update(elapsed:Float):Void
   {
+    if (enabled && !_confirming)
+    {
+      var cam = (this.cameras != null && this.cameras.length > 0) ? this.cameras[0] : FlxG.camera;
+      var isPressedTouch = false;
+      var releasedOnButton = false;
+
+      for (touch in FlxG.touches.list) 
+      {
+        var point = touch.getWorldPosition(cam);
+        if (this.overlapsPoint(point, true, cam)) 
+        {
+          if (touch.pressed) isPressedTouch = true;
+          if (touch.justReleased) releasedOnButton = true;
+        }
+        point.put();
+      }
+
+      if (FlxG.mouse != null)
+      {
+        var mousePoint = FlxG.mouse.getWorldPosition(cam);
+        if (this.overlapsPoint(mousePoint, true, cam)) 
+        {
+          if (FlxG.mouse.pressed) isPressedTouch = true;
+          if (FlxG.mouse.justReleased) releasedOnButton = true;
+        }
+        mousePoint.put();
+      }
+
+      var wasPressed = this.pressed;
+      this.justPressed = isPressedTouch && !wasPressed;
+      this.justReleased = !isPressedTouch && wasPressed;
+      this.pressed = isPressedTouch;
+
+      if (this.justPressed) 
+      {
+        playHoldAnim();
+      } 
+      else if (this.justReleased) 
+      {
+        if (releasedOnButton) playConfirmAnim();
+        else playOutAnim();
+      }
+    }
+
     #if android
     if (FlxG.android.justReleased.BACK) onConfirmEnd.dispatch();
     #end
@@ -160,3 +199,4 @@ class FunkinBackButton extends FunkinButton
     onConfirmEnd.removeAll();
   }
 }
+#end
