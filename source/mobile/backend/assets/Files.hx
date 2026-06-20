@@ -1,43 +1,58 @@
 package mobile.backend.assets;
 
 using StringTools;
-/**
- * class made to handle copying the files to the needed place.
-**/
+
 #if mobile
 class Files
 {
 	#if android
-    private static var _androidDir:String = null;
+	private static var _androidDir:String = null;
 
-    private static function getAndroidStorageDir():String
-    {
-        if (_androidDir != null)
-            return _androidDir;
+	private static function getAndroidStorageDir():String
+	{
+		if (_androidDir != null && _androidDir != "")
+			return _androidDir;
 
-        if (VERSION.SDK_INT >= VERSION_CODES.R)
-        {
-            _androidDir = haxe.io.Path.addTrailingSlash(extension.androidtools.content.Context.getObbDir());
-        }
-        else
-        {
-            _androidDir = haxe.io.Path.addTrailingSlash(extension.androidtools.content.Context.getExternalFilesDir());
-        }
+		var dir:String = null;
 
-        trace("ANDROID STORAGE DIR: " + _androidDir);
+		try {
+			if (VERSION.SDK_INT >= VERSION_CODES.R)
+			{
+				dir = Context.getObbDir();
+			}
+			else
+			{
+				dir = Context.getExternalFilesDir();
+			}
+		} catch (e:Dynamic) {
+		}
 
-        return _androidDir;
-    }
-    #end
+		if (dir == null || dir == "") 
+		{
+			dir = lime.system.System.documentsDirectory;
+		}
+
+		if (dir != null && dir != "") 
+		{
+			_androidDir = Path.addTrailingSlash(dir);
+		} 
+		else 
+		{
+			_androidDir = ""; 
+		}
+
+		return _androidDir;
+	}
+	#end
 	
 	public static function getAssetsDir():String
 	{
 		#if android
 		return getAndroidStorageDir();
 		#elseif ios
-		var dir = System.documentsDirectory;
+		var dir = lime.system.System.documentsDirectory;
 		if (dir != null && !dir.endsWith("/")) dir += "/";
-		return dir;
+		return dir != null ? dir : "";
 		#else
 		return Sys.getCwd();
 		#end
@@ -48,9 +63,9 @@ class Files
 		#if android
 		return getAndroidStorageDir();
 		#elseif ios
-		var dir = System.documentsDirectory;
+		var dir = lime.system.System.documentsDirectory;
 		if (dir != null && !dir.endsWith("/")) dir += "/";
-		return dir;
+		return dir != null ? dir : "";
 		#else
 		return Sys.getCwd();
 		#end
@@ -58,61 +73,67 @@ class Files
 	
 	public static function init():Void
 	{
-		var assetsBase = Path.addTrailingSlash(getAssetsDir());
-		var modsBase = Path.addTrailingSlash(getModsDir());
+		try {
+			var assetsBase = Path.addTrailingSlash(getAssetsDir());
+			var modsBase = Path.addTrailingSlash(getModsDir());
 
-		createDirRecursive(assetsBase);
-		createDirRecursive(modsBase + "mods/");
+			if (assetsBase == "/" || assetsBase == "") return;
 
-		trace("Assets target path: " + assetsBase);
-		trace("Mods target path: " + modsBase);
+			createDirRecursive(assetsBase);
+			createDirRecursive(modsBase + "mods/");
 
-		copyFolderOnce("assets", assetsBase + "assets/");
+			copyFolderOnce("assets", assetsBase + "assets/");
+		} catch (e:Dynamic) {
+		}
 	}
 	
 	static function copyFolderOnce(folder:String, target:String):Void
 	{
 		#if sys
-		if (FileSystem.exists(target))
-		{
-			trace(folder + " already exists, skipping.");
+		try {
+			if (FileSystem.exists(target))
+			{
+				return;
+			}
+		} catch (e:Dynamic) {
 			return;
 		}
 		#end
 
-		trace("Copying " + folder + "...");
 		copyAssets(folder, target);
 	}
 
 	static function copyAssets(source:String, target:String):Void
 	{
-		var list:Array<String> = Assets.list();
+		try {
+			var list:Array<String> = Assets.list();
 
-		for (asset in list)
-		{
-			if (!asset.startsWith(source)) continue;
+			for (asset in list)
+			{
+				if (!asset.startsWith(source)) continue;
 
-			var relative = asset.substr(source.length);
-			if (relative.startsWith("/")) relative = relative.substr(1);
+				var relative = asset.substr(source.length);
+				if (relative.startsWith("/")) relative = relative.substr(1);
 
-			var outPath = Path.addTrailingSlash(target) + relative;
+				var outPath = Path.addTrailingSlash(target) + relative;
+				var dir = Path.directory(outPath);
 
-			createDirRecursive(Path.directory(outPath));
+				createDirRecursive(dir);
 
-			try {
-				var bytes:Bytes = Assets.getBytes(asset);
+				try {
+					var bytes:Bytes = Assets.getBytes(asset);
 
-				if (bytes != null)
-					File.saveBytes(outPath, bytes);
-				else
-					File.saveContent(outPath, lime.utils.Assets.getText(asset));
-
-			} catch (e:Dynamic) {
-				trace("Failed: " + asset + " -> " + e);
+					if (bytes != null) {
+						File.saveBytes(outPath, bytes);
+					} else {
+						var text:String = lime.utils.Assets.getText(asset);
+						if (text != null) File.saveContent(outPath, text);
+					}
+				} catch (e:Dynamic) {
+				}
 			}
+		} catch (e:Dynamic) {
 		}
-
-		trace("Finished copying " + source);
 	}
 
 	static function createDirRecursive(path:String):Void
@@ -120,10 +141,14 @@ class Files
 		#if sys
 		if (path == null || path == "") return;
 
-		path = Path.normalize(path);
+		try {
+			path = Path.normalize(path);
 
-		if (!FileSystem.exists(path))
-			FileSystem.createDirectory(path);
+			if (!FileSystem.exists(path)) {
+				FileSystem.createDirectory(path);
+			}
+		} catch (e:Dynamic) {
+		}
 		#end
 	}
 }
