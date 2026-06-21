@@ -11,7 +11,6 @@ import funkin.backend.assets.AssetSource;
 import funkin.backend.assets.AssetsLibraryList;
 import funkin.backend.assets.ModsFolder;
 import funkin.backend.system.framerate.Framerate;
-// import funkin.backend.system.framerate.SystemInfo;
 import funkin.backend.system.modules.*;
 import funkin.backend.utils.ThreadUtil;
 import funkin.editors.SaveWarning;
@@ -25,7 +24,7 @@ import sys.FileSystem;
 import sys.io.File;
 #if mobile
 import mobile.backend.utils.MobileTrace;
-import GlobalInputManager;
+import mobile.Input;
 import funkin.backend.utils.NativeAPI;
 #end
 #if android
@@ -92,17 +91,13 @@ class Main extends Sprite
      	    finalizeSetup();
         #end
 
-		#if mobile
-		//MobileTrace.enabled = true;
-		//MobileTrace.init();
-		#end
-
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		addChild(framerateSprite = new Framerate());
 		SystemInfo.init();
+		
         #if mobile
-		FlxG.plugins.add(new GlobalInputManager());
+		FlxG.plugins.add(new Input());
         #end
 	}
 
