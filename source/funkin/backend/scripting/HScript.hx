@@ -10,6 +10,7 @@ import funkin.backend.utils.NativeAPI;
 import flixel.input.keyboard.FlxKey;
 import flixel.ui.FlxButton;
 import mobile.backend.utils.MobileTrace;
+import funkin.game.PlayState;
 #end
 #if android
 import extension.androidtools.Tools;
@@ -56,6 +57,8 @@ class HScript extends Script {
 		interp.variables.set("VirtualPad", mobile.ui.menus.FunkinPad);
 		interp.variables.set("FunkinHitbox", mobile.ui.game.FunkinHitbox);
 		interp.variables.set("FunkinPause", mobile.ui.game.FunkinPause);
+		interp.variables.set("hitbox", PlayState.instance.hitbox);
+		interp.variables.set("pauseButton", PlayState.instance.pauseButton);
 
         interp.variables.set("addVirtualPad", function(dpadModeStr:String, actionModeStr:String) {
             var dpadMode = Type.createEnum(mobile.ui.menus.FunkinPad.FlxDPadMode, dpadModeStr);
