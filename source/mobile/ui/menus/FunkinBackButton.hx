@@ -3,9 +3,9 @@ package mobile.ui.menus;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.FlxG;
+import flixel.util.FlxSignal;
 
 #if mobile
 class FunkinBackButton extends FunkinButton
@@ -31,6 +31,7 @@ class FunkinBackButton extends FunkinButton
 
   var _confirming:Bool = false;
   var _releaseBackspace:Bool = false;
+  var _confirmTimer:Float = 0;
 
   var _touchPressed:Bool = false;
   var _touchJustPressed:Bool = false;
@@ -95,6 +96,7 @@ class FunkinBackButton extends FunkinButton
     }
 
     _confirming = true;
+    _confirmTimer = 0.7;
 
     FlxTween.cancelTweensOf(this);
     animation.play('confirm');
@@ -102,15 +104,6 @@ class FunkinBackButton extends FunkinButton
     if (FlxG.sound != null) FlxG.sound.play(Paths.sound('cancelMenu'));
 
     onConfirmStart.dispatch();
-
-    new FlxTimer().start(0.7, function(tmr:FlxTimer)
-    {
-      if (this.exists) {
-        triggerFakeBackspace();
-        onConfirmEnd.dispatch();
-        _confirming = false;
-      }
-    });
   }
 
   function triggerFakeBackspace():Void 
@@ -134,6 +127,7 @@ class FunkinBackButton extends FunkinButton
   public function resetCallbacks():Void
   {
     _confirming = false;
+    _confirmTimer = 0;
     _touchPressed = false;
     _touchJustPressed = false;
     _touchJustReleased = false;
@@ -141,6 +135,17 @@ class FunkinBackButton extends FunkinButton
 
   override public function update(elapsed:Float):Void
   {
+    if (_confirming && _confirmTimer > 0)
+    {
+      _confirmTimer -= elapsed;
+      if (_confirmTimer <= 0)
+      {
+        triggerFakeBackspace();
+        onConfirmEnd.dispatch();
+        _confirming = false;
+      }
+    }
+
     if (enabled && !_confirming)
     {
       var cam = (this.cameras != null && this.cameras.length > 0) ? this.cameras[0] : FlxG.camera;
@@ -200,6 +205,12 @@ class FunkinBackButton extends FunkinButton
 
   override public function destroy():Void
   {
+    if (_releaseBackspace)
+    {
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+      _releaseBackspace = false;
+    }
+
     super.destroy();
 
     onConfirmStart.removeAll();
