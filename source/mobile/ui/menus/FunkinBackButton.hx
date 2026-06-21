@@ -29,6 +29,9 @@ class FunkinBackButton extends FunkinButton
 
   var instant:Bool = false;
   var held:Bool = false;
+  
+  var _sendPressNextFrame:Bool = false;
+  var _sendReleaseNextFrame:Bool = false;
 
   public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
   {
@@ -88,23 +91,12 @@ class FunkinBackButton extends FunkinButton
 
     alpha = 1;
     
-    FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+    _sendPressNextFrame = true;
   }
 
   function playConfirmAnim():Void
   {
-    if (!enabled || !held) return;
-
-    FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
-
-    if (instant)
-    {
-      return;
-    }
-    else if (confirming)
-    {
-      return;
-    }
+    if (!enabled || !held || confirming) return;
 
     _confirming = true;
 
@@ -118,9 +110,21 @@ class FunkinBackButton extends FunkinButton
     animation.onFinish.addOnce(function(name:String)
     {
       if (name != 'confirm') return;
+      
+      _sendReleaseNextFrame = true;
+      onConfirmEnd.dispatch();
+      
       _confirming = false;
       held = false;
     });
+    
+    if (instant)
+    {
+      _sendReleaseNextFrame = true;
+      onConfirmEnd.dispatch();
+      _confirming = false;
+      held = false;
+    }
   }
 
   function playOutAnim():Void
@@ -129,7 +133,7 @@ class FunkinBackButton extends FunkinButton
 
     if (held)
     {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+      _sendReleaseNextFrame = true;
     }
 
     FlxTween.cancelTweensOf(this);
@@ -148,20 +152,34 @@ class FunkinBackButton extends FunkinButton
   {
     _confirming = false;
     held = false;
+    _sendPressNextFrame = false;
+    _sendReleaseNextFrame = false;
   }
 
   override public function update(elapsed:Float):Void
   {
+    if (_sendPressNextFrame)
+    {
+      _sendPressNextFrame = false;
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+    }
+    
+    if (_sendReleaseNextFrame)
+    {
+      _sendReleaseNextFrame = false;
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+    }
+
     super.update(elapsed);
 
     #if android
     if (FlxG.android.justPressed.BACK) 
     {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+      playHoldAnim();
     }
     else if (FlxG.android.justReleased.BACK) 
     {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+      playConfirmAnim();
     }
     #end
   }
