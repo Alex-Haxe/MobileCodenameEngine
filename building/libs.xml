@@ -16,7 +16,7 @@
 		<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" ref="old" />
 
 		<!-- Other Libraries -->
-		<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="codename-dev" />
+		<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="1972ae6a823491db0f2598a6c62fa624a8f2a29f" />
 		<git name="hxdiscord_rpc" url="https://github.com/CodenameCrew/cne-hxdiscord_rpc" ref="old" skipDeps="true" />
 		<lib name="funkin-modchart" skipDeps="true" />
 		<lib name="hxvlc" version="1.9.3" skipDeps="true" />
