@@ -1,4 +1,4 @@
-package;
+package mobile;
 
 import flixel.FlxG;
 import flixel.math.FlxPoint;
