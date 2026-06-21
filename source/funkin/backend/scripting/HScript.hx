@@ -54,6 +54,8 @@ class HScript extends Script {
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		#if mobile
 		interp.variables.set("VirtualPad", mobile.ui.menus.FunkinPad);
+		interp.variables.set("FunkinHitbox", mobile.ui.game.FunkinHitbox);
+		interp.variables.set("FunkinPause", mobile.ui.game.FunkinPause);
 
         interp.variables.set("addVirtualPad", function(dpadModeStr:String, actionModeStr:String) {
             var dpadMode = Type.createEnum(mobile.ui.menus.FunkinPad.FlxDPadMode, dpadModeStr);
