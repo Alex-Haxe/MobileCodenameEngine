@@ -9,7 +9,7 @@ import mobile.ui.menus.FunkinPad;
 //import mobile.controls.ui.BackButton;
 
 #if mobile
-class GlobalInputManager extends FlxBasic {
+class Input extends FlxBasic {
     public static var holdDelay:Float = 0.25; 
     public static var clickThreshold:Float = 10.0;
 
