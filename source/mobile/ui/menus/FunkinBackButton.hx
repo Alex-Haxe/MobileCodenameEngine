@@ -30,9 +30,6 @@ class FunkinBackButton extends FunkinButton
   var instant:Bool = false;
   var held:Bool = false;
 
-  public var justPressed:Bool = false;
-  public var justReleased:Bool = false;
-
   public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
   {
     var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
@@ -58,13 +55,26 @@ class FunkinBackButton extends FunkinButton
     this.restingOpacity = restingOpacity;
     this.instant = instant;
     this.alpha = restingOpacity;
-    this.ignoreDownHandler = true;
-
-    onUp.add(playConfirmAnim);
-    onDown.add(playHoldAnim);
-    onOut.add(playOutAnim);
 
     if (confirmCallback != null) onConfirmEnd.add(confirmCallback);
+  }
+
+  override function onDownHandler():Void
+  {
+    super.onDownHandler();
+    playHoldAnim();
+  }
+
+  override function onUpHandler():Void
+  {
+    super.onUpHandler();
+    playConfirmAnim();
+  }
+
+  override function onOutHandler():Void
+  {
+    super.onOutHandler();
+    playOutAnim();
   }
 
   function playHoldAnim():Void
@@ -72,7 +82,6 @@ class FunkinBackButton extends FunkinButton
     if (confirming || held || !enabled) return;
 
     held = true;
-    justPressed = true;
 
     FlxTween.cancelTweensOf(this);
     animation.play('hold');
@@ -86,7 +95,6 @@ class FunkinBackButton extends FunkinButton
   {
     if (!enabled) return;
 
-    justReleased = true;
     FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
 
     if (instant)
@@ -123,7 +131,6 @@ class FunkinBackButton extends FunkinButton
 
     if (held)
     {
-      justReleased = true;
       FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
     }
 
@@ -141,29 +148,17 @@ class FunkinBackButton extends FunkinButton
 
   public function resetCallbacks():Void
   {
-    onUp.removeAll();
-    onDown.removeAll();
-    onOut.removeAll();
-
     _confirming = false;
     held = false;
-
-    onUp.add(playConfirmAnim);
-    onDown.add(playHoldAnim);
-    onOut.add(playOutAnim);
   }
 
   override public function update(elapsed:Float):Void
   {
     super.update(elapsed);
 
-    justPressed = false;
-    justReleased = false;
-
     #if android
     if (FlxG.android.justReleased.BACK) 
     {
-      justReleased = true;
       onConfirmEnd.dispatch();
     }
     #end
