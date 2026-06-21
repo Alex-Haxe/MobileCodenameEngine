@@ -1,22 +1,16 @@
 package mobile.ui.menus;
 
-import flixel.tweens.FlxEase;
-import flixel.util.FlxColor;
-import flixel.tweens.FlxTween;
-import flixel.input.keyboard.FlxKey;
-import flixel.FlxG;
-import flixel.util.FlxSignal;
-
 #if mobile
+import flixel.FlxG;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
+import flixel.util.FlxSignal;
+import flixel.input.keyboard.FlxKey;
+import mobile.ui.FunkinButton;
+
 class FunkinBackButton extends FunkinButton
 {
-  public static function add(x:Float = 0, y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
-  {
-    var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
-    FlxG.state.add(btn);
-    return btn;
-  }
-
   public var onConfirmStart(default, null):FlxSignal = new FlxSignal();
   public var onConfirmEnd(default, null):FlxSignal = new FlxSignal();
 
@@ -30,27 +24,31 @@ class FunkinBackButton extends FunkinButton
   }
 
   var _confirming:Bool = false;
-  var _releaseBackspace:Bool = false;
-  var _confirmTimer:Float = 0;
-
-  var _touchPressed:Bool = false;
-  var _touchJustPressed:Bool = false;
-  var _touchJustReleased:Bool = false;
 
   public var restingOpacity:Float;
+
   var instant:Bool = false;
+  var held:Bool = false;
+
+  public var justPressed:Bool = false;
+  public var justReleased:Bool = false;
+
+  public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
+  {
+    var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
+    FlxG.state.add(btn);
+    return btn;
+  }
 
   public function new(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3,
       instant:Bool = false):Void
   {
     super(x, y);
 
-    frames = Paths.getSparrowAtlas("menus/backButton");
-
+    frames = Paths.getSparrowAtlas("backButton");
     animation.addByIndices('idle', 'back', [0], "", 24, false);
     animation.addByIndices('hold', 'back', [5], "", 24, false);
     animation.addByIndices('confirm', 'back', [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], "", 24, false);
-    
     animation.play("idle");
 
     scale.set(0.7, 0.7);
@@ -60,161 +58,125 @@ class FunkinBackButton extends FunkinButton
     this.restingOpacity = restingOpacity;
     this.instant = instant;
     this.alpha = restingOpacity;
+    this.ignoreDownHandler = true;
 
-    if (onUp != null) onUp.callback = null;
-    if (onDown != null) onDown.callback = null;
-    if (onOut != null) onOut.callback = null;
+    onUp.add(playConfirmAnim);
+    onDown.add(playHoldAnim);
+    onOut.add(playOutAnim);
 
-    if (confirmCallback != null)
-    {
-      onConfirmEnd.add(confirmCallback);
-    }
-  }
-
-  override function updateStatusAnimation():Void
-  {
+    if (confirmCallback != null) onConfirmEnd.add(confirmCallback);
   }
 
   function playHoldAnim():Void
   {
-    if (confirming || !enabled) return;
+    if (confirming || held || !enabled) return;
+
+    held = true;
+    justPressed = true;
 
     FlxTween.cancelTweensOf(this);
     animation.play('hold');
+
     alpha = 1;
+    
+    FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
   }
 
   function playConfirmAnim():Void
   {
-    if (!enabled || confirming) return;
+    if (!enabled) return;
+
+    justReleased = true;
+    FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
 
     if (instant)
     {
-      triggerFakeBackspace();
       onConfirmEnd.dispatch();
+      return;
+    }
+    else if (confirming)
+    {
       return;
     }
 
     _confirming = true;
-    _confirmTimer = 0.7;
 
     FlxTween.cancelTweensOf(this);
     animation.play('confirm');
 
-    if (FlxG.sound != null) FlxG.sound.play(Paths.sound('cancelMenu'));
+    FlxG.sound.play(Paths.sound('cancelMenu'));
 
     onConfirmStart.dispatch();
-  }
 
-  function triggerFakeBackspace():Void 
-  {
-    FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
-    _releaseBackspace = true;
+    animation.onFinish.addOnce(function(name:String)
+    {
+      if (name != 'confirm') return;
+      _confirming = false;
+      held = false;
+      onConfirmEnd.dispatch();
+    });
   }
 
   function playOutAnim():Void
   {
     if (confirming || !enabled) return;
 
+    if (held)
+    {
+      justReleased = true;
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+    }
+
     FlxTween.cancelTweensOf(this);
     animation.play('idle');
 
     FlxTween.tween(this, {alpha: restingOpacity}, 0.5, {
-      ease: FlxEase.expoOut
+      ease: FlxEase.expoOut,
+      onComplete: function(tween:FlxTween):Void
+      {
+        held = false;
+      }
     });
   }
 
   public function resetCallbacks():Void
   {
+    onUp.removeAll();
+    onDown.removeAll();
+    onOut.removeAll();
+
     _confirming = false;
-    _confirmTimer = 0;
-    _touchPressed = false;
-    _touchJustPressed = false;
-    _touchJustReleased = false;
+    held = false;
+
+    onUp.add(playConfirmAnim);
+    onDown.add(playHoldAnim);
+    onOut.add(playOutAnim);
   }
 
   override public function update(elapsed:Float):Void
   {
-    if (_confirming && _confirmTimer > 0)
-    {
-      _confirmTimer -= elapsed;
-      if (_confirmTimer <= 0)
-      {
-        triggerFakeBackspace();
-        onConfirmEnd.dispatch();
-        _confirming = false;
-      }
-    }
+    super.update(elapsed);
 
-    if (enabled && !_confirming)
-    {
-      var cam = (this.cameras != null && this.cameras.length > 0) ? this.cameras[0] : FlxG.camera;
-      var isPressedTouch = false;
-      var releasedOnButton = false;
-
-      for (touch in FlxG.touches.list) 
-      {
-        var point = touch.getWorldPosition(cam);
-        if (this.overlapsPoint(point, true, cam)) 
-        {
-          if (touch.pressed) isPressedTouch = true;
-          if (touch.justReleased) releasedOnButton = true;
-        }
-        point.put();
-      }
-
-      if (FlxG.mouse != null)
-      {
-        var mousePoint = FlxG.mouse.getWorldPosition(cam);
-        if (this.overlapsPoint(mousePoint, true, cam)) 
-        {
-          if (FlxG.mouse.pressed) isPressedTouch = true;
-          if (FlxG.mouse.justReleased) releasedOnButton = true;
-        }
-        mousePoint.put();
-      }
-
-      var wasPressed = _touchPressed;
-      _touchJustPressed = isPressedTouch && !wasPressed;
-      _touchJustReleased = !isPressedTouch && wasPressed;
-      _touchPressed = isPressedTouch;
-
-      if (_touchJustPressed) 
-      {
-        playHoldAnim();
-      } 
-      else if (_touchJustReleased) 
-      {
-        if (releasedOnButton) playConfirmAnim();
-        else playOutAnim();
-      }
-    }
+    justPressed = false;
+    justReleased = false;
 
     #if android
-    if (FlxG.android.justReleased.BACK) onConfirmEnd.dispatch();
-    #end
-
-    if (_releaseBackspace)
+    if (FlxG.android.justReleased.BACK) 
     {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
-      _releaseBackspace = false;
+      justReleased = true;
+      onConfirmEnd.dispatch();
     }
-
-    super.update(elapsed);
+    #end
   }
 
-  override public function destroy():Void
+  override function destroy():Void
   {
-    if (_releaseBackspace)
-    {
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
-      _releaseBackspace = false;
-    }
-
     super.destroy();
 
     onConfirmStart.removeAll();
     onConfirmEnd.removeAll();
+
+    if (animation != null && animation.onFinish != null) animation.onFinish.removeAll();
   }
 }
 #end
