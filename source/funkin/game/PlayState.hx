@@ -62,6 +62,7 @@ class PlayState extends MusicBeatState
 	#if mobile
     public var virtualPad:FunkinPad;
 	public var hitbox:FunkinHitbox;
+	public var pauseButton:FunkinPause;
 	#end
 
 	/**
@@ -944,9 +945,9 @@ class PlayState extends MusicBeatState
         #if mobile
 		addMobileControls();
         // pausebutton.
-		var androidPause = new mobile.ui.game.FunkinPause();
-        add(androidPause);
-        androidPause.setFunkinPause('true');
+		pauseButton = new mobile.ui.game.FunkinPause();
+        add(pauseButton);
+        pauseButton.setFunkinPause('true');
 		#end
 
 		if (chartingMode) {
