@@ -1,5 +1,12 @@
 package mobile.ui.menus;
 
+import flixel.tweens.FlxEase;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import flixel.input.keyboard.FlxKey;
+import flixel.FlxG;
+
 #if mobile
 class FunkinBackButton extends FunkinButton
 {
@@ -24,6 +31,10 @@ class FunkinBackButton extends FunkinButton
 
   var _confirming:Bool = false;
   var _releaseBackspace:Bool = false;
+
+  var _touchPressed:Bool = false;
+  var _touchJustPressed:Bool = false;
+  var _touchJustReleased:Bool = false;
 
   public var restingOpacity:Float;
   var instant:Bool = false;
@@ -123,9 +134,9 @@ class FunkinBackButton extends FunkinButton
   public function resetCallbacks():Void
   {
     _confirming = false;
-    pressed = false;
-    justPressed = false;
-    justReleased = false;
+    _touchPressed = false;
+    _touchJustPressed = false;
+    _touchJustReleased = false;
   }
 
   override public function update(elapsed:Float):Void
@@ -158,16 +169,16 @@ class FunkinBackButton extends FunkinButton
         mousePoint.put();
       }
 
-      var wasPressed = this.pressed;
-      this.justPressed = isPressedTouch && !wasPressed;
-      this.justReleased = !isPressedTouch && wasPressed;
-      this.pressed = isPressedTouch;
+      var wasPressed = _touchPressed;
+      _touchJustPressed = isPressedTouch && !wasPressed;
+      _touchJustReleased = !isPressedTouch && wasPressed;
+      _touchPressed = isPressedTouch;
 
-      if (this.justPressed) 
+      if (_touchJustPressed) 
       {
         playHoldAnim();
       } 
-      else if (this.justReleased) 
+      else if (_touchJustReleased) 
       {
         if (releasedOnButton) playConfirmAnim();
         else playOutAnim();
