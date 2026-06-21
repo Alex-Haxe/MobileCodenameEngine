@@ -63,7 +63,7 @@ class FunkinBackButton extends FunkinButton
     animation.addByIndices('idle', 'back', [0], "", 24, false);
     animation.addByIndices('hold', 'back', [5], "", 24, false);
     animation.addByIndices('confirm', 'back', [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], "", 24, false);
-    animation.play("idle");
+    animation.play("idle", true);
 
     scale.set(0.7, 0.7);
     updateHitbox();
@@ -101,7 +101,7 @@ class FunkinBackButton extends FunkinButton
     held = true;
 
     FlxTween.cancelTweensOf(this);
-    animation.play('hold');
+    animation.play('hold', true);
 
     alpha = 1;
     
@@ -116,7 +116,7 @@ class FunkinBackButton extends FunkinButton
     clickCooldown = 0.5;
 
     FlxTween.cancelTweensOf(this);
-    animation.play('confirm');
+    animation.play('confirm', true);
 
     FlxG.sound.play(Paths.sound('cancelMenu'));
 
@@ -128,19 +128,26 @@ class FunkinBackButton extends FunkinButton
       onConfirmEnd.dispatch();
     }
 
-    animation.onFinish.addOnce(function(name:String)
+    var finishListener:String->Void = null;
+    finishListener = function(name:String)
     {
-      if (name != 'confirm') return;
-      
-      if (!instant) 
+      if (name == 'confirm')
       {
-        _sendReleaseNextFrame = true;
-        onConfirmEnd.dispatch();
+        if (!instant) 
+        {
+          _sendReleaseNextFrame = true;
+          onConfirmEnd.dispatch();
+        }
+        
+        _confirming = false;
+        held = false;
+        if (animation != null && animation.onFinish != null)
+        {
+          animation.onFinish.remove(finishListener);
+        }
       }
-      
-      _confirming = false;
-      held = false;
-    });
+    };
+    animation.onFinish.add(finishListener);
   }
 
   function playOutAnim():Void
@@ -153,7 +160,7 @@ class FunkinBackButton extends FunkinButton
     }
 
     FlxTween.cancelTweensOf(this);
-    animation.play('idle');
+    animation.play('idle', true);
 
     FlxTween.tween(this, {alpha: restingOpacity}, 0.5, {
       ease: FlxEase.expoOut,
@@ -191,16 +198,14 @@ class FunkinBackButton extends FunkinButton
 
     super.update(elapsed);
 
-    #if android
-    if (FlxG.android.justPressed.BACK) 
+    if (FlxG.keys.justPressed.BACKSPACE) 
     {
       playHoldAnim();
     }
-    else if (FlxG.android.justReleased.BACK) 
+    else if (FlxG.keys.justReleased.BACKSPACE) 
     {
       playConfirmAnim();
     }
-    #end
   }
 
   override function destroy():Void
