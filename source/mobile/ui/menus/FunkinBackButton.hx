@@ -42,7 +42,7 @@ class FunkinBackButton extends FunkinButton
   {
     super(x, y);
 
-    frames = Paths.getSparrowAtlas("backButton");
+    frames = Paths.getSparrowAtlas("menus/backButton");
     animation.addByIndices('idle', 'back', [0], "", 24, false);
     animation.addByIndices('hold', 'back', [5], "", 24, false);
     animation.addByIndices('confirm', 'back', [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], "", 24, false);
@@ -93,13 +93,12 @@ class FunkinBackButton extends FunkinButton
 
   function playConfirmAnim():Void
   {
-    if (!enabled) return;
+    if (!enabled || !held) return;
 
     FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
 
     if (instant)
     {
-      onConfirmEnd.dispatch();
       return;
     }
     else if (confirming)
@@ -121,7 +120,6 @@ class FunkinBackButton extends FunkinButton
       if (name != 'confirm') return;
       _confirming = false;
       held = false;
-      onConfirmEnd.dispatch();
     });
   }
 
@@ -157,9 +155,13 @@ class FunkinBackButton extends FunkinButton
     super.update(elapsed);
 
     #if android
-    if (FlxG.android.justReleased.BACK) 
+    if (FlxG.android.justPressed.BACK) 
     {
-      onConfirmEnd.dispatch();
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+    }
+    else if (FlxG.android.justReleased.BACK) 
+    {
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
     }
     #end
   }
