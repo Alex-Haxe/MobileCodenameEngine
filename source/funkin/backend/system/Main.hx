@@ -80,7 +80,7 @@ class Main extends Sprite
 
 		#if android
 		if (!Permissions.hasManageAllFiles()) {
-	        NativeAPI.showMessageBox("Permission Required!", "Please grant the following permission so the app can work correctly.", "Got It!");
+	        NativeAPI.showMessageBox("Permission Required!", "Please grant the following permission so the app can work correctly. (You may need to restart for the assets to load correctly).", "Got It!");
 
             openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, function(_) { checkPermissions(); });
     	}
