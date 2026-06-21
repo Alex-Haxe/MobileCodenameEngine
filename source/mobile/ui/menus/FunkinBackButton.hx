@@ -36,6 +36,8 @@ class FunkinBackButton extends FunkinButton
   var _sendPressNextFrame:Bool = false;
   var _sendReleaseNextFrame:Bool = false;
 
+  var clickCooldown:Float = 0;
+
   public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
   {
     var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
@@ -94,7 +96,7 @@ class FunkinBackButton extends FunkinButton
 
   function playHoldAnim():Void
   {
-    if (confirming || held || !enabled) return;
+    if (confirming || held || !enabled || clickCooldown > 0) return;
 
     held = true;
 
@@ -111,6 +113,7 @@ class FunkinBackButton extends FunkinButton
     if (!enabled || !held || confirming) return;
 
     _confirming = true;
+    clickCooldown = 0.5;
 
     FlxTween.cancelTweensOf(this);
     animation.play('confirm');
@@ -119,24 +122,25 @@ class FunkinBackButton extends FunkinButton
 
     onConfirmStart.dispatch();
 
-    animation.onFinish.addOnce(function(name:String)
-    {
-      if (name != 'confirm') return;
-      
-      _sendReleaseNextFrame = true;
-      onConfirmEnd.dispatch();
-      
-      _confirming = false;
-      held = false;
-    });
-    
     if (instant)
     {
       _sendReleaseNextFrame = true;
       onConfirmEnd.dispatch();
+    }
+
+    animation.onFinish.addOnce(function(name:String)
+    {
+      if (name != 'confirm') return;
+      
+      if (!instant) 
+      {
+        _sendReleaseNextFrame = true;
+        onConfirmEnd.dispatch();
+      }
+      
       _confirming = false;
       held = false;
-    }
+    });
   }
 
   function playOutAnim():Void
@@ -166,10 +170,13 @@ class FunkinBackButton extends FunkinButton
     held = false;
     _sendPressNextFrame = false;
     _sendReleaseNextFrame = false;
+    clickCooldown = 0;
   }
 
   override public function update(elapsed:Float):Void
   {
+    if (clickCooldown > 0) clickCooldown -= elapsed;
+
     if (_sendPressNextFrame)
     {
       _sendPressNextFrame = false;
