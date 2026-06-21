@@ -2,6 +2,7 @@ package mobile.ui.menus;
 
 #if mobile
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -33,11 +34,29 @@ class FunkinBackButton extends FunkinButton
   var _sendPressNextFrame:Bool = false;
   var _sendReleaseNextFrame:Bool = false;
 
+  public static var buttonCam:FlxCamera = null;
+
   public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
   {
+    prepareCamera();
     var btn = new FunkinBackButton(x, y, color, confirmCallback, restingOpacity, instant);
+    btn.cameras = [buttonCam];
     FlxG.state.add(btn);
     return btn;
+  }
+
+  public static function prepareCamera():Void
+  {
+    if (buttonCam == null)
+    {
+      buttonCam = new FlxCamera();
+      buttonCam.bgColor = FlxColor.TRANSPARENT;
+    }
+    
+    if (!FlxG.cameras.list.contains(buttonCam))
+    {
+      FlxG.cameras.add(buttonCam, false);
+    }
   }
 
   public function new(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3,
@@ -46,9 +65,9 @@ class FunkinBackButton extends FunkinButton
     super(x, y);
 
     frames = Paths.getSparrowAtlas("menus/backButton");
-    animation.addByIndices('idle', 'back', [0], "", 24, false);
-    animation.addByIndices('hold', 'back', [5], "", 24, false);
-    animation.addByIndices('confirm', 'back', [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], "", 24, false);
+    animation.addByIndices('idle', 'back',, "", 24, false);
+    animation.addByIndices('hold', 'back',, "", 24, false);
+    animation.addByIndices('confirm', 'back',, "", 24, false);
     animation.play("idle");
 
     scale.set(0.7, 0.7);
@@ -158,6 +177,12 @@ class FunkinBackButton extends FunkinButton
 
   override public function update(elapsed:Float):Void
   {
+    if (buttonCam != null && FlxG.cameras.list.indexOf(buttonCam) != FlxG.cameras.list.length - 1)
+    {
+      FlxG.cameras.remove(buttonCam, false);
+      FlxG.cameras.add(buttonCam, false);
+    }
+
     if (_sendPressNextFrame)
     {
       _sendPressNextFrame = false;
@@ -176,10 +201,6 @@ class FunkinBackButton extends FunkinButton
     if (FlxG.android.justPressed.BACK) 
     {
       playHoldAnim();
-    }
-    else if (FlxG.android.justReleased.BACK) 
-    {
-      playConfirmAnim();
     }
     #end
   }
