@@ -33,9 +33,6 @@ class FunkinBackButton extends FunkinButton
   var instant:Bool = false;
   var held:Bool = false;
   
-  var _sendPressNextFrame:Bool = false;
-  var _sendReleaseNextFrame:Bool = false;
-
   var clickCooldown:Float = 0;
 
   public static function add(?x:Float = 0, ?y:Float = 0, ?color:FlxColor = FlxColor.WHITE, ?confirmCallback:Void->Void, ?restingOpacity:Float = 0.3, instant:Bool = false):FunkinBackButton
@@ -79,19 +76,23 @@ class FunkinBackButton extends FunkinButton
   override function onDownHandler():Void
   {
     super.onDownHandler();
-    playHoldAnim();
+    
+    if (enabled && clickCooldown <= 0)
+    {
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
+      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
+      playConfirmAnim();
+    }
   }
 
   override function onUpHandler():Void
   {
     super.onUpHandler();
-    playConfirmAnim();
   }
 
   override function onOutHandler():Void
   {
     super.onOutHandler();
-    playOutAnim();
   }
 
   function playHoldAnim():Void
@@ -104,13 +105,11 @@ class FunkinBackButton extends FunkinButton
     animation.play('hold', true);
 
     alpha = 1;
-    
-    _sendPressNextFrame = true;
   }
 
   function playConfirmAnim():Void
   {
-    if (!enabled || !held || confirming) return;
+    if (!enabled || confirming) return;
 
     _confirming = true;
     clickCooldown = 0.5;
@@ -124,7 +123,6 @@ class FunkinBackButton extends FunkinButton
 
     if (instant)
     {
-      _sendReleaseNextFrame = true;
       onConfirmEnd.dispatch();
     }
 
@@ -135,7 +133,6 @@ class FunkinBackButton extends FunkinButton
       {
         if (!instant) 
         {
-          _sendReleaseNextFrame = true;
           onConfirmEnd.dispatch();
         }
         
@@ -154,11 +151,6 @@ class FunkinBackButton extends FunkinButton
   {
     if (confirming || !enabled) return;
 
-    if (held)
-    {
-      _sendReleaseNextFrame = true;
-    }
-
     FlxTween.cancelTweensOf(this);
     animation.play('idle', true);
 
@@ -175,36 +167,20 @@ class FunkinBackButton extends FunkinButton
   {
     _confirming = false;
     held = false;
-    _sendPressNextFrame = false;
-    _sendReleaseNextFrame = false;
     clickCooldown = 0;
+    
+    FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
   }
 
   override public function update(elapsed:Float):Void
   {
     if (clickCooldown > 0) clickCooldown -= elapsed;
 
-    if (_sendPressNextFrame)
-    {
-      _sendPressNextFrame = false;
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, true);
-    }
-    
-    if (_sendReleaseNextFrame)
-    {
-      _sendReleaseNextFrame = false;
-      FlxG.keys.handleAction(FlxKey.BACKSPACE, false);
-    }
-
     super.update(elapsed);
 
     if (FlxG.keys.justPressed.BACKSPACE) 
     {
-      playHoldAnim();
-    }
-    else if (FlxG.keys.justReleased.BACKSPACE) 
-    {
-      playConfirmAnim();
+      if (!_confirming) playConfirmAnim();
     }
   }
 
