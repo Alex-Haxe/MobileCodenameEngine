@@ -43,7 +43,7 @@ on:
           
 jobs:
   buildAndroid:
-    if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event_name == 'push' }}
+    if: ${{ github.event.inputs.platform != 'ios' || github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event_name == 'push' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -154,7 +154,7 @@ jobs:
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
   # only built if im doing a workflow run.
   buildiOS:
-    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || github.event_name != 'push'}}
+    if: ${{ github.event.inputs.platform != 'android' || github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || github.event_name != 'push'}}
     runs-on: macos-latest
 
     steps:
