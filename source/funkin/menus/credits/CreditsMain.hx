@@ -52,7 +52,8 @@ class CreditsMain extends TreeMenu {
             virtualPad = new FunkinPad(UP_DOWN, A_B);
             add(virtualPad);
 		} else {
-		    FunkinBackButton.add(FlxG.width - 230, FlxG.height - 200, FlxColor.WHITE, null, 1.0);
+		    virtualPad = new FunkinPad(NONE, BACK);
+            add(virtualPad);
 		}
         #end
 	}
