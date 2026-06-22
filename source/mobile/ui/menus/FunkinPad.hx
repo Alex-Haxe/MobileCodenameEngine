@@ -1,4 +1,4 @@
-package mobile.controls;
+package mobile.ui.menus;
 
 #if mobile
 import flixel.FlxG;
