@@ -46,13 +46,13 @@ class SaveSubstate extends MusicBeatSubstate {
 			
 			Tools.saveFile(tempPath, fileName, mimeType, function(success:Bool) {
 				if (success) {
-					Toast.makeText("Saved File!", Toast.LENGTH_SHORT).show();
+					Toast.makeText("Saved File!", Toast.LENGTH_SHORT);
 				}
 				close();
 			});
 		} catch(e:Dynamic) {
 			trace("Error writing temp save file for Android: " + e);
-			Toast.makeText("Error saving file!", Toast.LENGTH_SHORT).show();
+			Toast.makeText("Error saving file!", Toast.LENGTH_SHORT);
 			close();
 		}
 		#else
