@@ -342,7 +342,7 @@ class FunkinPad extends FlxSpriteGroup
 					}
 				}
 			}
-			if (FlxG.keys.justPressed.BACKSPACE) {
+			if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE) {
 			    playBackAnim(btn);
 			}
 		}
