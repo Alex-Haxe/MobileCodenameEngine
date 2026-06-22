@@ -7,6 +7,7 @@ class DebugOptions extends TreeMenuScreen {
 		#if windows
 		add(new TextOption(getNameID("showConsole"), getDescID("showConsole"), () -> funkin.backend.utils.NativeAPI.allocConsole()));
 		#end
+		add(new Checkbox(getnameID("extraOptions"), getDescID("extraOptions"), "extraOptions"));
 		add(new Checkbox(getNameID("editorsResizable"), getDescID("editorsResizable"), "editorsResizable"));
 		add(new Checkbox(getNameID("bypassEditorsResize"), getDescID("bypassEditorsResize"), "bypassEditorsResize"));
 		add(new Checkbox(getNameID("editorSFX"), getDescID("editorSFX"), "editorSFX"));
