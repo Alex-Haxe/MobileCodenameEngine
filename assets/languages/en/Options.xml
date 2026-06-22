@@ -210,6 +210,9 @@
 		<str id="showConsole-name">Show Console</str>
 		<str id="showConsole-desc">Select this to show the debug console, which contains log information about the game.</str>
 
+		<str id="extraOptions-name">Extra Options</str>
+		<str id="extraOptions-desc">If checked, it will enable some options like middlescroll and more.</str>
+
 		<str id="editorsResizable-name">Resizable Editors</str>
 		<str id="editorsResizable-desc">If checked, this will allow the editors to render beyond the base 1280x720 resolution of FNF (allowing for more detail and space...)</str>
 
