@@ -258,9 +258,18 @@ class FunkinPad extends FlxSpriteGroup
 			return;
 		}
 
-		this.alpha = funkin.options.Options.VirtualPadOpacity; 
-		
 		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft, buttonE, buttonM, buttonBack];
+		
+		var currentOpacity = funkin.options.Options.VirtualPadOpacity;
+		for (btn in padButtons) {
+			if (btn != null) {
+				if (btn == buttonE || btn == buttonM || btn == buttonBack) {
+					btn.alpha = 1.0;
+				} else {
+					btn.alpha = currentOpacity;
+				}
+			}
+		}
 
 		if (FunkinPad.lastUpdateFrame != FlxG.game.ticks) {
 			FunkinPad.usedTouches = [];
