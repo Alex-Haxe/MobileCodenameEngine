@@ -10,7 +10,7 @@ import flixel.util.FlxSignal;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.FlxInput.FlxInputState;
 import mobile.ui.FunkinButton;
-
+/**
 class FunkinBackButton extends FunkinButton
 {
   public static var buttonCam:FlxCamera;
@@ -180,4 +180,5 @@ class FunkinBackButton extends FunkinButton
     onConfirmEnd.removeAll();
   }
 }
+**/
 #end
