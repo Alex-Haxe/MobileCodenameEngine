@@ -1,4 +1,4 @@
-package mobile.ui.menus;
+package mobile.controls;
 
 #if mobile
 import flixel.FlxG;
@@ -48,7 +48,7 @@ class FunkinPad extends FlxSpriteGroup
 	public var buttonM:MobileButton;
 	public var buttonBack:MobileButton;
 
-	public var FunkinPadCamera:FlxCamera;
+	public var virtualpadCamera:FlxCamera;
 	public static var touchingPad:Bool = false;
 
 	private inline static var B_W:Int = 132;
@@ -82,10 +82,10 @@ class FunkinPad extends FlxSpriteGroup
 		super();
 		FunkinPad.activePads.push(this);
 
-		FunkinPadCamera = new FlxCamera();
-		FunkinPadCamera.bgColor = 0x00000000;
-		FlxG.cameras.add(FunkinPadCamera, false);
-		this.cameras = [FunkinPadCamera];
+		virtualpadCamera = new FlxCamera();
+		virtualpadCamera.bgColor = 0x00000000;
+		FlxG.cameras.add(virtualpadCamera, false);
+		this.cameras = [virtualpadCamera];
 
 		if (Std.isOfType(FlxG.state, funkin.editors.charter.Charter)) {
 			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
@@ -194,6 +194,9 @@ class FunkinPad extends FlxSpriteGroup
 			case B_Y:
 				add(buttonB = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "b"));
 				add(buttonY = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "y"));
+			case X_Y:
+				add(buttonY = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "y"));
+				add(buttonX = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "x"));
 			case B_X_Y:
 				add(buttonB = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "b"));
 				add(buttonY = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "y"));
@@ -260,7 +263,7 @@ class FunkinPad extends FlxSpriteGroup
 
 		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft, buttonE, buttonM, buttonBack];
 		
-		var currentOpacity = funkin.options.Options.VirtualPadOpacity;
+		var currentOpacity = funkin.options.Options.virtualPadOpacity;
 		for (btn in padButtons) {
 			if (btn != null) {
 				if (btn == buttonE || btn == buttonM || btn == buttonBack) {
@@ -291,7 +294,7 @@ class FunkinPad extends FlxSpriteGroup
         }
 
 		var overlappingPad:Bool = false;
-		var cam = FunkinPadCamera != null ? FunkinPadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
+		var cam = virtualpadCamera != null ? virtualpadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
 
 		for (btn in padButtons) {
 			if (btn == null || !btn.exists || !btn.active || !btn.visible) continue;
@@ -340,7 +343,7 @@ class FunkinPad extends FlxSpriteGroup
 				}
 			}
 			
-			playBackAnim(this);
+			playBackAnim(btn);
 		}
 		
 		if (overlappingPad)
@@ -376,7 +379,7 @@ class FunkinPad extends FlxSpriteGroup
 	}
 
 	override public function draw():Void {
-		if (FunkinPadCamera != null && !FlxG.cameras.list.contains(FunkinPadCamera)) return; 
+		if (virtualpadCamera != null && !FlxG.cameras.list.contains(virtualpadCamera)) return; 
 		super.draw();
 	}
 
@@ -531,9 +534,9 @@ class FunkinPad extends FlxSpriteGroup
 		    holdActive = null;
 		}
 
-		if (FunkinPadCamera != null) {
-			FlxG.cameras.remove(FunkinPadCamera, false);
-			FunkinPadCamera = null;
+		if (virtualpadCamera != null) {
+			FlxG.cameras.remove(virtualpadCamera, false);
+			virtualpadCamera = null;
 		}
 
 		buttonA = FlxDestroyUtil.destroy(buttonA);
@@ -628,6 +631,6 @@ enum FlxDPadMode {
 }
 
 enum FlxActionMode {
-	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y; E; E_M; M; BACK;
+	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y; X_Y; E; E_M; M; BACK;
 }
 #end
