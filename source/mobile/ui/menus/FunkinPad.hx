@@ -1,6 +1,18 @@
-package mobile.ui.menus;
+package mobile.controls;
 
 #if mobile
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxCamera;
+import flixel.group.FlxSpriteGroup;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.touch.FlxTouch;
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
+import flixel.input.FlxInput.FlxInputState;
+
 class MobileButton extends FlxSprite 
 {
 	public var justPressed:Bool = false;
@@ -32,7 +44,11 @@ class FunkinPad extends FlxSpriteGroup
 	public var buttonRight2:MobileButton;
 	public var buttonDown2:MobileButton;
 
-	public var virtualpadCamera:FlxCamera;
+	public var buttonE:MobileButton;
+	public var buttonM:MobileButton;
+	public var buttonBack:MobileButton;
+
+	public var FunkinPadCamera:FlxCamera;
 	public static var touchingPad:Bool = false;
 
 	private inline static var B_W:Int = 132;
@@ -55,7 +71,10 @@ class FunkinPad extends FlxSpriteGroup
 		"b" => FlxKey.BACKSPACE,
 		"c" => FlxKey.SHIFT,
 		"x" => FlxKey.SEVEN,
-		"y" => FlxKey.TAB
+		"y" => FlxKey.TAB,
+		"e" => FlxKey.SEVEN,
+		"m" => FlxKey.TAB,
+		"back" => FlxKey.ESCAPE
 	];
 	
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
@@ -63,10 +82,10 @@ class FunkinPad extends FlxSpriteGroup
 		super();
 		FunkinPad.activePads.push(this);
 
-		virtualpadCamera = new FlxCamera();
-		virtualpadCamera.bgColor = 0x00000000;
-		FlxG.cameras.add(virtualpadCamera, false);
-		this.cameras = [virtualpadCamera];
+		FunkinPadCamera = new FlxCamera();
+		FunkinPadCamera.bgColor = 0x00000000;
+		FlxG.cameras.add(FunkinPadCamera, false);
+		this.cameras = [FunkinPadCamera];
 
 		if (Std.isOfType(FlxG.state, funkin.editors.charter.Charter)) {
 			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
@@ -147,9 +166,6 @@ class FunkinPad extends FlxSpriteGroup
 			case A_Y:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
 				add(buttonY = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "y"));
-			case X_Y:
-				add(buttonY = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "y"));
-				add(buttonX = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "x"));
 			case A_B_C:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
 				add(buttonB = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "b"));
@@ -192,6 +208,15 @@ class FunkinPad extends FlxSpriteGroup
 				add(buttonX = createButton(FlxG.width - 132, FlxG.height - 255, B_W, B_H, "x"));
 				add(buttonC = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "c"));
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
+			case E:
+				add(buttonE = createExtraImageButton(50, 475, "menus/EButton"));
+			case E_M:
+				add(buttonE = createExtraImageButton(50, 475, "menus/EButton"));
+				add(buttonM = createExtraImageButton(1000, 475, "menus/MButton"));
+			case M:
+				add(buttonM = createExtraImageButton(1000, 475, "menus/MButton"));
+			case BACK:
+				add(buttonBack = createExtraSparrowButton(1000, 475, "menus/backButton", "back"));
 			case NONE:
 			default:
 		}
@@ -217,6 +242,14 @@ class FunkinPad extends FlxSpriteGroup
     	btn.justReleased = false;
     	btn.pressed = false;
     }
+
+	function playBackAnim(btn:MobileButton)
+    {
+        if (btn.pressed)
+            btn.animation.play("pressed", true);
+        else
+            btn.animation.play("normal", true);
+    }
      
 	override function update(elapsed:Float) 
 	{
@@ -225,8 +258,9 @@ class FunkinPad extends FlxSpriteGroup
 			return;
 		}
 
-		this.alpha = funkin.options.Options.virtualPadOpacity; 
-		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft];
+		this.alpha = funkin.options.Options.VirtualPadOpacity; 
+		
+		var padButtons = [buttonY, buttonX, buttonC, buttonB, buttonA, buttonDown2, buttonRight2, buttonUp2, buttonLeft2, buttonDown, buttonRight, buttonUp, buttonLeft, buttonE, buttonM, buttonBack];
 
 		if (FunkinPad.lastUpdateFrame != FlxG.game.ticks) {
 			FunkinPad.usedTouches = [];
@@ -248,13 +282,12 @@ class FunkinPad extends FlxSpriteGroup
         }
 
 		var overlappingPad:Bool = false;
-		var cam = virtualpadCamera != null ? virtualpadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
+		var cam = FunkinPadCamera != null ? FunkinPadCamera : (this.cameras != null && this.cameras.length > 0 ? this.cameras[0] : FlxG.camera);
 
 		for (btn in padButtons) {
 			if (btn == null || !btn.exists || !btn.active || !btn.visible) continue;
 
 			var isPressed = false;
-
 
 			for (touch in FlxG.touches.list) {
 				if (touch.pressed && !FunkinPad.usedTouches.contains(touch)) { 
@@ -298,10 +331,7 @@ class FunkinPad extends FlxSpriteGroup
 				}
 			}
 			
-			if (btn.pressed)
-				btn.animation.play("pressed");
-			else
-				btn.animation.play("normal");
+			playBackAnim(this);
 		}
 		
 		if (overlappingPad)
@@ -330,11 +360,14 @@ class FunkinPad extends FlxSpriteGroup
 		if (btn == buttonC) return getBind("c");
 		if (btn == buttonX) return getBind("x");
 		if (btn == buttonY) return getBind("y");
+		if (btn == buttonE) return getBind("e");
+		if (btn == buttonM) return getBind("m");
+		if (btn == buttonBack) return getBind("back");
 		return FlxKey.NONE;
 	}
 
 	override public function draw():Void {
-		if (virtualpadCamera != null && !FlxG.cameras.list.contains(virtualpadCamera)) return; 
+		if (FunkinPadCamera != null && !FlxG.cameras.list.contains(FunkinPadCamera)) return; 
 		super.draw();
 	}
 
@@ -383,7 +416,7 @@ class FunkinPad extends FlxSpriteGroup
 	
 	public function anyPressed():Bool
 	{
-		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
+		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY, buttonE, buttonM, buttonBack];
 		for (btn in padButtons) {
 			if (btn != null && btn.pressed) return true;
 		}
@@ -392,7 +425,7 @@ class FunkinPad extends FlxSpriteGroup
 
 	public function isTouchOnPad(point:FlxPoint):Bool
 	{
-		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY];
+		var padButtons = [buttonLeft, buttonRight, buttonUp, buttonDown, buttonLeft2, buttonRight2, buttonUp2, buttonDown2, buttonA, buttonB, buttonC, buttonX, buttonY, buttonE, buttonM, buttonBack];
 		for (btn in padButtons) {
 			if (btn != null && btn.overlapsPoint(point)) return true;
 		}
@@ -489,9 +522,9 @@ class FunkinPad extends FlxSpriteGroup
 		    holdActive = null;
 		}
 
-		if (virtualpadCamera != null) {
-			FlxG.cameras.remove(virtualpadCamera, false);
-			virtualpadCamera = null;
+		if (FunkinPadCamera != null) {
+			FlxG.cameras.remove(FunkinPadCamera, false);
+			FunkinPadCamera = null;
 		}
 
 		buttonA = FlxDestroyUtil.destroy(buttonA);
@@ -509,6 +542,10 @@ class FunkinPad extends FlxSpriteGroup
 		buttonDown2 = FlxDestroyUtil.destroy(buttonDown2);
 		buttonUp2 = FlxDestroyUtil.destroy(buttonUp2);
 		buttonRight2 = FlxDestroyUtil.destroy(buttonRight2);
+
+		buttonE = FlxDestroyUtil.destroy(buttonE);
+		buttonM = FlxDestroyUtil.destroy(buttonM);
+		buttonBack = FlxDestroyUtil.destroy(buttonBack);
 
 		this.cameras = null;
 		atlasFrames = null;
@@ -531,6 +568,50 @@ class FunkinPad extends FlxSpriteGroup
 		
 		return button;
 	}
+
+	private function createExtraSparrowButton(x:Float, y:Float, path:String, animName:String):MobileButton {
+		var btn = new MobileButton(x, y);
+		var atlas = Paths.getSparrowAtlas(path);
+		
+		if (atlas != null) {
+			btn.frames = atlas;
+			btn.animation.addByPrefix("normal", animName + "idle", 24, false);
+			btn.animation.addByPrefix("pressed", animName + "click", 24, false);
+			btn.animation.play("normal");
+		} else {
+			btn.makeGraphic(132, 135, 0xFFFFFFFF);
+			btn.animation.add("normal", [0]);
+			btn.animation.add("pressed", [0]);
+		}
+		
+		btn.scale.set(0.8, 0.8);
+		btn.updateHitbox();
+		btn.solid = false;
+		btn.immovable = true;
+		btn.scrollFactor.set();
+		return btn;
+	}
+
+	private function createExtraImageButton(x:Float, y:Float, path:String):MobileButton {
+		var btn = new MobileButton(x, y);
+		var img = Paths.image(path);
+		
+		if (img != null) {
+			btn.loadGraphic(img);
+		} else {
+			btn.makeGraphic(132, 135, 0xFFFFFFFF);
+		}
+		
+		btn.animation.add("normal", [0]);
+		btn.animation.add("pressed", [0]);
+		
+		btn.scale.set(0.8, 0.8);
+		btn.updateHitbox();
+		btn.solid = false;
+		btn.immovable = true;
+		btn.scrollFactor.set();
+		return btn;
+	}
 }
 
 enum FlxDPadMode {
@@ -538,6 +619,6 @@ enum FlxDPadMode {
 }
 
 enum FlxActionMode {
-	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; X_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y;
+	NONE; A; B; X; Y; C; A_B; A_C; A_X; A_Y; A_B_C; A_X_Y; A_B_X_Y; A_C_X_Y; A_B_C_X_Y; B_C; B_X; B_Y; B_C_X_Y; B_X_Y; E; E_M; M; BACK;
 }
 #end
