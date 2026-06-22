@@ -5,6 +5,7 @@ import lime.ui.FileDialog;
 
 #if android
 import extension.androidtools.Tools;
+import extension.androidtools.widget.Toast;
 #end
 
 class SaveSubstate extends MusicBeatSubstate {
@@ -44,10 +45,14 @@ class SaveSubstate extends MusicBeatSubstate {
 			else if (ext == "xml" || ext == "hx" || ext == "lua" || ext == "txt") mimeType = "text/plain";
 			
 			Tools.saveFile(tempPath, fileName, mimeType, function(success:Bool) {
+				if (success) {
+					Toast.makeText("Saved File!", Toast.LENGTH_SHORT).show();
+				}
 				close();
 			});
 		} catch(e:Dynamic) {
 			trace("Error writing temp save file for Android: " + e);
+			Toast.makeText("Error saving file!", Toast.LENGTH_SHORT).show();
 			close();
 		}
 		#else
