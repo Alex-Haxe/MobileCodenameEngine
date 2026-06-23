@@ -1,5 +1,7 @@
 # Friday Night Funkin' - Codename Engine Mobile
 ---
+## paused for a little while because im working on my iostools extension
+
 > [!CAUTION]
 > If u encounter any issues. Go [here](https://github.com/ChanceXML/MobileCodenameEngine/issues) and report them 
 
