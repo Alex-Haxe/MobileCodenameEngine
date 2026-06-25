@@ -1557,17 +1557,17 @@ class PlayState extends MusicBeatState
             };
 
             for (i in 0...hitbox.buttons.length) {
-               var btn = hitbox.buttons[i];
-               var key = keysArray[i];
-        
-               if (key != null) {
-                      if (btn.justPressed) {
-                        FlxG.keys.handleAction(key, true);
-                    } else if (btn.justReleased) {
-                        FlxG.keys.handleAction(key, false);
+                var btn = hitbox.buttons[i];
+                var key:Null<FlxKey> = keysArray[i];
+ 
+            if (key != null) {
+                if (btn.justPressed) {
+                    FlxG.keys.handleAction(key, true);
+                } else if (btn.justReleased) {
+                    FlxG.keys.handleAction(key, false);
                     }
                 }
-            }
+		    }
         }
         #end
 
