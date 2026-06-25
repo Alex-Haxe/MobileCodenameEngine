@@ -110,7 +110,7 @@ class MainMenuState extends MusicBeatState
             virtualPad = new FunkinPad(UP_DOWN, A_B_X_Y);
             add(virtualPad);
 		} else {
-			virtualPad = new FunkinPad(NONE, X_Y);
+			virtualPad = new FunkinPad(NONE, E_M);
             add(virtualPad);
 		}
         #end
