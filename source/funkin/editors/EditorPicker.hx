@@ -3,6 +3,7 @@ package funkin.editors;
 import flixel.effects.FlxFlicker;
 import flixel.math.FlxPoint;
 #if mobile
+import funkin.options.Options;
 import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
 import funkin.backend.MusicBeatState;
@@ -90,8 +91,13 @@ class EditorPicker extends MusicBeatSubstate {
 		FlxG.mouse.getScreenPosition(subCam, oldMousePos);
 
 		#if mobile
-        virtualPad = new FunkinPad(NONE, B);
-        add(virtualPad);
+		if (Options.useVirtualPad) {
+            virtualPad = new FunkinPad(NONE, B);
+            add(virtualPad);
+		} else {
+			virtualPad = new FunkinPad(NONE, BACK);
+            add(virtualPad);
+		}
         #end
 	}
 
