@@ -220,8 +220,10 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 				// apparently there is a boolean that just checks for you. yw :D
 
 				// if we are not holding ctrl, ignore
-				if (!modifier.ctrlKey)
+				#if !mobile
+				if (!modifier.ctrlKey && !modifier.metaKey)
 					return;
+				#end
 				// we pasting
 				var data:String = Clipboard.generalClipboard.getData(TEXT_FORMAT);
 				if (data != null)
@@ -229,8 +231,10 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 			case C:
 				UIState.playEditorSound(Flags.DEFAULT_EDITOR_COPY_SOUND);
 				// if we are not holding ctrl, ignore
-				if (!modifier.ctrlKey)
+				#if !mobile
+				if (!modifier.ctrlKey && !modifier.metaKey)
 					return;
+				#end
 
 				// copying
 				Clipboard.generalClipboard.setData(TEXT_FORMAT, label.text);
@@ -238,20 +242,24 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 				UIState.playEditorSound(Flags.DEFAULT_EDITOR_CUT_SOUND);
 
 				// if we are not holding ctrl, ignore
-				if (!modifier.ctrlKey)
+				#if !mobile
+				if (!modifier.ctrlKey && !modifier.metaKey)
 					return;
+				#end
 
 				// cutting
 				Clipboard.generalClipboard.setData(TEXT_FORMAT, label.text);
 				position = 0;
 				label.text = "";
 			default:
+				#if !mobile
 				if (modifier.ctrlKey || modifier.altKey || modifier.shiftKey)
 					return;
+				#end
 
 				UIState.playEditorSound(Flags.DEFAULT_EDITOR_TEXTTYPE_SOUND);
 		}
-	}
+    }
 
 	public function changeSelection(change:Int) {
 		position = Std.int(FlxMath.bound(position + change, 0, label.text.length));
