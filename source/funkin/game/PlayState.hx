@@ -1547,29 +1547,27 @@ class PlayState extends MusicBeatState
 		
         #if mobile
         if (hitbox != null) {
-            if (hitbox.UP.justPressed) {
-                FlxG.keys.handleAction(FlxKey.W, true);
-            } else if (hitbox.UP.justReleased) {
-                FlxG.keys.handleAction(FlxKey.W, false);
-            }
+            var keysArray:Array<FlxKey> = switch (hitbox.buttons.length) {
+                case 5:  [A, S, SPACE, K, L];
+                case 6:  [S, D, F, J, K, L];
+                case 7:  [S, D, F, SPACE, J, K, L];
+                case 8:  [A, S, D, F, H, J, K, L];
+                case 9:  [A, S, D, F, SPACE, H, J, K, L];
+                default: [A, S, W, D];
+            };
 
-            if (hitbox.DOWN.justPressed) {
-                FlxG.keys.handleAction(FlxKey.S, true);
-            } else if (hitbox.DOWN.justReleased) {
-                FlxG.keys.handleAction(FlxKey.S, false);
+            for (i in 0...hitbox.buttons.length) {
+               var btn = hitbox.buttons[i];
+               var key = keysArray[i];
+        
+               if (key != null) {
+                      if (btn.justPressed) {
+                        FlxG.keys.handleAction(key, true);
+                    } else if (btn.justReleased) {
+                        FlxG.keys.handleAction(key, false);
+                    }
+                }
             }
-
-            if (hitbox.LEFT.justPressed) {
-                FlxG.keys.handleAction(FlxKey.A, true);
-            } else if (hitbox.LEFT.justReleased) {
-                FlxG.keys.handleAction(FlxKey.A, false);
-            }
-
-            if (hitbox.RIGHT.justPressed) {
-                FlxG.keys.handleAction(FlxKey.D, true);
-            } else if (hitbox.RIGHT.justReleased) {
-                FlxG.keys.handleAction(FlxKey.D, false);
-            } 
         }
         #end
 
