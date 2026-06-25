@@ -1,5 +1,8 @@
 package mobile.ui.game;
 
+import funkin.game.PlayState;
+import funkin.game.StrumLine;
+
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
@@ -17,57 +20,63 @@ class FunkinHitbox extends FlxSpriteGroup {
     public var hintUp:HitboxButton;
     public var hintRight:HitboxButton;
 
+    public var buttons:Array<HitboxButton> = [];
+    public var hints:Array<HitboxButton> = [];
+
     public var LEFT(get, never):HitboxButton; inline function get_LEFT() return buttonLeft;
     public var DOWN(get, never):HitboxButton; inline function get_DOWN() return buttonDown;
     public var UP(get, never):HitboxButton; inline function get_UP() return buttonUp;
     public var RIGHT(get, never):HitboxButton; inline function get_RIGHT() return buttonRight;
 
-    public function new(hitboxStyle:String = "Simple", hintStyle:String = "Simple") {
+    public function new(hitboxStyle:String = "Simple", hintStyle:String = "Simple", keyCount:Int = 4) {
         super();
 
-        var w:Int = Std.int(FlxG.width / 4);
+        var w:Int = Std.int(FlxG.width / keyCount);
         var h:Int = Std.int(FlxG.height);
         
         var hintH:Int = Options.fullHint ? Std.int(FlxG.height) : Std.int(FlxG.height / 28);
-        
         var hintY:Int = hintStyle == "Gradient" ? 0 : FlxG.height - hintH;
 
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         hitboxCamera.bgColor = 0x00000000;
-        
-        buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera, false);
-        buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera, false);
-        buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera, false);
-        buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera, false);
 
-        if (hitboxStyle == "Gradient") {
-            applyGradientSafe([buttonLeft, buttonDown, buttonUp, buttonRight], w, h, false);
-        }
+        var colors:Array<Int> = switch(keyCount) {
+            case 5: [0xFFC24B99, 0xFF00FFFF, 0xFFFFFFFF, 0xFF12FA05, 0xFFF9393F];
+            case 6: [0xFFC24B99, 0xFF12FA05, 0xFFF9393F, 0xFFE7E63D, 0xFF8338EC, 0xFF0012FA];
+            case 7: [0xFFC24B99, 0xFF12FA05, 0xFFF9393F, 0xFFFFFFFF, 0xFFE7E63D, 0xFF8338EC, 0xFF0012FA];
+            case 8: [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F, 0xFFE7E63D, 0xFF8338EC, 0xFF0012FA, 0xFFC24B99];
+            case 9: [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F, 0xFFFFFFFF, 0xFFE7E63D, 0xFF8338EC, 0xFF0012FA, 0xFFC24B99];
+            default: [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F];
+        };
 
-        hintLeft  = new HitboxButton(0, hintY, w, hintH, 0xFFC24B99, hitboxCamera, true);
-        hintDown  = new HitboxButton(w, hintY, w, hintH, 0xFF00FFFF, hitboxCamera, true);
-        hintUp    = new HitboxButton(w * 2, hintY, w, hintH, 0xFF12FA05, hitboxCamera, true);
-        hintRight = new HitboxButton(w * 3, hintY, w, hintH, 0xFFF9393F, hitboxCamera, true);
-
-        hintLeft.parentButton = buttonLeft;
-        hintDown.parentButton = buttonDown;
-        hintUp.parentButton = buttonUp;
-        hintRight.parentButton = buttonRight;
-
-        if (hintStyle == "Gradient") {
-            applyGradientSafe([hintLeft, hintDown, hintUp, hintRight], w, hintH, true);
-        }
-
-        for (btn in [buttonLeft, buttonDown, buttonUp, buttonRight, hintLeft, hintDown, hintUp, hintRight]) {
+        for (i in 0...keyCount) {
+            var btn = new HitboxButton(w * i, 0, w, h, colors[i], hitboxCamera, false);
+            buttons.push(btn);
             add(btn);
-            btn.cameras = [hitboxCamera];
-            btn.scrollFactor.set(0, 0);
+            
+            var hint = new HitboxButton(w * i, hintY, w, hintH, colors[i], hitboxCamera, true);
+            hints.push(hint);
+            add(hint);
+            
+            hint.parentButton = btn;
         }
+
+        if (keyCount == 4) {
+            buttonLeft = buttons[0]; buttonDown = buttons[1]; buttonUp = buttons[2]; buttonRight = buttons[3];
+            hintLeft = hints[0]; hintDown = hints[1]; hintUp = hints[2]; hintRight = hints[3];
+        } else {
+            buttonLeft = buttons[0]; buttonDown = buttons[1]; buttonUp = buttons[2]; buttonRight = buttons[3];
+            hintLeft = hints[0]; hintDown = hints[1]; hintUp = hints[2]; hintRight = hints[3];
+        }
+
+        if (hitboxStyle == "Gradient") applyGradientSafe(buttons, colors, w, h);
+        if (hintStyle == "Gradient") applyGradientSafe(hints, colors, w, hintH);
+
+        for (item in buttons) { item.cameras = [hitboxCamera]; item.scrollFactor.set(0, 0); }
+        for (item in hints) { item.cameras = [hitboxCamera]; item.scrollFactor.set(0, 0); }
     }
     
-    private function applyGradientSafe(buttons:Array<HitboxButton>, width:Int, height:Int, isHint:Bool):Void {
-        var colors:Array<Int> = [0xFFC24B99, 0xFF00FFFF, 0xFF12FA05, 0xFFF9393F];
-
+    private function applyGradientSafe(buttons:Array<HitboxButton>, colors:Array<Int>, width:Int, height:Int):Void {
         for (i in 0...buttons.length) {
             var btn = buttons[i];
             var shape = new Shape();
@@ -80,7 +89,7 @@ class FunkinHitbox extends FlxSpriteGroup {
             shape.graphics.endFill();
 
             var glowMatrix = new Matrix();
-                glowMatrix.createGradientBox(width * 3, width * 3, 0, -width * 1.5, -width * 1.5);
+            glowMatrix.createGradientBox(width * 3, width * 3, 0, -width * 1.5, -width * 1.5);
 
             shape.graphics.beginGradientFill(GradientType.RADIAL, [colors[i], 0x00000000], [0.7, 0], [0, 255], glowMatrix, SpreadMethod.PAD, InterpolationMethod.RGB);
 
