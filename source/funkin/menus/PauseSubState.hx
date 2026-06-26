@@ -4,7 +4,6 @@ import flixel.sound.FlxSound;
 import funkin.backend.FunkinText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import funkin.backend.FunkinText;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.events.NameEvent;
 import funkin.backend.scripting.events.menu.MenuChangeEvent;
@@ -46,7 +45,10 @@ class PauseSubState extends MusicBeatSubstate
 	private var __cancelDefault:Bool = false;
 
 	private var _startY:Float = -1;
+	private var _lastY:Float = -1;
+	private var _dragDistance:Float = 0;
 	private var _swipeThreshold:Float = 40; 
+	private var _scrollDistanceThreshold:Float = 70;
 
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
@@ -132,8 +134,8 @@ class PauseSubState extends MusicBeatSubstate
 
 		#if mobile
 		if (Options.useVirtualPad) {
-            virtualPad = new FunkinPad(UP_DOWN, A);
-            add(virtualPad);
+			virtualPad = new FunkinPad(UP_DOWN, A);
+			add(virtualPad);
 		}
 		#end
 	}
@@ -164,21 +166,34 @@ class PauseSubState extends MusicBeatSubstate
 			for (touch in FlxG.touches.list) {
 				if (touch.justPressed) {
 					_startY = touch.screenY;
+					_lastY = touch.screenY;
+					_dragDistance = 0;
+				}
+
+				if (touch.pressed && _lastY != -1) {
+					var deltaY = touch.screenY - _lastY;
+					_dragDistance += deltaY;
+					_lastY = touch.screenY;
+
+					if (Math.abs(_dragDistance) >= _scrollDistanceThreshold) {
+						if (_dragDistance < 0) {
+							changeSelection(1);
+						} else {
+							changeSelection(-1);
+						}
+						_dragDistance %= _scrollDistanceThreshold;
+					}
 				}
 
 				if (touch.justReleased) {
 					if (_startY != -1) {
-						var diffY = touch.screenY - _startY;
-						if (Math.abs(diffY) >= _swipeThreshold) {
-							if (diffY < 0) {
-								changeSelection(1);
-							} else {
-								changeSelection(-1);
-							}
-						} else {
+						var totalDiffY = touch.screenY - _startY;
+						
+						if (Math.abs(totalDiffY) < _swipeThreshold) {
 							for (i in 0...grpMenuShit.members.length) {
 								var item = grpMenuShit.members[i];
-								if (touch.overlaps(item, camera)) {
+								if (touch.screenX >= item.x && touch.screenX <= (item.x + item.width) &&
+									touch.screenY >= item.y && touch.screenY <= (item.y + item.height)) {
 									curSelected = i;
 									changeSelection(0);
 									selectOption();
@@ -188,6 +203,8 @@ class PauseSubState extends MusicBeatSubstate
 						}
 					}
 					_startY = -1;
+					_lastY = -1;
+					_dragDistance = 0;
 				}
 			}
 		}
