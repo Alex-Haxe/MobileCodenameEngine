@@ -17,24 +17,21 @@ class MobileOptions extends TreeMenuScreen
 	public function new()
 	{
 		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
-		
-		add(new MobileControlsOption(
-	        getNameID('mobilecontrols'),
-        	getDescID('mobilecontrols')
-        ));
+	}
+}
+
+class VirtualPadOptions extends TreeMenuScreen
+{
+	public function new()
+	{
+		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
 		add(new Checkbox(
             getNameID('useVirtualPad'),
             getDescID('useVirtualPad'),
             'useVirtualPad'
         ));
-		
-        add(new Checkbox(
-            getNameID('pauseButton'),
-            getDescID('pauseButton'),
-            'pauseButton'
-        ));
-		
+
 		add(new NumOption(
             getNameID('virtualPadOpacity'), 
             getDescID('virtualPadOpacity'),
@@ -43,12 +40,14 @@ class MobileOptions extends TreeMenuScreen
             0.05,
 			'virtualPadOpacity',
 		));
+	}
+}
 
-		add(new Checkbox(
-            getNameID('fullHint'),
-            getDescID('fullHint'),
-            'fullHint'
-        ));
+class HitboxOptions extends TreeMenuScreen 
+{
+	public function new()
+	{
+		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
 
         add(new ArrayOption(
             getNameID('hintStyle'),
@@ -67,6 +66,23 @@ class MobileOptions extends TreeMenuScreen
         ));
 
         add(new NumOption(
+            getNameID('hitboxOpacity'), 
+            getDescID('hitboxOpacity'),
+			0,
+            1,
+            0.05,
+			'hitboxOpacity',
+		));
+	}
+}
+
+class HintOptions extends TreeMenuScreen
+{
+	public function new()
+	{
+		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
+
+		add(new NumOption(
             getNameID('hintOpacity'), 
             getDescID('hintOpacity'),
 			0,
@@ -75,13 +91,30 @@ class MobileOptions extends TreeMenuScreen
 			'hintOpacity',
 		));
 
-        add(new NumOption(
-            getNameID('hitboxOpacity'), 
-            getDescID('hitboxOpacity'),
-			0,
-            1,
-            0.05,
-			'hitboxOpacity',
-		));
+		add(new Checkbox(
+            getNameID('fullHint'),
+            getDescID('fullHint'),
+            'fullHint'
+        ));
+	}
+}
+
+class MobileMiscOptions extends TreeMenuScreen
+{
+	public function new()
+	{
+		super('optionsTree.mobile-name', 'optionsTree.mobile-desc', 'MobileOptions');
+		
+		add(new MobileControlsOption(
+	        getNameID('mobilecontrols'),
+        	getDescID('mobilecontrols')
+        ));
+
+		
+        add(new Checkbox(
+            getNameID('pauseButton'),
+            getDescID('pauseButton'),
+            'pauseButton'
+        ));
 	}
 }
