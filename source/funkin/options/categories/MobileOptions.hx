@@ -83,5 +83,11 @@ class MobileOptions extends TreeMenuScreen
             0.05,
 			'hitboxOpacity',
 		));
+
+		add(new Checkbox(
+			getNameID('oldAlert'),
+			getDescID('oldAlert'),
+			'oldAlert'
+		));
 	}
 }
