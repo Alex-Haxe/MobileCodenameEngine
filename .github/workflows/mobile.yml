@@ -2,8 +2,7 @@ name: Mobile Build
 run-name: ${{ github.event.inputs.build_name }}
 
 on:
-  push:
-    branches: [main]
+  #push:
   workflow_dispatch:
     inputs:
     
