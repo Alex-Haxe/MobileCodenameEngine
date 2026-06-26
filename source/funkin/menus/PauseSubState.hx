@@ -4,6 +4,7 @@ import flixel.sound.FlxSound;
 import funkin.backend.FunkinText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import funkin.backend.FunkinText;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.events.NameEvent;
 import funkin.backend.scripting.events.menu.MenuChangeEvent;
@@ -17,7 +18,7 @@ import funkin.options.keybinds.KeybindsOptions;
 import funkin.options.Options; 
 #if mobile
 import mobile.ui.FunkinButton;
-import mobile.ui.menus.VirtualPad;
+import mobile.ui.menus.FunkinPad;
 #end
 
 class PauseSubState extends MusicBeatSubstate
