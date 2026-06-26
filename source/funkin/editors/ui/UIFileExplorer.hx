@@ -5,7 +5,7 @@ import lime.ui.FileDialog;
 #if android
 import extension.androidtools.Tools;
 #elseif ios
-import iostools.IOSTools;
+import iostools.storage.IOSFiles;
 #end
 
 class UIFileExplorer extends UISliceSprite {
@@ -37,12 +37,15 @@ class UIFileExplorer extends UISliceSprite {
 				}
 			});
 			
-			#elseif ios
-			IOSTools.pickFiles(function(path:String) {
-            if (path != null && path != "") {
-                loadFile(path);
-                }
-            });
+		    #elseif ios
+            IOSFiles.setup(function(path:String) {
+                if (path != null && path != "") {
+                    loadFile(path);
+                    }
+                },
+				function() {}
+            );
+            IOSFiles.pickFile();
 			
 			#else
 			var fileDialog = new FileDialog();
