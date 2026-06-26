@@ -12,6 +12,9 @@ import extension.androidtools.Tools;
 #elseif ios
 import iostools.ui.IOSAlarm; 
 #end
+#if mobile
+import funkin.options.Options;
+#end
 
 /**
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
