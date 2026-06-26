@@ -583,28 +583,30 @@ class FunkinPad extends FlxSpriteGroup
 	}
 
 	private function createExtraSparrowButton(x:Float, y:Float, path:String, animName:String):MobileButton {
-		var btn = new MobileButton(x, y);
-		var atlas = Paths.getSparrowAtlas(path);
-		
-		if (atlas != null) {
-			btn.frames = atlas;
-			btn.animation.addByPrefix("normal", animName + "idle", 24, false);
-			btn.animation.addByPrefix("pressed", animName + "click", 24, false);
-			btn.animation.play("normal");
-		} else {
-			btn.makeGraphic(132, 135, 0xFFFFFFFF);
-			btn.animation.add("normal", [0]);
-			btn.animation.add("pressed", [0]);
-		}
-		
-		btn.scale.set(0.8, 0.8);
-		btn.updateHitbox();
-		btn.solid = false;
-		btn.immovable = true;
-		btn.scrollFactor.set();
-		return btn;
+        var btn = new MobileButton(x, y);
+        var atlas = Paths.getSparrowAtlas(path);
+    
+        if (atlas != null) {
+            btn.frames = atlas;
+        
+            btn.animation.addByPrefix("normal", animName, 24, false);
+            btn.animation.addByPrefix("pressed", animName + " click", 24, false);
+        
+            btn.animation.play("normal");
+        } else {
+            btn.makeGraphic(132, 135, 0xFFFFFFFF);
+            btn.animation.add("normal", [0]);
+            btn.animation.add("pressed", [0]);
+        }
+    
+        btn.scale.set(0.8, 0.8);
+        btn.updateHitbox();
+        btn.solid = false;
+        btn.immovable = true;
+        btn.scrollFactor.set();
+        return btn;
 	}
-
+	
 	private function createExtraImageButton(x:Float, y:Float, path:String):MobileButton {
 		var btn = new MobileButton(x, y);
 		var img = Paths.image(path);
