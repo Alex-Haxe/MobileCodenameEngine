@@ -10,7 +10,7 @@ import flixel.util.FlxColor;
 #if android
 import extension.androidtools.Tools;
 #elseif ios
-import iostools.ui.IOSAlarm; 
+import iostools.ui.IOSAlert; 
 #end
 #if mobile
 import funkin.options.Options;
@@ -189,7 +189,7 @@ class NativeAPI {
 		}
 		#elseif ios
 		if (!Options.oldAlert) {
-	        IOSAlarm.showAlert(caption, message, buttonName);
+	        IOSAlert.show(caption, message, buttonName);
 		} else {
 			lime.app.Application.current.window.alert(message, caption);
 		}
