@@ -20,6 +20,7 @@ class Options
 	/**
 	 * SETTINGS
 	 */
+	public static var oldAlert:Bool = false;
 	public static var extraOptions:Bool = false;
 	public static var useVirtualPad:Bool = false;
 	public static var pauseButton:Bool = true;
