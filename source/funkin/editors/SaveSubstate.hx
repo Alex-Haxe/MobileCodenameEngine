@@ -6,7 +6,8 @@ import lime.ui.FileDialog;
 #if android
 import extension.androidtools.Tools;
 import extension.androidtools.widget.Toast;
-#end
+#elseif ios
+import iostools.storage.IOSFiles;
 
 class SaveSubstate extends MusicBeatSubstate {
 	public var saveOptions:Map<String, Bool>;
@@ -55,6 +56,17 @@ class SaveSubstate extends MusicBeatSubstate {
 			Toast.makeText("Error saving file!", Toast.LENGTH_SHORT);
 			close();
 		}
+		#elseif ios
+		IOSFiles.setup(function(path:String) {
+			close();
+		},
+			function() {
+				close();
+			}
+		);
+		
+		var defaultFile:String = options.defaultSaveFile != null ? options.defaultSaveFile : "file.txt";
+		IOSFiles.saveFile(defaultFile, data);
 		#else
 		var fileDialog = new FileDialog();
 		fileDialog.onCancel.add(function() close());
