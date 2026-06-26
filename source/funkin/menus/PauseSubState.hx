@@ -4,7 +4,6 @@ import flixel.sound.FlxSound;
 import funkin.backend.FunkinText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import funkin.backend.FunkinText;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.events.NameEvent;
 import funkin.backend.scripting.events.menu.MenuChangeEvent;
@@ -15,17 +14,14 @@ import funkin.editors.charter.Charter;
 import funkin.menus.StoryMenuState;
 import funkin.options.OptionsMenu;
 import funkin.options.keybinds.KeybindsOptions;
+import funkin.options.Options; 
 #if mobile
-import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
+import mobile.ui.menus.VirtualPad;
 #end
 
 class PauseSubState extends MusicBeatSubstate
 {
-	#if mobile
-    //public var virtualPad:FunkinPad;
-    #end
-	
 	public static var script:String = Flags.DEFAULT_PAUSE_SCRIPT;
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -42,11 +38,14 @@ class PauseSubState extends MusicBeatSubstate
 	var pauseMusic:FlxSound;
 
 	public var pauseScript:Script;
-	public var selectCall:NameEvent->Void;  // Mainly for extern stuff that aren't scripts  - Nex
+	public var selectCall:NameEvent->Void;
 
-	public var game:PlayState = PlayState.instance; // shortcut
+	public var game:PlayState = PlayState.instance;
 
 	private var __cancelDefault:Bool = false;
+
+	private var _startY:Float = -1;
+	private var _swipeThreshold:Float = 40; 
 
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
@@ -131,8 +130,10 @@ class PauseSubState extends MusicBeatSubstate
 		FlxG.cameras.add(camera, false);
 
 		#if mobile
-		virtualPad = new FunkinPad(UP_DOWN, A);
-        add(virtualPad);
+		if (Options.useVirtualPad) {
+            virtualPad = new VirtualPad(UP_DOWN, A);
+            add(virtualPad);
+		}
 		#end
 	}
 
@@ -157,7 +158,41 @@ class PauseSubState extends MusicBeatSubstate
 		var downP = controls.DOWN_P;
 		var scroll = FlxG.mouse.wheel;
 
-		if (upP || downP || scroll != 0)  // like this we wont break mods that expect a 0 change event when calling sometimes  - Nex
+		#if mobile
+		if (!Options.useVirtualPad) {
+			for (touch in FlxG.touches.list) {
+				if (touch.justPressed) {
+					_startY = touch.screenY;
+				}
+
+				if (touch.justReleased) {
+					if (_startY != -1) {
+						var diffY = touch.screenY - _startY;
+						if (Math.abs(diffY) >= _swipeThreshold) {
+							if (diffY < 0) {
+								changeSelection(1);
+							} else {
+								changeSelection(-1);
+							}
+						} else {
+							for (i in 0...grpMenuShit.members.length) {
+								var item = grpMenuShit.members[i];
+								if (touch.overlaps(item, camera)) {
+									curSelected = i;
+									changeSelection(0);
+									selectOption();
+									break;
+								}
+							}
+						}
+					}
+					_startY = -1;
+				}
+			}
+		}
+		#end
+
+		if (upP || downP || scroll != 0)
 			changeSelection((upP ? -1 : 0) + (downP ? 1 : 0) - scroll);
 
 		if (controls.ACCEPT)
@@ -191,7 +226,6 @@ class PauseSubState extends MusicBeatSubstate
 				else {
 					if (Charter.instance != null) Charter.instance.__clearStatics();
 
-					// prevents certain notes to disappear early when exiting  - Nex
 					game.strumLines.forEachAlive(function(grp) grp.notes.__forcedSongPos = Conductor.songPosition);
 
 					CoolUtil.playMenuSong();
