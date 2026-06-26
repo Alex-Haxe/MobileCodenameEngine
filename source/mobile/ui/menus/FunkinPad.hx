@@ -246,14 +246,21 @@ class FunkinPad extends FlxSpriteGroup
     	btn.pressed = false;
     }
 
-	function playBackAnim(btn:MobileButton)
+	function playBackAnim(btn:MobileButton, pressed:Bool)
     {
-        if (btn.pressed)
+        if (pressed)
+        {
             btn.animation.play("pressed", true);
-        else
-            btn.animation.play("normal", true);
+        }
+
+        if (btn.animation.curAnim != null
+            && btn.animation.curAnim.name == "pressed"
+            && btn.animation.curAnim.finished)
+        {
+            btn.animation.play("normal");
+        }
     }
-     
+      
 	override function update(elapsed:Float) 
 	{
 		if (!active || !visible) {
@@ -342,9 +349,7 @@ class FunkinPad extends FlxSpriteGroup
 					}
 				}
 			}
-			if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE) {
-			    playBackAnim(btn);
-			}
+			playBackAnim(backButton, FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE);
 		}
 		
 		if (overlappingPad)
@@ -582,30 +587,37 @@ class FunkinPad extends FlxSpriteGroup
 		return button;
 	}
 
-	private function createExtraSparrowButton(x:Float, y:Float, path:String, animName:String):MobileButton {
+	private function createExtraSparrowButton(x:Float, y:Float, path:String, animName:String):MobileButton
+    {
         var btn = new MobileButton(x, y);
         var atlas = Paths.getSparrowAtlas(path);
-    
-        if (atlas != null) {
+
+        if (atlas != null)
+        {
             btn.frames = atlas;
-        
+
             btn.animation.addByPrefix("normal", animName, 24, false);
             btn.animation.addByPrefix("pressed", animName + " click", 24, false);
-        
+
             btn.animation.play("normal");
-        } else {
-            btn.makeGraphic(132, 135, 0xFFFFFFFF);
-            btn.animation.add("normal", [0]);
-            btn.animation.add("pressed", [0]);
         }
-    
+        else
+        {
+            btn.makeGraphic(132, 135, 0xFFFFFFFF);
+            btn.animation.add("normal", [0], 0, false);
+            btn.animation.add("pressed", [0], 0, false);
+
+            btn.animation.play("normal");
+        }
+
         btn.scale.set(0.8, 0.8);
         btn.updateHitbox();
         btn.solid = false;
         btn.immovable = true;
         btn.scrollFactor.set();
+
         return btn;
-	}
+    }
 	
 	private function createExtraImageButton(x:Float, y:Float, path:String):MobileButton {
 		var btn = new MobileButton(x, y);
