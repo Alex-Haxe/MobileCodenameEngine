@@ -8,6 +8,7 @@ import extension.androidtools.Tools;
 import extension.androidtools.widget.Toast;
 #elseif ios
 import iostools.storage.IOSFiles;
+#end
 
 class SaveSubstate extends MusicBeatSubstate {
 	public var saveOptions:Map<String, Bool>;
