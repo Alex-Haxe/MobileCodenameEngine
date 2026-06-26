@@ -132,7 +132,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		#if mobile
 		if (Options.useVirtualPad) {
-            virtualPad = new VirtualPad(UP_DOWN, A);
+            virtualPad = new FunkinPad(UP_DOWN, A);
             add(virtualPad);
 		}
 		#end
