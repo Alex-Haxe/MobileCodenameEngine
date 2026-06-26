@@ -152,6 +152,8 @@ jobs:
         with:
           name: Android-Release
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+          retention-days: 1
+          
   # only built if im doing a workflow run.
   buildiOS:
     if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || github.event_name != 'push'}}
@@ -232,4 +234,5 @@ jobs:
         with:
           name: iosBuild
           path: outputs/ipa/debug/*
+          retention-days: 1
           if-no-files-found: ignore
