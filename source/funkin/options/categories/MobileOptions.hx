@@ -12,6 +12,7 @@ public static var hitboxStyle:String = "Simple";
 public static var hintStyle:String = "Simple";
 **/
 
+// TODO: organize them
 class MobileOptions extends TreeMenuScreen
 {
 	public function new()
