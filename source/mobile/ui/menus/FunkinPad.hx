@@ -248,6 +248,9 @@ class FunkinPad extends FlxSpriteGroup
 
 	function playBackAnim(btn:MobileButton, pressed:Bool)
     {
+		if (btn == null)
+            return;
+		
         if (pressed)
         {
             btn.animation.play("pressed", true);
