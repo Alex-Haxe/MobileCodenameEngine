@@ -22,7 +22,7 @@ class Options
 	 */
 	public static var oldAlert:Bool = false;
 	public static var extraOptions:Bool = false;
-	public static var useVirtualPad:Bool = false;
+	public static var useVirtualPad:Bool = true;
 	public static var pauseButton:Bool = true;
 	public static var fullHint:Bool = true;
 	public static var hitboxStyle:String = "Simple";
