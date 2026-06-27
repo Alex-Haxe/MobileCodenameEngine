@@ -349,7 +349,7 @@ class FunkinPad extends FlxSpriteGroup
 					}
 				}
 			}
-			playBackAnim(backButton, FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE);
+			playBackAnim(BACK, FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE);
 		}
 		
 		if (overlappingPad)
