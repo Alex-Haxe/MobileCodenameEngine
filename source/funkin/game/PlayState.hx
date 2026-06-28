@@ -944,6 +944,8 @@ class PlayState extends MusicBeatState
 			
         #if mobile
 		var customOptions:Script = Script.create(Paths.script('data/scripts/options'));
+		customOptions.load();
+			
 		addMobileControls();
         // pausebutton.
 		pauseButton = new mobile.ui.game.FunkinPause();
