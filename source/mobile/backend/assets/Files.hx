@@ -3,6 +3,13 @@ package mobile.backend.assets;
 using StringTools;
 
 #if mobile
+import haxe.io.Bytes;
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
+import openfl.utils.Assets;
+#end
+
 class Files
 {
 	#if android
@@ -91,22 +98,27 @@ class Files
 	{
 		#if sys
 		try {
-			if (FileSystem.exists(target))
+			var marker = Path.addTrailingSlash(target) + ".copy_complete";
+			if (FileSystem.exists(marker))
 			{
 				return;
 			}
+			
+			if (copyAssets(folder, target))
+			{
+				File.saveContent(marker, "1");
+			}
 		} catch (e:Dynamic) {
-			return;
 		}
 		#end
-
-		copyAssets(folder, target);
 	}
 
-	static function copyAssets(source:String, target:String):Void
+	static function copyAssets(source:String, target:String):Bool
 	{
+		var success = true;
 		try {
 			var list:Array<String> = Assets.list();
+			if (list == null || list.length == 0) return false;
 
 			for (asset in list)
 			{
@@ -120,20 +132,31 @@ class Files
 
 				createDirRecursive(dir);
 
+				var fileSuccess = false;
 				try {
 					var bytes:Bytes = Assets.getBytes(asset);
-
 					if (bytes != null) {
 						File.saveBytes(outPath, bytes);
+						fileSuccess = true;
 					} else {
-						var text:String = lime.utils.Assets.getText(asset);
-						if (text != null) File.saveContent(outPath, text);
+						var text:String = Assets.getText(asset);
+						if (text != null) {
+							File.saveContent(outPath, text);
+							fileSuccess = true;
+						}
 					}
 				} catch (e:Dynamic) {
+					fileSuccess = false;
+				}
+
+				if (!fileSuccess) {
+					success = false;
 				}
 			}
 		} catch (e:Dynamic) {
+			return false;
 		}
+		return success;
 	}
 
 	static function createDirRecursive(path:String):Void
