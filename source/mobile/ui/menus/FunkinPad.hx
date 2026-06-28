@@ -366,9 +366,9 @@ class FunkinPad extends FlxSpriteGroup
 
 		for (btn in padButtons)
 		{
-			if (btn != null && btn.exists && btn.visible && buttonStates.exists(btn))
+			if (btn != null && btn.exists && btn.visible)
 			{
-				if (buttonStates.get(btn))
+				if (btn.pressed)
 					btn.animation.play("pressed");
 				else
 					btn.animation.play("normal");
