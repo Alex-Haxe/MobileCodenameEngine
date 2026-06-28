@@ -44,7 +44,7 @@ function update(elapsed) {
         item.bg.x = item.receptor.x + (item.receptor.width / 2) - (item.bg.width / 2);
     }
     
-    if (FlxG.save.data.middleScroll) {
+    if (Options.middleScroll) {
         for (strumLine in strumLines.members)
         {
             if (!strumLine.opponentSide) continue;
@@ -61,7 +61,7 @@ function postUpdate(elapsed:Float) {
     if (PlayState.instance == null) {
         return;
     }
-    if (FlxG.save.data.middleScroll) {
+    if (Options.middleScroll) {
         if (oppStrums != null) {
             for (i in 0...oppStrums.members.length) {
                 var strum = oppStrums.members[i];
