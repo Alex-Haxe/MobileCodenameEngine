@@ -943,6 +943,7 @@ class PlayState extends MusicBeatState
 				FlxG.sound.load(Paths.sound(s));
 			
         #if mobile
+		var customOptions:Script = Script.create(Paths.script('data/scripts/options'));
 		addMobileControls();
         // pausebutton.
 		pauseButton = new mobile.ui.game.FunkinPause();
