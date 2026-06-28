@@ -363,6 +363,17 @@ class FunkinPad extends FlxSpriteGroup
 
 		FunkinPad.touchingPad = overlappingPad;
 		super.update(elapsed);
+
+		for (btn in padButtons)
+		{
+			if (btn != null && btn.exists && btn.visible && buttonStates.exists(btn))
+			{
+				if (buttonStates.get(btn))
+					btn.animation.play("pressed");
+				else
+					btn.animation.play("normal");
+			}
+		}
 	}
 	
 	private inline function getBind(keyName:String):FlxKey 
