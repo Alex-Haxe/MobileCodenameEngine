@@ -6,7 +6,6 @@ import flixel.util.FlxDestroyUtil;
 import flixel.FlxBasic;
 import flixel.input.touch.FlxTouch;
 import mobile.ui.menus.FunkinPad;
-//import mobile.controls.ui.BackButton;
 
 #if mobile
 class Input extends FlxBasic {
@@ -46,13 +45,7 @@ class Input extends FlxBasic {
         }
 
         if (FunkinPad.touchingPad) {
-            isPressing = false;
-            isDragging = false;
-            trackedTouchID = -1;
-            simulatedState = 0;
-            pendingTapRelease = false;
-            
-            @:privateAccess FlxG.mouse._leftButton.current = 0;
+            resetInputState();
             super.update(elapsed);
             return;
         }
@@ -74,6 +67,12 @@ class Input extends FlxBasic {
                     break;
                 }
             }
+        }
+
+        if (activeTouch == null && trackedTouchID == -1) {
+            resetInputState();
+            super.update(elapsed);
+            return;
         }
 
         var rawJustPressed:Bool = false;
@@ -169,6 +168,15 @@ class Input extends FlxBasic {
         }
 
         super.update(elapsed);
+    }
+
+    private function resetInputState():Void {
+        isPressing = false;
+        isDragging = false;
+        trackedTouchID = -1;
+        simulatedState = 0;
+        pendingTapRelease = false;
+        @:privateAccess FlxG.mouse._leftButton.current = 0;
     }
 
     override public function destroy():Void {
