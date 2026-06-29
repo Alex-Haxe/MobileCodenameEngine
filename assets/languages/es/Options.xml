@@ -97,7 +97,7 @@
 
 	<group name="MobileOptions" prefix="MobileOptions">
 		<str id="useVirtualPad-name">Usar VirtualPad</str>
-		<str id="useVirtualPad-name"Si esta activado. los menus usaran botones envez de ser interactivos.</str>
+		<str id="useVirtualPad-name">Si esta activado. los menus usaran botones envez de ser interactivos.</str>
 		
    	    <str id="pauseButton-name">Boton De Pausa</str>
 	    <str id="pauseButton-desc">Si esta desactivado. el boton de pause se volvera invisible.</str>
