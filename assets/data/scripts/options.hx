@@ -5,9 +5,6 @@ import funkin.game.PlayState;
 var opponentNoteAlpha:Float = 0.4;
 var laneBGs:Array<Dynamic> = [];
 
-var oppStrums = strumLines.members[0];
-var playerStrums = strumLines.members[1];
-
 function postCreate() {
     for (i in 0...2) {
         var strumLine = strumLines.members[i];
@@ -62,6 +59,7 @@ function postUpdate(elapsed:Float) {
         return;
     }
     if (Options.middleScroll) {
+        var oppStrums = strumLines.members[0];
         if (oppStrums != null) {
             for (i in 0...oppStrums.members.length) {
                 var strum = oppStrums.members[i];
@@ -75,6 +73,7 @@ function postUpdate(elapsed:Float) {
             }
         }
         
+        var playerStrums = strumLines.members[1];
         if (playerStrums != null) {
             for (i in 0...playerStrums.members.length) {
                 var strum = playerStrums.members[i];
