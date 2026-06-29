@@ -26,6 +26,9 @@
 
 		<str id="optionsTree.debug-name">Opções de Depuração</str>
 		<str id="optionsTree.debug-desc">Opções de Depuração para o Modo de Desenvolvedor.</str>
+		
+		<str id="optionsTree.mobile-name">Opções para móvel</str>
+        <str id="optionsTree.mobile-desc">Alterar opções relacionadas a dispositivos móveis.</str>
 	</group>
 
 	<group name="KeybindOptions" prefix="KeybindsOptions.">
@@ -63,10 +66,47 @@
 			<str id="reloadState">Recarregar</str>
 		</group>
 	</group>
+	
+	<group name="MobileOptions" prefix="MobileOptions">
+		<str id="useVirtualPad-name">Use o VirtualPad</str>
+		<str id="useVirtualPad-name">Se selecionada, a opção escolhida fará com que o jogo utilize o controle para os menus, em vez de torná-los interativos.</str>
+		
+		<str id="mobilecontrols-name">Controles móveis</str>
+		<str id="mobilecontrols-desc">Altere os botões que o jogo usará; a caixa de colisão está ativada por padrão.</str>
+		
+   	    <str id="pauseButton-name">Botão de pausa</str>
+	    <str id="pauseButton-desc">Se desmarcada, a opção de pausa ficará invisível.</str>
+
+		<str id="virtualPadOpacity-name">Opacidade do VirtualPad</str>
+		<str id="virtualPadOpacity-desc">É bastante autoexplicativo, não é?</str>
+
+		<str id="fullHint-name">Hint completa</str>
+		<str id="fullHint-desc">Se selecionada, a dica ocupará a tela inteira (apenas na versão normal).</str>
+		
+        <str id="hintStyle-name">Estilo Hint</str>
+        <str id="hintStyle-desc">Altera a aparência da hint.</str>
+        
+        <str id="hitboxStyle-name">Estilo Hitbox</str>
+        <str id="hitboxStyle-desc">Altera a aparência da hitbox.</str>
+	
+        <str id="hintOpacity-name">Hint Opacity</str>
+        <str id="hintOpacity-desc">É bastante autoexplicativo, não é?</str>
+    
+        <str id="hitboxOpacity-name">Opacidade da Hitbox</str>
+        <str id="hitboxOpacity-desc">É bastante autoexplicativo, não é?</str>
+
+		<str id="oldAlert-name">Alerta antigo</str>
+		<str id="oldAlert-desc">Se selecionada, em vez de usar o alerta nativo, ele usa o alerta padrão do Lime.</str>
+
+	   <!-- <str id=" -->
+    </group>
 
 	<group name="AppearanceOptions" prefix="AppearanceOptions.">
 		<str id="framerate-name">FPS</str>
 		<str id="framerate-desc">Quadros Por Segundo, se quiser. Explica-se a sí próprio, certo?</str>
+		
+		<str id="fpsSize-name">Tamanho FPS</str>
+		<str id="fpsSize-name">Altera o tamanho do FPS dependendo do número.</str>
 
 		<str id="flashingMenu-name">Luzes Intermitentes</str>
 		<str id="flashingMenu-desc">Se desmarcado, irá desativar as luzes intermitentes quando seleciona algo no Menu Principal, e outras serão abrandadas.</str>
@@ -101,6 +141,12 @@
 	<group name="GameplayOptions" prefix="GameplayOptions.">
 		<str id="downscroll-name">"Downscroll"</str>
 		<str id="downscroll-desc">Se marcado, notas irão de cima para baixo em vez de baixo para cima, como se estivessem a cair.</str>
+		
+		<str id="middleScroll-name">Middlescroll</str>
+		<str id="middleScroll-desc">Se selecionada, as anotações irão para o meio.</str>
+		
+		<str id="strumlineBackground-name">Strum Fundo</str>
+		<str id="strumlineBackground-desc">Altera a opacidade do fundo Strum.</str>
 
 		<str id="ghostTapping-name">Toques Fantasma</str>
 		<str id="ghostTapping-desc">Se desmarcado, bater em teclas que não tem uma nota conta como erro.</str>
