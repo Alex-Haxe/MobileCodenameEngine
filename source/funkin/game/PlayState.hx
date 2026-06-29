@@ -963,7 +963,7 @@ class PlayState extends MusicBeatState
 			SaveWarning.saveFunc = () -> Charter.saveEverything(false);
 		}
 
-		customOptions.call("postCreate")
+		customOptions.call("postCreate");
 	}
 
 	@:dox(hide) public override function createPost() {
