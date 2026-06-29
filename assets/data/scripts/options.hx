@@ -4,6 +4,7 @@ import funkin.game.PlayState;
 
 var opponentNoteAlpha:Float = 0.4;
 var laneBGs:Array<Dynamic> = [];
+var strumLines = PlayState.instance.strumLines;
 
 function postCreate() {
     for (i in 0...2) {
@@ -18,10 +19,10 @@ function postCreate() {
                    
                     bg.makeGraphic(105, FlxG.height, 0xFF000000);
                     bg.alpha = Options.strumlineBackground;
-                    bg.cameras = [camHUD];
+                    bg.cameras = [PlayState.instance.camHUD];
                     bg.scrollFactor.set(0, 0);
 
-                    insert(members.indexOf(strumLines), bg);
+                    PlayState.instance.insert(PlayState.instance.members.indexOf(strumLines), bg);
 
                     laneBGs.push({
                         bg: bg,
