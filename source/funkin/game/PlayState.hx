@@ -60,6 +60,7 @@ class PlayState extends MusicBeatState
      * Mobile Hitbox.
      */
 	#if mobile
+	public var customOptions:Script;
     public var virtualPad:FunkinPad;
 	public var hitbox:FunkinHitbox;
 	public var pauseButton:FunkinPause;
@@ -943,7 +944,7 @@ class PlayState extends MusicBeatState
 				FlxG.sound.load(Paths.sound(s));
 			
         #if mobile
-		var customOptions:Script = Script.create(Paths.script('data/scripts/options'));
+		customOptions = Script.create(Paths.script('data/scripts/options'));
 		customOptions.load();
 			
 		addMobileControls();
