@@ -22,6 +22,9 @@
 
 		<str id="optionsTree.miscellaneous-name">Różnorodne</str>
 		<str id="optionsTree.miscellaneous-desc">Użyj tej kategorii aby usunąć zapis lub zmienić ustawienia silnika.</str>
+		
+		<str id="optionsTree.mobile-name">Opcje mobilne</str>
+        <str id="optionsTree.mobile-desc">Zmień opcje związane z urządzeniami mobilnymi.</str>
 	</group>
 
 	<group name="KeybindOptions" prefix="KeybindsOptions.">
@@ -59,10 +62,47 @@
 			<str id="reloadState">Odświerz</str>
 		</group>
 	</group>
+	
+	<group name="MobileOptions" prefix="MobileOptions">
+		<str id="useVirtualPad-name">Użyj VirtualPad</str>
+		<str id="useVirtualPad-name">Jeśli zaznaczone, gra będzie używać pada do menu, zamiast je interaktywnie obsługiwać.</str>
+		
+		<str id="mobilecontrols-name">Sterowanie mobilne</str>
+		<str id="mobilecontrols-desc">Zmień przyciski, których będzie używać rozgrywka. Hitbox jest domyślnie włączony.</str>
+		
+   	    <str id="pauseButton-name">Przycisk pauzy</str>
+	    <str id="pauseButton-desc">Jeśli odznaczone, przycisk pauzy stanie się niewidoczny.</str>
+
+		<str id="virtualPadOpacity-name">Nieprzezroczystość VirtualPad</str>
+		<str id="virtualPadOpacity-desc">To chyba oczywiste, prawda?</str>
+
+		<str id="fullHint-name">Pełna wskazówka</str>
+		<str id="fullHint-desc">Jeśli zaznaczone, podpowiedź obejmie cały ekran. (tylko w przypadku wariantu normalnego).</str>
+		
+        <str id="hintStyle-name">Styl podpowiedzi</str>
+        <str id="hintStyle-desc">Zmienia wygląd podpowiedzi.</str>
+        
+        <str id="hitboxStyle-name">Styl Hitbox</str>
+        <str id="hitboxStyle-desc">Zmienia wygląd pola trafienia.</str>
+	
+        <str id="hintOpacity-name">Podpowiedź Krycie</str>
+        <str id="hintOpacity-desc">To chyba oczywiste, prawda?</str>
+    
+        <str id="hitboxOpacity-name">Hitbox Opacity</str>
+        <str id="hitboxOpacity-desc">To chyba oczywiste, prawda?</str>
+
+		<str id="oldAlert-name">Stary alert</str>
+		<str id="oldAlert-desc">Jeśli zaznaczone, zamiast używać alertu natywnego, używany jest alert domyślny Lime.</str>
+
+	   <!-- <str id=" -->
+    </group>
 
 	<group name="AppearanceOptions" prefix="AppearanceOptions.">
 		<str id="framerate-name">Klatki</str>
 		<str id="framerate-desc">Ilość Klatek na sekundę ktore gra renderuje</str>
+		
+		<str id="fpsSize-name">Rozmiar FPS</str>
+		<str id="fpsSize-name">Zmienia rozmiar fps w zależności od liczby.</str>
 
 		<str id="colorHealthBar-name">Kolorowe Zdrowie</str>
 		<str id="colorHealthBar-desc">Jeśli wyłączone, Pasek zdrowia będzie tylko używał czerwonego i zielonego koloru, takiego jak z oryginalnej gry.</str>
@@ -91,6 +131,12 @@
 	<group name="GameplayOptions" prefix="GameplayOptions.">
 		<str id="downscroll-name">Przewijanie w dół</str>
 		<str id="downscroll-desc">Jeśli włączone, nuty będą spadać w dół zamiast lecieć w górę.</str>
+		
+		<str id="middleScroll-name">Middlescroll</str>
+		<str id="middleScroll-desc">Jeśli zaznaczone, notatki zostaną umieszczone w środku.</str>
+		
+		<str id="strumlineBackground-name">Strum Tło</str>
+		<str id="strumlineBackground-desc">Zmienia krycie tła Strum.</str>
 
 		<str id="ghostTapping-name">Wolne stukanie</str>
 		<str id="ghostTapping-desc">Jeśli wyłączone, próba kliknięcia struny która nie ma nuty sprawi chybienie.</str>
