@@ -2,7 +2,7 @@ name: Mobile Build
 run-name: ${{ github.event.inputs.build_name }}
 
 on:
-  #push:
+  push:
   workflow_dispatch:
     inputs:
     
@@ -155,7 +155,7 @@ jobs:
           
   # only built if im doing a workflow run.
   buildiOS:
-    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || github.event_name != 'push'}}
+    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
     runs-on: macos-latest
 
     steps:
