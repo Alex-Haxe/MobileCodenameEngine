@@ -48,7 +48,7 @@ class PauseSubState extends MusicBeatSubstate
 	private var _lastY:Float = -1;
 	private var _dragDistance:Float = 0;
 	private var _swipeThreshold:Float = 40; 
-	private var _scrollDistanceThreshold:Float = 70;
+	private var _scrollDistanceThreshold:Float = 200;
 
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
