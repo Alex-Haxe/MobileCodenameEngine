@@ -65,6 +65,9 @@
 	</group>
 
 	<group name="MobileOptions" prefix="MobileOptions">
+		<str id="useVirtualPad-name">Utilizzare VirtualPad</str>
+		<str id="useVirtualPad-name">Se selezionata, il gioco utilizzerà il pad per i menu, anziché renderli interattivi.</str>
+		
 		<str id="mobilecontrols-name">Comandi mobili</str>
 		<str id="mobilecontrols-desc">Modifica i comandi utilizzati per il gioco. L'hitbox è attiva per impostazione predefinita.</str>
 		
@@ -85,6 +88,9 @@
     
         <str id="hitboxOpacity-name">Hitbox Opacità</str>
         <str id="hitboxOpacity-desc">È abbastanza autoesplicativo, non credi?</str
+        
+        <str id="oldAlert-name">Vecchio allarme</str>
+		<str id="oldAlert-desc">Se selezionata, invece di utilizzare l'avviso nativo, viene utilizzato quello predefinito di Lime.</str>
 
 	   <!-- <str id=" -->
     </group>
