@@ -1455,6 +1455,7 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float)
 	{
 		scripts.call("update", [elapsed]);
+		customOptions.call("update", [elapsed]);
 
 		if (inCutscene) {
 			super.update(elapsed);
@@ -1575,6 +1576,7 @@ class PlayState extends MusicBeatState
         #end
 
 		scripts.call("postUpdate", [elapsed]);
+		customOptions.call("postUpdate", [elapsed]);
 	}
 
 	override function draw() {
