@@ -96,9 +96,15 @@
 	</group>
 
 	<group name="MobileOptions" prefix="MobileOptions">
+		<str id="useVirtualPad-name">Usar VirtualPad</str>
+		<str id="useVirtualPad-name"Si esta activado. los menus usaran botones envez de ser interactivos.</str>
+		
    	    <str id="pauseButton-name">Boton De Pausa</str>
 	    <str id="pauseButton-desc">Si esta desactivado. el boton de pause se volvera invisible.</str>
 
+		<str id="mobilecontrols-name">Controles Mobiles</str>
+		<str id="mobilecontrols-desc">Cambia los botones que usara PlayState.</str>
+		
 		<str id="virtualPadOpacity-name">Transparencia táctil</str>
 		<str id="virtualPadOpacity-desc">No tengo que explicar esto.</str>
 	
@@ -117,6 +123,9 @@
         <str id="hitboxOpacity-name">Hitbox Opacidad</str>
         <str id="hitboxOpacity-desc">no tengo que explicar esto.</str>
 
+		<str id="oldAlert-name">Alerta Vieja</str>
+		<str id="oldAlert-desc">Si esta activado. las alertas seran del lime envez de ser las normales del movil.</str>
+
 	   <!-- <str id=" -->
     </group>
 
@@ -128,7 +137,7 @@
 
 		<str id="ghostTapping-desc">Si está desactivado, apretar una tecla sin ninguna nota contará como un Combo Break.</str>
 
-		<str id="strumlineBackground-name">Fondo Del Strumline</str>
+		<str id="strumlineBackground-name">Fondo Del Strum</str>
 		<str id="strumlineBackground-desc">Cambia la opacidad del Strumline.</str>
 
 		<str id="naughtyness-name">Guarradas</str>
