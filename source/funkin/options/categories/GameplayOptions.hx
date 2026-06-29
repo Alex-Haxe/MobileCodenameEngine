@@ -12,10 +12,10 @@ class GameplayOptions extends TreeMenuScreen {
 
 		add(new Checkbox(getNameID('downscroll'), getDescID('downscroll'), 'downscroll'));
 
-		if (Options.extraOptions) {
+		//if (Options.extraOptions) {
 			add(new NumOption(getNameID('strumlineBackground'), getDescID('strumlineBackground'), 0, 1, 0.1, 'strumlineBackground'));
 			add(new Checkbox(getNameID('middleScroll'), getDescID('middleScroll'), 'middleScroll'));
-		}
+		//}
 
 		add(new Checkbox(getNameID('ghostTapping'), getDescID('ghostTapping'), 'ghostTapping'));
 
