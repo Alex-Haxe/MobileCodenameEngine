@@ -96,7 +96,7 @@
         <str id="hitboxOpacity-desc">Pretty self explanatory, isn't it?</str>
 
 		<str id="oldAlert-name">Old Alert</str>
-		<str id="oldAlert-name">If checked, instead of using the native alert. it uses the default lime one.</str>
+		<str id="oldAlert-desc">If checked, instead of using the native alert. it uses the default lime one.</str>
 
 	   <!-- <str id=" -->
     </group>
