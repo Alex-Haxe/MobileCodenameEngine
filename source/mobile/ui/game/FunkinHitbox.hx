@@ -188,6 +188,10 @@ class HitboxButton extends FlxSprite {
     private function checkInputs():Void {
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
+            if (mobile.ui.menus.FunkinJoystick.activeTouchID != -1 && touch.touchPointID == mobile.ui.menus.FunkinJoystick.activeTouchID) {
+                continue; 
+            }
+
             if (touch.pressed || touch.justPressed) {
                 touch.getWorldPosition(_assignedCamera, _touchPoint);
                 if (overlapPointCheck(_touchPoint)) {
@@ -199,6 +203,10 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
+        if (mobile.ui.menus.FunkinJoystick.isJoystickDragging) {
+            return;
+        }
+
         if (FlxG.mouse.pressed) {
             FlxG.mouse.getWorldPosition(_assignedCamera, _touchPoint);
             if (overlapPointCheck(_touchPoint)) {
