@@ -192,8 +192,8 @@ class PauseSubState extends MusicBeatSubstate
 						if (Math.abs(totalDiffY) < _swipeThreshold) {
 							for (i in 0...grpMenuShit.members.length) {
 								var item = grpMenuShit.members[i];
-								if (touch.screenX >= item.x && touch.screenX <= (item.x + item.width) &&
-									touch.screenY >= item.y && touch.screenY <= (item.y + item.height)) {
+								if (touch.screenX >= item.x - 40 && touch.screenX <= (item.x + item.width) + 40 &&
+									touch.screenY >= item.y - 40 && touch.screenY <= (item.y + item.height) + 40) {
 									curSelected = i;
 									changeSelection(0);
 									selectOption();
