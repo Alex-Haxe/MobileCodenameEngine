@@ -81,6 +81,24 @@ class HScript extends Script {
 	
 	        return joystick;
         });
+		
+		interp.variables.set("removeVirtualPad", function(vpad:mobile.ui.menus.FunkinPad) {
+	        if (vpad != null) {
+		        if (flixel.FlxG.state != null) {
+			        flixel.FlxG.state.remove(vpad, true);
+		        }
+		      vpad.destroy();
+	        }
+        });
+
+		interp.variables.set("removeJoystick", function(joystick:mobile.ui.menus.FunkinJoystick) {
+	        if (joystick != null) {
+		        if (flixel.FlxG.state != null) {
+			        flixel.FlxG.state.remove(joystick, true);
+		        }
+		      joystick.destroy();
+	        }
+        });
 
 		interp.variables.set("addCustomButton", function(x:Float, y:Float, assetPath:String, keyStr:String, animName:String = "", playOnlyWhenPressed:Dynamic = "true", size:Dynamic = 1.0) {
              var btn:Dynamic = null;
