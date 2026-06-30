@@ -68,7 +68,19 @@ class HScript extends Script {
     
             return vpad;
         });
-		#end
+		
+        interp.variables.set("addJoystick", function(?x:Float, ?y:Float) {
+	        var posX:Float = (x != null) ? x : 50;
+	        var posY:Float = (y != null) ? y : (flixel.FlxG.height - 252 - 50);
+
+	        var joystick = new mobile.ui.menus.FunkinJoystick(posX, posY);
+	
+	        if (flixel.FlxG.state != null) {
+            	flixel.FlxG.state.add(joystick);
+	        }
+	
+	        return joystick;
+        });
 
 		interp.variables.set("addCustomButton", function(x:Float, y:Float, assetPath:String, keyStr:String, animName:String = "", playOnlyWhenPressed:Dynamic = "true", size:Dynamic = 1.0) {
              var btn:Dynamic = null;
@@ -228,6 +240,7 @@ class HScript extends Script {
             flixel.FlxG.signals.preUpdate.add(updateHook);
             return btn;
         });
+		#end
 		
 		interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
 			var v:String = Std.string(args.shift());
