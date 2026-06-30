@@ -14,7 +14,8 @@ import flixel.util.FlxDestroyUtil;
 
 class FunkinJoystick extends FlxSpriteGroup
 {
-	public static var activeJoysticks:Array<FunkinJoystick> = [];
+	public static var isJoystickDragging:Bool = false;
+	public static var activeTouchID:Int = -1;
 
 	public var base:FlxSprite;
 	public var thumb:FlxSprite;
@@ -23,7 +24,7 @@ class FunkinJoystick extends FlxSpriteGroup
 	private var atlasFrames:FlxAtlasFrames;
 	
 	public var isDragging:Bool = false;
-	public var currentTouch:FlxTouch = null;
+	private var currentTouch:FlxTouch = null;
 	
 	private var baseRadius:Float = 126;
 	private var thumbRadius:Float = 78;
@@ -45,7 +46,6 @@ class FunkinJoystick extends FlxSpriteGroup
 	public function new(x:Float, y:Float)
 	{
 		super();
-		FunkinJoystick.activeJoysticks.push(this);
 		
 		virtualpadCamera = new FlxCamera();
 		virtualpadCamera.bgColor = 0x00000000;
@@ -100,6 +100,8 @@ class FunkinJoystick extends FlxSpriteGroup
 					
 					if (dist <= baseRadius) {
 						isDragging = true;
+						isJoystickDragging = true;
+						activeTouchID = touch.touchPointID;
 						currentTouch = touch;
 						point.put();
 						break;
@@ -116,6 +118,8 @@ class FunkinJoystick extends FlxSpriteGroup
 		{
 			if (!currentTouch.pressed) {
 				isDragging = false;
+				isJoystickDragging = false;
+				activeTouchID = -1;
 				currentTouch = null;
 				thumb.x = centerPoint.x - thumbRadius;
 				thumb.y = centerPoint.y - thumbRadius;
@@ -183,7 +187,9 @@ class FunkinJoystick extends FlxSpriteGroup
 	
 	override public function destroy():Void
 	{
-		FunkinJoystick.activeJoysticks.remove(this);
+		isJoystickDragging = false;
+		activeTouchID = -1;
+
 		if (virtualpadCamera != null) {
 			FlxG.cameras.remove(virtualpadCamera, false);
 			virtualpadCamera = null;
