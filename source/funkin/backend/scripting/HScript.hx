@@ -264,9 +264,6 @@ class HScript extends Script {
 			var v:String = Std.string(args.shift());
 			for (a in args) v += ", "+ Std.string(a);
 			this.trace(v);
-			#if mobile
-			MobileTrace.log(v);
-			#end
 		}));
 
 		#if GLOBAL_SCRIPT
@@ -444,6 +441,15 @@ class HScript extends Script {
 			Logs.logText('${fileName}:${posInfo.lineNumber}: ', GREEN),
 			Logs.logText(Std.isOfType(v, String) ? v : Std.string(v))
 		], TRACE);
+
+		#if mobile
+		if (!MobileTrace.enabled) {
+            MobileTrace.enabled = true;
+            MobileTrace.init();
+        }
+
+        MobileTrace.log(v);
+        #end
 	}
 
 	public override function setPublicMap(map:Map<String, Dynamic>) {
