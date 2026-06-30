@@ -12,9 +12,10 @@ import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
-// STILL IN BETA TESTING!!
 class FunkinJoystick extends FlxSpriteGroup
 {
+	public static var activeJoysticks:Array<FunkinJoystick> = [];
+
 	public var base:FlxSprite;
 	public var thumb:FlxSprite;
 	
@@ -22,7 +23,7 @@ class FunkinJoystick extends FlxSpriteGroup
 	private var atlasFrames:FlxAtlasFrames;
 	
 	public var isDragging:Bool = false;
-	private var currentTouch:FlxTouch = null;
+	public var currentTouch:FlxTouch = null;
 	
 	private var baseRadius:Float = 126;
 	private var thumbRadius:Float = 78;
@@ -44,6 +45,7 @@ class FunkinJoystick extends FlxSpriteGroup
 	public function new(x:Float, y:Float)
 	{
 		super();
+		FunkinJoystick.activeJoysticks.push(this);
 		
 		virtualpadCamera = new FlxCamera();
 		virtualpadCamera.bgColor = 0x00000000;
@@ -181,6 +183,7 @@ class FunkinJoystick extends FlxSpriteGroup
 	
 	override public function destroy():Void
 	{
+		FunkinJoystick.activeJoysticks.remove(this);
 		if (virtualpadCamera != null) {
 			FlxG.cameras.remove(virtualpadCamera, false);
 			virtualpadCamera = null;
@@ -195,3 +198,4 @@ class FunkinJoystick extends FlxSpriteGroup
 	}
 }
 #end
+	
