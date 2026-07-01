@@ -114,13 +114,17 @@ class Input extends FlxBasic {
 
             if (!isDragging && (pressTime >= holdDelay || distance >= clickThreshold)) {
                 isDragging = true;
-                simulatedState = 2;
+                if (simulatedState != 2 && simulatedState != 1) {
+                    simulatedState = 2;
+                }
             }
         }
 
         if (rawJustReleased && isPressing) {
             if (!isDragging) {
-                simulatedState = 2;
+                if (simulatedState != 2 && simulatedState != 1) {
+                    simulatedState = 2;
+                }
                 pendingTapRelease = true;
             } else {
                 simulatedState = -1;
@@ -189,3 +193,4 @@ class Input extends FlxBasic {
     }
 }
 #end
+    
