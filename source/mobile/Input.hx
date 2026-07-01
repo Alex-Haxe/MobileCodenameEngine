@@ -160,8 +160,7 @@ class Input extends FlxBasic {
                     simulatedState = -1;
                     pendingTapRelease = false;
                 } else if (!isDragging && !isPressing) {
-                    simulatedState = 0;
-                    FlxG.mouse._leftButton.current = 0;
+                    simulatedState = -1;
                 } else {
                     FlxG.mouse._leftButton.current = 1;
                     FlxG.mouse.x = lastMouseX;
@@ -193,4 +192,3 @@ class Input extends FlxBasic {
     }
 }
 #end
-    
