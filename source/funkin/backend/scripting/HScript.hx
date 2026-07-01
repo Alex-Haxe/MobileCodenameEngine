@@ -82,21 +82,31 @@ class HScript extends Script {
 	        return joystick;
         });
 		
-		interp.variables.set("removeVirtualPad", function(vpad:mobile.ui.menus.FunkinPad) {
-	        if (vpad != null) {
-		        if (flixel.FlxG.state != null) {
-			        flixel.FlxG.state.remove(vpad, true);
-		        }
-		      vpad.destroy();
-	        }
-        });
+		interp.variables.set("removeVirtualPad", function() {
+	        if (flixel.FlxG.state != null) {
+		        var i:Int = flixel.FlxG.state.members.length - 1;
+	        	while (i >= 0) {
+		            var member = flixel.FlxG.state.members[i];
+			        if (member != null && Std.isOfType(member, mobile.ui.menus.FunkinPad)) {
+			        	flixel.FlxG.state.remove(member, true);
+				        member.destroy();
+			        }
+			        i--;
+  	        	}
+        	}
+         });
 
-		interp.variables.set("removeJoystick", function(joystick:mobile.ui.menus.FunkinJoystick) {
-	        if (joystick != null) {
-		        if (flixel.FlxG.state != null) {
-			        flixel.FlxG.state.remove(joystick, true);
+        interp.variables.set("removeJoystick", function() {
+	        if (flixel.FlxG.state != null) {
+		    var i:Int = flixel.FlxG.state.members.length - 1;
+		    while (i >= 0) {
+			    var member = flixel.FlxG.state.members[i];
+			        if (member != null && Std.isOfType(member, mobile.ui.menus.FunkinJoystick)) {
+				        flixel.FlxG.state.remove(member, true);
+				        member.destroy();
+			        }
+			        i--;
 		        }
-		      joystick.destroy();
 	        }
         });
 
