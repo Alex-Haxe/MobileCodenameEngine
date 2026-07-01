@@ -70,9 +70,11 @@ class Input extends FlxBasic {
         }
 
         if (activeTouch == null && trackedTouchID == -1) {
-            resetInputState();
-            super.update(elapsed);
-            return;
+            if (simulatedState != -1 && !pendingTapRelease) {
+                resetInputState();
+                super.update(elapsed);
+                return;
+            }
         }
 
         var rawJustPressed:Bool = false;
@@ -144,14 +146,16 @@ class Input extends FlxBasic {
                 FlxG.mouse.screenY = lastScreenY;
                 
                 if (pendingTapRelease) {
-                    simulatedState = -1;
-                    pendingTapRelease = false;
+                    simulatedState = 1;
                 } else {
                     simulatedState = 1;
                 }
             }
             else if (simulatedState == 1) {
-                if (!isDragging && !isPressing) {
+                if (pendingTapRelease) {
+                    simulatedState = -1;
+                    pendingTapRelease = false;
+                } else if (!isDragging && !isPressing) {
                     simulatedState = 0;
                     FlxG.mouse._leftButton.current = 0;
                 } else {
