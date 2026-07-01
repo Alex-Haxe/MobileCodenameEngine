@@ -3,17 +3,21 @@ package mobile.backend.utils;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import funkin.options.Options;
-
-import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 
 class MobileTrace
 {
 	public static var text:FlxText;
-	public static var deleteTimer:FlxTimer;
+
+	public static var enabled:Bool = false;
+
+	private static var tween:FlxTween;
 
 	public static function init()
 	{
+		if (!Options.devMode)
+			return;
+
 		if (text != null)
 			return;
 
@@ -23,7 +27,7 @@ class MobileTrace
 		text = new FlxText(10, 10, FlxG.width - 20, "");
 		text.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.LIME);
 		text.scrollFactor.set();
-		text.alpha = 0.7;
+		text.alpha = 0;
 		text.borderSize = 1;
 
 		if (FlxG.cameras.list.length > 0)
@@ -35,16 +39,27 @@ class MobileTrace
 	public static function log(msg:Dynamic, ?color:FlxColor)
 	{
 		if (!Options.devMode) return;
+
+		if (!enabled) return;
 		
 		if (text == null) return;
 
-		if (deleteTimer != null)
-			deleteTimer.cancel();
+		if (tween != null)
+			tween.cancel();
 
-		text.visible = true;
+		text.alpha = 0.7;
+
+		tween = FlxTween.tween(text, {alpha: 0}, 0.5, {
+			startDelay: 2,
+			onComplete: function(twn:FlxTween) {
+				text.text = "";
+			}
+		});
 
 		if (color != null)
 			text.color = color;
+		else
+			text.color = FlxColor.LIME;
 
 		text.text += Std.string(msg) + "\n";
 
@@ -53,11 +68,5 @@ class MobileTrace
 			lines.shift();
 
 		text.text = lines.join("\n");
-
-		deleteTimer = new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			text.visible = false;
-			text.text = "";
-		});
 	}
 }
