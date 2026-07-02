@@ -141,6 +141,7 @@ class Input extends FlxBasic {
                 FlxG.mouse.screenX = lastScreenX;
                 FlxG.mouse.screenY = lastScreenY;
                 simulatedState = 0;
+                pendingTapRelease = false;
             }
             else if (simulatedState == 2) {
                 FlxG.mouse._leftButton.current = 2;
@@ -150,16 +151,13 @@ class Input extends FlxBasic {
                 FlxG.mouse.screenY = lastScreenY;
                 
                 if (pendingTapRelease) {
-                    simulatedState = 1;
+                    simulatedState = -1;
                 } else {
                     simulatedState = 1;
                 }
             }
             else if (simulatedState == 1) {
-                if (pendingTapRelease) {
-                    simulatedState = -1;
-                    pendingTapRelease = false;
-                } else if (!isDragging && !isPressing) {
+                if (!isDragging && !isPressing) {
                     simulatedState = -1;
                 } else {
                     FlxG.mouse._leftButton.current = 1;
