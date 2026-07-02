@@ -35,7 +35,7 @@ class FunkinHitbox extends FlxSpriteGroup {
         var h:Int = Std.int(FlxG.height);
         
         var hintH:Int = Options.fullHint ? Std.int(FlxG.height) : Std.int(FlxG.height / 28);
-        var hintY:Int = hintStyle == "Gradient" ? 0 : FlxG.height - hintH;
+        var hintY:Int = hintStyle == "Gradient" ? 0 : (Options.downscroll ? FlxG.height - hintH : 0);
 
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         hitboxCamera.bgColor = 0x00000000;
@@ -61,13 +61,8 @@ class FunkinHitbox extends FlxSpriteGroup {
             hint.parentButton = btn;
         }
 
-        if (keyCount == 4) {
-            buttonLeft = buttons[0]; buttonDown = buttons[1]; buttonUp = buttons[2]; buttonRight = buttons[3];
-            hintLeft = hints[0]; hintDown = hints[1]; hintUp = hints[2]; hintRight = hints[3];
-        } else {
-            buttonLeft = buttons[0]; buttonDown = buttons[1]; buttonUp = buttons[2]; buttonRight = buttons[3];
-            hintLeft = hints[0]; hintDown = hints[1]; hintUp = hints[2]; hintRight = hints[3];
-        }
+        buttonLeft = buttons[0]; buttonDown = buttons[1]; buttonUp = buttons[2]; buttonRight = buttons[3];
+        hintLeft = hints[0]; hintDown = hints[1]; hintUp = hints[2]; hintRight = hints[3];
 
         if (hitboxStyle == "Gradient") applyGradientSafe(buttons, colors, w, h);
         if (hintStyle == "Gradient") applyGradientSafe(hints, colors, w, hintH);
@@ -192,7 +187,7 @@ class HitboxButton extends FlxSprite {
                 continue; 
             }
 
-            if (touch.pressed || touch.justPressed) {
+            if (touch.justPressed || touch.pressed) {
                 touch.getWorldPosition(_assignedCamera, _touchPoint);
                 if (overlapPointCheck(_touchPoint)) {
                     pressed = true;
@@ -207,7 +202,7 @@ class HitboxButton extends FlxSprite {
             return;
         }
 
-        if (FlxG.mouse.pressed) {
+        if (FlxG.mouse.justPressed || FlxG.mouse.pressed) {
             FlxG.mouse.getWorldPosition(_assignedCamera, _touchPoint);
             if (overlapPointCheck(_touchPoint)) {
                 pressed = true;
