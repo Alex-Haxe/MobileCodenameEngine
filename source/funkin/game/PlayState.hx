@@ -1560,7 +1560,7 @@ class PlayState extends MusicBeatState
                 case 7:  [S, D, F, SPACE, J, K, L];
                 case 8:  [A, S, D, F, H, J, K, L];
                 case 9:  [A, S, D, F, SPACE, H, J, K, L];
-                default: [A, S, W, D];
+                default: [LEFT, DOWN, UP, RIGHT];
             };
 
             for (i in 0...hitbox.buttons.length) {
