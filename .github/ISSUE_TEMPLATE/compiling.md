@@ -14,9 +14,8 @@ assignees: ''
 ### Which target are you using?
 [weed]: <> (CHANGE [ ] TO [x] IN FRONT OF YOUR TARGET!)
 
-[ ] Windows
-[ ] Linux
-[ ] Mac
+[ ] Android
+[ ] IOS
 
 ### Explain your issue
 ##### Please check first if your issue haven't already been reported yet, and make sure you ran the `update.bat` file before building.
