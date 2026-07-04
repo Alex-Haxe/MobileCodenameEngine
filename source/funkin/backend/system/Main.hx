@@ -86,15 +86,8 @@ class Main extends Sprite
 		}
 		#elseif ios
 		finalizeSetup();
-		#end
-
-		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
-
-		addChild(framerateSprite = new Framerate());
-		SystemInfo.init();
-		
-		#if mobile
-		FlxG.plugins.add(new Input());
+		#else
+		finalizeSetup();
 		#end
 	}
 
@@ -110,6 +103,7 @@ class Main extends Sprite
 	#end	
 
 	private function finalizeSetup():Void {
+		#if mobile
 		var base = mobile.backend.assets.Files.getAssetsDir();
 		
 		if (!base.endsWith("/")) base += "/";
@@ -123,6 +117,16 @@ class Main extends Sprite
 		} else {
 			trace("Assets already initialized at: " + base);
 		}
+		#end
+
+		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
+
+		addChild(framerateSprite = new Framerate());
+		SystemInfo.init();
+		
+		#if mobile
+		FlxG.plugins.add(new Input());
+		#end
 	}
 
 	@:dox(hide)
