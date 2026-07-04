@@ -126,6 +126,8 @@ class Files
 				var relative = asset.substr(source.length);
 				if (relative.startsWith("/")) relative = relative.substr(1);
 
+				if (!relative.startsWith("data/") && !relative.startsWith("languages/")) continue;
+
 				var outPath = Path.addTrailingSlash(target) + relative;
 				var dir = Path.directory(outPath);
 
