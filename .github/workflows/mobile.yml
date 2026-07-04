@@ -149,7 +149,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Android-Release
+          name: AndroidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
           retention-days: 1
           
