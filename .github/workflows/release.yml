@@ -70,7 +70,7 @@ jobs:
         run: |
          mkdir -p release-files
 
-         cp artifacts/Android-Release/*.apk release-files/ || true
+         cp artifacts/AndroidBuild/*.apk release-files/ || true
          cp artifacts/iosBuild/*.ipa release-files/ || true
    
          echo "Files found:"
