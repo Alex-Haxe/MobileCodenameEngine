@@ -4,15 +4,15 @@
 		<print pretty="true">Preparing installation...</print>
 
 		<!-- Mobile Libraries -->
-		<git name="extension-androidtools" url="https://github.com/ChanceXML/extension-androidtools" />
-		<git name="IOSTools" url="https://github.com/ChanceXML/IOSTools" ref="cne" />
+		<git name="extension-androidtools" url="https://github.com/Alex-Haxe/extension-androidtools" />
+		<git name="IOSTools" url="https://github.com/Alex-Haxe/IOSTools" ref="0.4.0" />
 
 		<!-- OpenFL & Lime (Required for Flixel) -->
 		<git name="openfl" url="https://github.com/CodenameCrew/cne-openfl" ref="old" />
 		<lib name="lime" version="8.2.1" />
 
 		<!-- Flixel -->
-		<git name="flixel" url="https://github.com/ChanceXML/cne-flixel-old" />
+		<git name="flixel" url="https://github.com/Alex-Haxe/cne-flixel-old" />
 		<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" ref="old" />
 
 		<!-- Other Libraries -->
