@@ -5,7 +5,7 @@
 		title="Friday Night Funkin' - Codename Engine" main="funkin.backend.system.Main"
 		file="CodenameEngine" packageName="com.yoshman29.codenameengine"
 		package="com.yoshman29.codenameengine"
-		version="1.0.1" build="7" company="Yoshman29" />
+		version="1.0.1" company="Yoshman29" />
 
 	<!-- 
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
@@ -21,9 +21,6 @@
 
 	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT WOULD BREAK THE ENGINE -->
 	<haxedef name="REGION" />
-
-	<!-- This only appears on dev builds. -->
-	<haxedef name="DEVBUILD" if="DEVBRANCH" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
