@@ -79,42 +79,32 @@ class Main extends Sprite
 
 		#if android
 		if (!Permissions.hasManageAllFiles()) {
-	        NativeAPI.showMessageBox("Permission Required!", "Please grant the following permission so the app can work correctly. (You may need to restart for the assets to load correctly).", "Got It!");
-
-            openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, function(_) { checkPermissions(); });
-    	}
-
-    	if (Permissions.hasManageAllFiles()) {
-		    finalizeSetup();
-	    }
-        #elseif ios
-     	    finalizeSetup();
-        #end
+			NativeAPI.showMessageBox("Permission Required!", "Please grant the following permission so the app can work correctly. (You may need to restart for the assets to load correctly).", "Got It!");
+			openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, checkPermissions);
+		} else {
+			finalizeSetup();
+		}
+		#elseif ios
+		finalizeSetup();
+		#end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		addChild(framerateSprite = new Framerate());
 		SystemInfo.init();
 		
-        #if mobile
+		#if mobile
 		FlxG.plugins.add(new Input());
-        #end
+		#end
 	}
 
 	#if android
-	private function onResult(_):Void {
+	private function checkPermissions(_:openfl.events.Event):Void {
 		if (extension.androidtools.Permissions.hasManageAllFiles()) {
+			openfl.Lib.current.stage.removeEventListener(openfl.events.Event.ACTIVATE, checkPermissions);
 			finalizeSetup();
-			openfl.Lib.current.stage.removeEventListener(openfl.events.Event.ACTIVATE, onResult);
-		}
-	}
-    
-	private function checkPermissions():Void {
-		if (!extension.androidtools.Permissions.hasManageAllFiles()) {
-               openfl.Lib.current.stage.addEventListener(openfl.events.Event.ACTIVATE, onResult);
-            extension.androidtools.Permissions.requestManageAllFiles(); 
 		} else {
-			finalizeSetup();
+			extension.androidtools.Permissions.requestManageAllFiles(); 
 		}
 	}
 	#end	
@@ -124,7 +114,7 @@ class Main extends Sprite
 		
 		if (!base.endsWith("/")) base += "/";
 
-		var firstRun = !sys.FileSystem.exists(base + "assets/");
+		var firstRun = !sys.FileSystem.exists(base + "assets/.copy_complete");
 
 		if (firstRun)
 		{
@@ -185,9 +175,9 @@ class Main extends Sprite
 		var root = haxe.io.Path.addTrailingSlash(androidDir);
 		Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', root + 'assets/', true));
 		#elseif ios
-        var root = haxe.io.Path.addTrailingSlash(lime.system.System.documentsDirectory);
-        Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', root + 'assets/', true));
-        #end
+		var root = haxe.io.Path.addTrailingSlash(lime.system.System.documentsDirectory);
+		Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', root + 'assets/', true));
+		#end
 
 		var lib = new AssetLibrary();
 		@:privateAccess
