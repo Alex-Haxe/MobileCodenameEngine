@@ -114,8 +114,20 @@ class Main extends Sprite
 		{
 			trace("First run detected. Starting file initialization...");
 			mobile.backend.assets.Files.init();
+			
+			if (!sys.FileSystem.exists(base + "assets/.copy_complete"))
+			{
+				trace("Files missing after initialization. Retrying...");
+				mobile.backend.assets.Files.init();
+			}
 		} else {
 			trace("Assets already initialized at: " + base);
+			
+			if (!sys.FileSystem.exists(base + "assets/data/") || !sys.FileSystem.exists(base + "assets/songs/") || !sys.FileSystem.exists(base + "assets/languages/"))
+			{
+				trace("Critical files missing from extraction. Re-initializing assets...");
+				mobile.backend.assets.Files.init();
+			}
 		}
 		#end
 
