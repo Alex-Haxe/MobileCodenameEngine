@@ -217,11 +217,12 @@ class Files
 					try {
 						FileSystem.createDirectory(current);
 					} catch(e:Dynamic) {
-						if (!FileSystem.exists(current)) {
-							throw e;
-						}
 					}
 				}
+			}
+
+			if (!FileSystem.exists(path)) {
+				throw "Could not create directory: " + path;
 			}
 		} catch (e:Dynamic) {
 			#if COMPILE_EXPERIMENTAL
