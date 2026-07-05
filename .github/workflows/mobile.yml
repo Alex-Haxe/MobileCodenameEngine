@@ -14,12 +14,12 @@ on:
       android_flags:
         description: Android Flags
         required: false
-        default:
+        default: -DCOMPILE_EXPERIMENTAL
         
       ios_flags:
         description: Ios Flags
         required: false
-        default: 
+        default: -DCOMPILE_EXPERIMENTAL
         
       platform:
         description: "Build platform"
@@ -126,7 +126,7 @@ jobs:
       - name: Build APK
         run: |
          haxelib run lime clean android
-         haxelib run lime build android -DCOMPILE_EXPERIMENTAL -final -release \
+         haxelib run lime build android -final -release \
            --certificate-path="keystore.jks" \
            --certificate-alias="${{ secrets.KEYSTORE_ALIAS }}" \
            --certificate-password="${{ secrets.KEYSTORE_PASSWORD }}" \
@@ -195,7 +195,7 @@ jobs:
       - name: Build iOS
         run: |
           #arch -x86_64 
-          haxelib run lime build ios -DCOMPILE_EXPERIMENTAL -nosign ${{ github.event.inputs.ios_flags }}
+          haxelib run lime build ios -nosign ${{ github.event.inputs.ios_flags }}
           find . -name "*.ipa"
            
       - name: Compile Xcode Project
