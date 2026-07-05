@@ -98,9 +98,15 @@ class Files
 		#if sys
 		try {
 			var marker = Path.addTrailingSlash(target) + ".copy_complete";
-			if (FileSystem.exists(marker))
+			
+			if (FileSystem.exists(marker) && FileSystem.exists(Path.addTrailingSlash(target) + "data/") && FileSystem.exists(Path.addTrailingSlash(target) + "songs/") && FileSystem.exists(Path.addTrailingSlash(target) + "languages/"))
 			{
 				return;
+			}
+			
+			if (FileSystem.exists(marker))
+			{
+				FileSystem.deleteFile(marker);
 			}
 			
 			if (copyAssets(folder, target))
