@@ -90,6 +90,7 @@ class Files
 
 			copyFolderOnce("assets", assetsBase + "assets/");
 		} catch (e:Dynamic) {
+			NativeAPI.showMessageBox("Error Initializing", "Failed to initialize directories: " + Std.string(e), "Got It!");
 		}
 	}
 	
@@ -113,7 +114,12 @@ class Files
 			{
 				File.saveContent(marker, "1");
 			}
+			else
+			{
+				NativeAPI.showMessageBox("Copy Failed", "Some asset files failed to copy correctly. Please check permissions or storage space.", "Got It!");
+			}
 		} catch (e:Dynamic) {
+			NativeAPI.showMessageBox("Copy Error", "An error occurred during asset extraction: " + Std.string(e), "Got It!");
 		}
 		#end
 	}
@@ -155,6 +161,7 @@ class Files
 						}
 					}
 				} catch (e:Dynamic) {
+					NativeAPI.showMessageBox("Write Error", "Could not copy asset to " + outPath + "\nError: " + Std.string(e), "Got It!");
 					fileSuccess = false;
 				}
 
@@ -163,6 +170,7 @@ class Files
 				}
 			}
 		} catch (e:Dynamic) {
+			NativeAPI.showMessageBox("Asset List Error", "Failed to access asset package: " + Std.string(e), "Got It!");
 			return false;
 		}
 		return success;
@@ -180,6 +188,7 @@ class Files
 				FileSystem.createDirectory(path);
 			}
 		} catch (e:Dynamic) {
+			NativeAPI.showMessageBox("Directory Error", "Failed to create directory path: " + path + "\nError: " + Std.string(e), "Got It!");
 		}
 		#end
 	}
