@@ -48,7 +48,7 @@ class PauseSubState extends MusicBeatSubstate
 	private var _lastY:Float = -1;
 	private var _dragDistance:Float = 0;
 	private var _swipeThreshold:Float = 40; 
-	private var _scrollDistanceThreshold:Float = 200;
+	private var _scrollDistanceThreshold:Float = 250;
 
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
@@ -192,8 +192,8 @@ class PauseSubState extends MusicBeatSubstate
 						if (Math.abs(totalDiffY) < _swipeThreshold) {
 							for (i in 0...grpMenuShit.members.length) {
 								var item = grpMenuShit.members[i];
-								if (touch.screenX >= item.x - 50 && touch.screenX <= (item.x + item.width) + 50 &&
-									touch.screenY >= item.y - 25 && touch.screenY <= (item.y + item.height) + 25) {
+								if (touch.screenX >= item.x - 200 && touch.screenX <= (item.x + item.width) + 200 &&
+									touch.screenY >= item.y - 50 && touch.screenY <= (item.y + item.height) + 50) {
 									curSelected = i;
 									changeSelection(0);
 									selectOption();
