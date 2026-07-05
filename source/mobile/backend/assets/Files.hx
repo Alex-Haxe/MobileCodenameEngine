@@ -8,6 +8,7 @@ import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
 import openfl.utils.Assets;
+import funkin.backend.utils.NativeAPI;
 
 class Files
 {
