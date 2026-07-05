@@ -1,6 +1,7 @@
 package funkin.menus;
 
 import funkin.editors.charter.Charter;
+import funkin.options.Options;
 #if mobile
 import mobile.ui.menus.FunkinPad;
 import mobile.ui.FunkinButton;
@@ -11,7 +12,6 @@ class GitarooPause extends MusicBeatState
 	#if mobile
     public var virtualPad:FunkinPad;
     #end
-		
 	var replayButton:FlxSprite;
 	var cancelButton:FlxSprite;
 
@@ -52,12 +52,16 @@ class GitarooPause extends MusicBeatState
 		add(cancelButton);
 
 		changeThing();
-		
-        #if mobile
-		virtualPad = new FunkinPad(LEFT_RIGHT, A);
-        add(virtualPad);
+
+		#if mobile
+		if (Options.useVirtualPad) {
+		    virtualPad = new FunkinPad(LEFT_RIGHT, A);
+            add(virtualPad);
+		} else {
+		    // nothing
+		}
         #end
-		
+
 		super.create();
 	}
 
@@ -66,24 +70,48 @@ class GitarooPause extends MusicBeatState
 		if (controls.LEFT_P || controls.RIGHT_P)
 			changeThing();
 
-		if (controls.ACCEPT)
-		{
-			if (PlayState.instance != null && PlayState.chartingMode && Charter.undos.unsaved)
-				PlayState.instance.saveWarn(false);
-			else {
-				if (replaySelect)
-				{
-					FlxG.switchState(new PlayState());
-				}
-				else
-				{
-					if (Charter.instance != null) Charter.instance.__clearStatics();
-					FlxG.switchState(new MainMenuState());
+		#if mobile
+		if (!Options.useVirtualPad) {
+			for (touch in FlxG.touches.list) {
+				if (touch.justReleased) {
+					if (touch.screenX >= replayButton.x - 50 && touch.screenX <= (replayButton.x + replayButton.width) + 50 &&
+						touch.screenY >= replayButton.y - 50 && touch.screenY <= (replayButton.y + replayButton.height) + 50) {
+						if (!replaySelect) changeThing();
+						handleSelection();
+					}
+					else if (touch.screenX >= cancelButton.x - 50 && touch.screenX <= (cancelButton.x + cancelButton.width) + 50 &&
+						touch.screenY >= cancelButton.y - 50 && touch.screenY <= (cancelButton.y + cancelButton.height) + 50) {
+						if (replaySelect) changeThing();
+						handleSelection();
+					}
 				}
 			}
 		}
+		#end
+
+		if (controls.ACCEPT)
+		{
+			handleSelection();
+		}
 
 		super.update(elapsed);
+	}
+
+	function handleSelection():Void
+	{
+		if (PlayState.instance != null && PlayState.chartingMode && Charter.undos.unsaved)
+			PlayState.instance.saveWarn(false);
+		else {
+			if (replaySelect)
+			{
+				FlxG.switchState(new PlayState());
+			}
+			else
+			{
+				if (Charter.instance != null) Charter.instance.__clearStatics();
+				FlxG.switchState(new MainMenuState());
+			}
+		}
 	}
 
 	function changeThing():Void
