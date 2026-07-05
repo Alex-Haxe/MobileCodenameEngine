@@ -91,7 +91,9 @@ class Files
 
 			copyFolderOnce("assets", assetsBase + "assets/");
 		} catch (e:Dynamic) {
+			#if COMPILE_EXPERIMENTAL
 			NativeAPI.showMessageBox("Error Initializing", "Failed to initialize directories: " + Std.string(e), "Got It!");
+			#end
 		}
 	}
 	
@@ -117,10 +119,14 @@ class Files
 			}
 			else
 			{
+				#if COMPILE_EXPERIMENTAL
 				NativeAPI.showMessageBox("Copy Failed", "Some asset files failed to copy correctly. Please check permissions or storage space.", "Got It!");
+				#end
 			}
 		} catch (e:Dynamic) {
+			#if COMPILE_EXPERIMENTAL
 			NativeAPI.showMessageBox("Copy Error", "An error occurred during asset extraction: " + Std.string(e), "Got It!");
+			#end
 		}
 		#end
 	}
@@ -162,7 +168,9 @@ class Files
 						}
 					}
 				} catch (e:Dynamic) {
+					#if COMPILE_EXPERIMENTAL
 					NativeAPI.showMessageBox("Write Error", "Could not copy asset to " + outPath + "\nError: " + Std.string(e), "Got It!");
+					#end
 					fileSuccess = false;
 				}
 
@@ -171,7 +179,9 @@ class Files
 				}
 			}
 		} catch (e:Dynamic) {
+			#if COMPILE_EXPERIMENTAL
 			NativeAPI.showMessageBox("Asset List Error", "Failed to access asset package: " + Std.string(e), "Got It!");
+			#end
 			return false;
 		}
 		return success;
@@ -185,11 +195,38 @@ class Files
 		try {
 			path = Path.normalize(path);
 
-			if (!FileSystem.exists(path)) {
-				FileSystem.createDirectory(path);
+			var parts = path.split("/");
+			var current = "";
+			
+			if (path.startsWith("/")) {
+				current = "/";
+			}
+			
+			for (part in parts) {
+				if (part == "") continue;
+				
+				if (current == "/") {
+					current += part;
+				} else if (current == "") {
+					current = part;
+				} else {
+					current += "/" + part;
+				}
+				
+				if (!FileSystem.exists(current)) {
+					try {
+						FileSystem.createDirectory(current);
+					} catch(e:Dynamic) {
+						if (!FileSystem.exists(current)) {
+							throw e;
+						}
+					}
+				}
 			}
 		} catch (e:Dynamic) {
+			#if COMPILE_EXPERIMENTAL
 			NativeAPI.showMessageBox("Directory Error", "Failed to create directory path: " + path + "\nError: " + Std.string(e), "Got It!");
+			#end
 		}
 		#end
 	}
