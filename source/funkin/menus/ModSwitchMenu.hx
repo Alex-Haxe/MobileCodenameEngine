@@ -12,14 +12,14 @@ import mobile.ui.FunkinButton;
 #end
 
 class ModSwitchMenu extends MusicBeatSubstate {
-	#if mobile
-    //public var virtualPad:FunkinPad;
-    #end
 	var mods:Array<String> = [];
 	var alphabets:FlxTypedGroup<Alphabet>;
 	var curSelected:Int = 0;
 
 	var subCam:FlxCamera;
+
+	var touchY:Float = 0;
+	var touchSwiped:Bool = false;
 
 	public override function create() {
 		super.create();
@@ -52,8 +52,12 @@ class ModSwitchMenu extends MusicBeatSubstate {
 		changeSelection(0, true);
 
 		#if mobile
-	    virtualPad = new FunkinPad(UP_DOWN, A_B);
-        add(virtualPad);
+		if (Options.useVirtualPad) {
+	        virtualPad = new FunkinPad(UP_DOWN, A_B);
+            add(virtualPad);
+		} else {
+			// nothing
+		}
 		#end
 	}
 
@@ -61,6 +65,37 @@ class ModSwitchMenu extends MusicBeatSubstate {
 		super.update(elapsed);
 
 		changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0) - FlxG.mouse.wheel);
+
+		if (!Options.useVirtualPad) {
+			for (touch in FlxG.touches.list) {
+				if (touch.justPressed) {
+					touchY = touch.y;
+					touchSwiped = false;
+				}
+
+				if (touch.pressed) {
+					if (Math.abs(touch.y - touchY) > 25) {
+						changeSelection(touch.y > touchY ? -1 : 1);
+						touchY = touch.y;
+						touchSwiped = true;
+					}
+				}
+
+				if (touch.justReleased && !touchSwiped) {
+					for (item in alphabets) {
+						if (touch.overlaps(item, subCam)) {
+							if (curSelected != alphabets.members.indexOf(item)) {
+								curSelected = alphabets.members.indexOf(item);
+								changeSelection(0, true);
+							} else {
+								ModsFolder.switchMod(mods[curSelected]);
+								close();
+							}
+						}
+					}
+				}
+			}
+		}
 
 		if (controls.ACCEPT) {
 			ModsFolder.switchMod(mods[curSelected]);
