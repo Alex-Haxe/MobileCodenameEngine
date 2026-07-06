@@ -13,10 +13,6 @@ import mobile.ui.FunkinButton;
 
 class PlaytestingWarningSubstate extends MusicBeatSubstate
 {
-	#if mobile
-    //public var virtualPad:FunkinPad;
-    #end
-	
 	var titleAlphabet:Alphabet;
 	var disclaimer:FunkinText;
 
@@ -76,22 +72,56 @@ class PlaytestingWarningSubstate extends MusicBeatSubstate
 
 		curSelected = options.length-1;
 		changeSelection(0);
-        #if mobile
-		virtualPad = new FunkinPad(LEFT_RIGHT, A);
-        add(virtualPad);
+
+		#if mobile
+		if (Options.useVirtualPad) {
+		    virtualPad = new FunkinPad(LEFT_RIGHT, A);
+            add(virtualPad);
+		} else {
+		    // nothing
+		}
 		#end
 	}
 
 	var sinner:Float = 0;
 	var __firstFrame:Bool = true;
+	var _swipeStart:flixel.math.FlxPoint = new flixel.math.FlxPoint();
 	override function update(elapsed:Float) {
 		super.update(elapsed); sinner += elapsed;
 
 		titleAlphabet.offset.y = FlxMath.fastSin(sinner) * 12;
 		disclaimer.offset.y = FlxMath.fastSin(sinner+.8) * 8;
 
-		if (controls.RIGHT_P) changeSelection(1);
-		if (controls.LEFT_P) changeSelection(-1);
+		var rightTriggered:Bool = controls.RIGHT_P;
+		var leftTriggered:Bool = controls.LEFT_P;
+		var acceptTriggered:Bool = controls.ACCEPT;
+
+		if (!Options.useVirtualPad) {
+			#if mobile
+			for (touch in FlxG.touches.list) {
+				if (touch.justPressed) {
+					_swipeStart.set(touch.screenX, touch.screenY);
+				}
+				if (touch.justReleased) {
+					var dx:Float = touch.screenX - _swipeStart.x;
+					var dy:Float = touch.screenY - _swipeStart.y;
+					if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+						if (dx > 0) rightTriggered = true;
+						else leftTriggered = true;
+					} else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+						acceptTriggered = true;
+					}
+				}
+			}
+			#else
+			if (FlxG.mouse.justReleased) {
+				acceptTriggered = true;
+			}
+			#end
+		}
+
+		if (rightTriggered) changeSelection(1);
+		if (leftTriggered) changeSelection(-1);
 
 		for (i => option in options) {
 			option.x = FlxG.width * ((1+i)/4) - (option.fieldWidth/2);
@@ -104,7 +134,7 @@ class PlaytestingWarningSubstate extends MusicBeatSubstate
 			option.offset.y = CoolUtil.fpsLerp(option.offset.y, i == curSelected ? 10 : -10, 1/6);
 		}
 
-		if (controls.ACCEPT && !__firstFrame) {
+		if (acceptTriggered && !__firstFrame) {
 			buttonsData[curSelected].onClick(null);
 			close();
 		}
