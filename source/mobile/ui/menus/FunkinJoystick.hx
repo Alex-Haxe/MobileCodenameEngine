@@ -52,16 +52,10 @@ class FunkinJoystick extends FlxSpriteGroup
 		FlxG.cameras.add(virtualpadCamera, false);
 		this.cameras = [virtualpadCamera];
 		
-		if (Std.isOfType(FlxG.state, funkin.editors.charter.Charter)) {
-			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
-			'assets/images/editors/mobile/charter/virtual-input.png',
-			'assets/images/editors/mobile/charter/virtual-input.txt');
-		} else {
-			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
-			'assets/images/menus/virtual-input.png',
-			'assets/images/menus/virtual-input.txt');
-		}
-		
+		atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
+			'assets/shared/images/mobile/virtualpad/virtual-input.png',
+			'assets/shared/images/mobile/virtualpad/charter/virtual-input.txt');
+
 		base = new FlxSprite(x, y);
 		base.frames = FlxTileFrames.fromFrame(atlasFrames.getByName("base"), FlxPoint.get(252, 252));
 		base.solid = false;
