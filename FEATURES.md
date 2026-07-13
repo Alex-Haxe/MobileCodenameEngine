@@ -4,7 +4,7 @@ This markdown file contains most of the main features Codename has, separated in
 _**QOL = Quality of Life**_
 
 <details>
-  <summary><h2>Player QOL Features</h2></summary>
+  <summary><h2>Player QOL Features</h2></summary> 
 
 - New input system
 - New accuracy and misses system, added to fix the base game UI.
