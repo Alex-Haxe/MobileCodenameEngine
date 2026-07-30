@@ -1,5 +1,8 @@
 # Friday Night Funkin' - Codename Engine Mobile
 
+> [!NOTE]
+> paused for some time. obviously the port works. just that its not gonna get updates for some time.
+
 > [!CAUTION]
 > If u encounter any issues. Go [here](https://github.com/ChanceXML/MobileCodenameEngine/issues) and report them 
 
