@@ -48,6 +48,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var icon:String = null;
 	public var iconColor:Null<FlxColor> = null;
 	public var gameOverCharacter:String = Character.FALLBACK_DEAD_CHARACTER;
+	public var defaultAimFPS:Float = 24;
+
 
 	/*
 		Whether to use the center or the top-left of the character as the camera origin point.
@@ -425,7 +427,13 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		
 		for(node in xml.elements) {
 			switch(node.name) {
-				case "anim":
+				case "anim":	
+					if (defaultAimFPS != 24){
+						if (!node.x.exists("fps")) {
+							node.x.set('fps', Std.string(defaultAimFPS));
+						} 
+					}
+
 					XMLUtil.addXMLAnimation(this, node);
 				case "use-extension" | "extension" | "ext":
 					if (XMLImportedScriptInfo.shouldLoadBefore(node)) continue;
@@ -456,7 +464,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public static var characterProperties:Array<String> = [
 		"x", "y", "sprite", "scale", "antialiasing",
 		"flipX", "camx", "camy", "centercam", "isPlayer", "icon",
-		"color", "gameOverChar", "holdTime", "applyStageMatrix"
+		"color", "gameOverChar", "holdTime", "applyStageMatrix",
+		"defFps"
 	];
 	public static var characterAnimProperties:Array<String> = [
 		"name", "anim", "label", "x", "y", "fps", "loop", "indices"
@@ -480,6 +489,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 		if (gameOverCharacter != Character.FALLBACK_DEAD_CHARACTER) xml.set("gameOverChar", gameOverCharacter);
 		if (iconColor != null) xml.set("color", iconColor.toWebString());
+		if (defaultAimFPS != 24) xml.set("defFps", Std.string(defaultAimFPS));
 
 		if (sprite != curCharacter) xml.set("sprite", sprite);
 		if (scale.x != 1) xml.set("scale", Std.string(scale.x));
