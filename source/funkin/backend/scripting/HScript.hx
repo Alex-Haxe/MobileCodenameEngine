@@ -26,13 +26,29 @@ class HScript extends Script {
     public static var currentFunction:String = "";
     public static var callLog:Array<String> = [];
 	//public var folderlessPath:String;
-	var __importedPaths:Array<String>;
+	var __importedPaths:Map<String, Bool>;
 
 	public static function initParser() {
 		var parser = new Parser();
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		parser.preprocessorValues = Script.getDefaultPreprocessors();
 		return parser;
+	}
+
+	/** Pool of idle parsers, reused across script instances to avoid repeated Parser construction. **/
+	private static var __parserPool:Array<Parser> = [];
+
+	private static function getParser():Parser {
+		var parser = __parserPool.pop();
+		if (parser == null)
+			return initParser();
+		parser.line = 1; // reusing a parser only requires resetting `line`; all other vars get reset on parse
+		return parser;
+	}
+
+	private static function returnParser(parser:Parser) {
+		if (parser != null)
+			__parserPool.push(parser);
 	}
 
 	public override function onCreate(path:String) {
@@ -44,9 +60,9 @@ class HScript extends Script {
 			if(Assets.exists(rawPath)) code = Assets.getText(rawPath);
 		} catch(e) Logs.error('Error while reading $path: ${Std.string(e)}');
 
-		parser = initParser();
+		parser = getParser();
 		//folderlessPath = Path.directory(path);
-		__importedPaths = [path];
+		__importedPaths = [path => true];
 
 		interp.errorHandler = _errorHandler;
 		interp.warnHandler = _warnHandler;
@@ -284,7 +300,7 @@ class HScript extends Script {
 
 	public override function loadFromString(code:String) {
 		try {
-			if (code != null && code.trim() != "")
+			if (code != null && code.length > 0)
 				expr = parser.parseString(code, fileName);
 		} catch(e:Error) {
 			_errorHandler(e);
@@ -305,13 +321,13 @@ class HScript extends Script {
 		var assetsPath = 'assets/$prefix${cl.join("/")}';
 		for(hxExt in ["hx", "hscript", "hsc", "hxs"]) {
 			var p = '$assetsPath.$hxExt';
-			if (__importedPaths.contains(p))
+			if (__importedPaths.exists(p))
 				return true; // no need to reimport again
 			if (Assets.exists(p)) {
 				var code = Assets.getText(p);
 				var expr:Expr = null;
 				try {
-					if (code != null && code.trim() != "") {
+					if (code != null && code.length > 0) {
 						parser.line = 1; // fun fact: this is all you need to reuse a parser without issues. all the other vars get reset on parse.
 						expr = parser.parseString(code, cl.join("/") + "." + hxExt);
 					}
@@ -323,7 +339,7 @@ class HScript extends Script {
 				if (expr != null) {
 					@:privateAccess
 					interp.exprReturn(expr);
-					__importedPaths.push(p);
+					__importedPaths.set(p, true);
 				}
 				return true;
 			}
@@ -397,15 +413,17 @@ class HScript extends Script {
 
 		interp.allowStaticVariables = interp.allowPublicVariables = false;
 		var savedVariables:Map<String, Dynamic> = [];
+		var defaultVars = Script.getDefaultVariables(this);
 		for(k=>e in interp.variables) {
-			if (!Reflect.isFunction(e)) {
+			if (!Reflect.isFunction(e) && !defaultVars.exists(k)) {
 				savedVariables[k] = e;
 			}
 		}
 		var oldParent = interp.scriptObject;
+		returnParser(parser);
 		onCreate(path);
 
-		for(k=>e in Script.getDefaultVariables(this))
+		for(k=>e in defaultVars)
 			set(k, e);
 
 		load();
@@ -443,6 +461,8 @@ class HScript extends Script {
 
 	public override function set(val:String, value:Dynamic) {
 		interp.variables.set(val, value);
+		// A runtime-injected variable may shadow a previously-cached VNotFound/type-resolve result, so drop stale cache entries.
+		interp.invalidateCache();
 	}
 
 	public override function trace(v:Dynamic) {
@@ -464,5 +484,12 @@ class HScript extends Script {
 
 	public override function setPublicMap(map:Map<String, Dynamic>) {
 		this.interp.publicVariables = map;
+	}
+
+	override public function destroy() {
+		returnParser(parser);
+		parser = null;
+		interp = null;
+		super.destroy();
 	}
 }

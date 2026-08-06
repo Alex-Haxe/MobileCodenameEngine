@@ -275,6 +275,7 @@ class StageEditor extends UIState {
 					stageSpritesWindow.add(button);
 				} else if(sprite == null) {
 					var basic = new FlxBasic(); // prevent awkward layering
+					basic.exists = false;
 					insert(i, basic);
 					var button = new StageUnknownButton(0,0, basic, xml);
 					stageSpritesWindow.add(button);
@@ -336,8 +337,8 @@ class StageEditor extends UIState {
 				sprite.extra.set(exID("type"), node.name);
 				sprite.extra.set(exID("imageFile"), '${node.getAtt("sprite").getDefault(sprite.name)}');
 				sprite.extra.set(exID("parentNode"), parent);
-				sprite.extra.set(exID("highMemory"), parent.name == "highMemory");
-				sprite.extra.set(exID("lowMemory"), parent.name == "lowMemory");
+				sprite.extra.set(exID("highMemory"), parent.name == "high-memory");
+				sprite.extra.set(exID("lowMemory"), parent.name == "low-memory");
 				//sprite.active = false;
 			}
 			if(sprite is StageCharPos)
@@ -402,6 +403,7 @@ class StageEditor extends UIState {
 		}
 		char.name = charName;
 		char.debugMode = true;
+		char.useRenderTexture = true;
 		// Play first anim, and make it the last frame
 		var animToPlay = char.getAnimOrder()[0];
 		char.playAnim(animToPlay, true, NONE);
@@ -420,8 +422,8 @@ class StageEditor extends UIState {
 		char.extra.set(exID("camY"), charPos.camyoffset);
 
 		char.extra.set(exID("parentNode"), parent);
-		char.extra.set(exID("highMemory"), parent.name == "highMemory");
-		char.extra.set(exID("lowMemory"), parent.name == "lowMemory");
+		char.extra.set(exID("highMemory"), parent.name == "high-memory");
+		char.extra.set(exID("lowMemory"), parent.name == "low-memory");
 
 		chars.push(char);
 		stage.applyCharStuff(char, charPos.name, 0);
@@ -752,6 +754,8 @@ class StageEditor extends UIState {
 				saveToXml(spriteXML, "color", sprite.color.toWebString(), "#FFFFFF");
 				// TODO: save custom parameters
 				//saveToXml(spriteXML, "flipX", sprite.flipX, false);
+				if (node.hasNode.anim) for (animNode in node.nodes.anim)
+					spriteXML.addChild(animNode.x);
 				newNode = spriteXML;
 			} else if(button is StageCharacterButton) {
 				var button:StageCharacterButton = cast button;
