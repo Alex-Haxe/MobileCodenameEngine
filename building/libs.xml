@@ -18,7 +18,7 @@
 		<!-- Other Libraries -->
 		<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="1972ae6a823491db0f2598a6c62fa624a8f2a29f" />
 		<git name="hxdiscord_rpc" url="https://github.com/CodenameCrew/cne-hxdiscord_rpc" ref="old" skipDeps="true" />
-		<lib name="funkin-modchart" skipDeps="true" />
+		<lib name="funkin-modchart" url="https://github.com/CodenameCrew/FunkinModchart" skipDeps="true" />
 		<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 		<lib name="hxWebSockets" />
 

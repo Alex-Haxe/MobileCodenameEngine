@@ -3,6 +3,10 @@ package funkin.options.type;
 import flixel.FlxG;
 
 class ArrayOption extends TextOption {
+	public static var EMPTY_ARROW_STRING:String = '  ';
+	public static var LEFT_ARROW_STRING:String = '< ';
+	public static var RIGHT_ARROW_STRING:String = ' >';
+
 	public var changedCallback:String->Void;
 
 	public var options:Array<Dynamic>;
@@ -41,14 +45,14 @@ class ArrayOption extends TextOption {
 	}
 
 	function formatTextOption() {
-		var s = ": ";
+		var s = TextOption.OPTION_VALUE_PREFIX;
 
-		if (currentSelection > 0) s += "< ";
-		else s += "  ";
+		if (currentSelection > 0) s += LEFT_ARROW_STRING;
+		else s += EMPTY_ARROW_STRING;
 
 		s += TU.exists(displayOptions[currentSelection]) ? TU.translate(displayOptions[currentSelection]) : displayOptions[currentSelection];
 
-		if (currentSelection < options.length - 1) s += " >";
+		if (currentSelection < options.length - 1) s += RIGHT_ARROW_STRING;
 
 		return s;
 	}
