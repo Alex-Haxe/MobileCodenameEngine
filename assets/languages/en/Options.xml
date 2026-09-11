@@ -135,6 +135,23 @@
 			<str id="gpuOnlyBitmaps-name">VRAM-Only Sprites</str>
 			<str id="gpuOnlyBitmaps-desc">If checked, will only store the bitmaps in the GPU, freeing a LOT of memory (EXPERIMENTAL). Turning this off will consume a lot of memory, especially on bigger sprites. If you aren't sure, leave this on.</str>
 		</group>
+
+		<group name="AppearanceOptionsFramerate" prefix="Advanced.">
+			<str id="fpsCounterConductor-name">Show Conductor Info</str>
+			<str id="fpsCounterConductor-desc">If checked, will display information relating to the conductor on the debug FPS Counter menu.</str>
+
+			<str id="fpsCounterFlixel-name">Show Flixel Info</str>
+			<str id="fpsCounterFlixel-desc">If checked, will display information relating to Flixel on the debug FPS Counter menu.</str>
+		
+			<str id="fpsCounterSystem-name">Show System Info</str>
+			<str id="fpsCounterSystem-desc">If checked, will display information relating to your system on the debug FPS Counter menu.</str>
+		
+			<str id="fpsCounterAssets-name">Show Assets Tree Info</str>
+			<str id="fpsCounterAssets-desc">If checked, will display information relating to the assets tree on the debug FPS Counter menu.</str>
+		
+			<str id="fpsCounterStats-name">Show Stats Info</str>
+			<str id="fpsCounterStats-desc">If checked, will Fuck idk</str>
+		</group>
 	</group>
 
 	<group name="GameplayOptions" prefix="GameplayOptions.">

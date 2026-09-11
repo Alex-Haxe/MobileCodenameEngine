@@ -1,14 +1,18 @@
 package funkin.backend.assets;
 
+import haxe.io.Path;
+
+import lime.utils.AssetLibrary;
+
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;
+import flixel.util.typeLimit.OneOfTwo;
+
+import animate.FlxAnimateFrames;
+
 import funkin.backend.assets.ModsFolder;
 import funkin.backend.scripting.Script;
-import haxe.io.Path;
-import lime.utils.AssetLibrary;
-import openfl.utils.Assets as OpenFlAssets;
-import animate.FlxAnimateFrames;
 
 #if android
 import extension.androidtools.content.Context;
@@ -83,14 +87,14 @@ class Paths
 		if (difficulty == null) difficulty = Flags.DEFAULT_DIFFICULTY;
 		if (ext == null) ext = Flags.SOUND_EXT;
 		var diff = getPath('songs/$song/song/Voices$suffix-${difficulty}.${ext}', null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/$song/song/Voices$suffix.${ext}', null);
+		return Assets.exists(diff) ? diff : getPath('songs/$song/song/Voices$suffix.${ext}', null);
 	}
 
 	inline static public function inst(song:String, ?difficulty:String, ?suffix:String = "", ?ext:String) {
 		if (difficulty == null) difficulty = Flags.DEFAULT_DIFFICULTY;
 		if (ext == null) ext = Flags.SOUND_EXT;
 		var diff = getPath('songs/$song/song/Inst$suffix-${difficulty}.${ext}', null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/$song/song/Inst$suffix.${ext}', null);
+		return Assets.exists(diff) ? diff : getPath('songs/$song/song/Inst$suffix.${ext}', null);
 	}
 
 	static public function image(key:String, ?library:String, checkForAtlas:Bool = false, ?ext:String) {
@@ -98,18 +102,18 @@ class Paths
 		if (checkForAtlas) {
 			var atlasPath = getPath('images/$key/spritemap.$ext', library);
 			var multiplePath = getPath('images/$key/1.$ext', library);
-			if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
-			if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
+			if (atlasPath != null && Assets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
+			if (multiplePath != null && Assets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
 		}
 		return getPath('images/$key.$ext', library);
 	}
 
 	public static inline function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
-		if (!OpenFlAssets.exists(scriptPath)) {
+		if (!Assets.exists(scriptPath)) {
 			var p:String;
 			for(ex in Script.scriptExtensions) {
-				if (OpenFlAssets.exists(p = scriptPath + '.' + ex)) {
+				if (Assets.exists(p = scriptPath + '.' + ex)) {
 					scriptPath = p;
 					break;
 				}
@@ -134,7 +138,7 @@ class Paths
 	 * @param font The font's path (if it's already passed as a font name, the same name will be returned)
 	 */
 	inline static public function getFontName(font:String) {
-		return OpenFlAssets.exists(font, FONT) ? OpenFlAssets.getFont(font).fontName : font;
+		return Assets.exists(font, FONT) ? Assets.getFont(font).fontName : font;
 	}
 
 	public static inline function font(key:String) {
