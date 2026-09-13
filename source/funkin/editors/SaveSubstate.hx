@@ -2,6 +2,9 @@ package funkin.editors;
 
 import haxe.io.Path;
 import lime.ui.FileDialog;
+#if lime_funkin
+import lime.ui.FileDialogFilter;
+#end
 
 #if android
 import extension.androidtools.Tools;

@@ -17,15 +17,20 @@ class UIFileExplorer extends UISliceSprite {
 
 	public var file:Bytes = null;
 	public var filePath:String = null;
+	public var fileExt:String = null; // avoid constant Path.extension checks
 	public var onFile:(String, Bytes)->Void;
 
 	public var uiElement:FlxSprite;
 	
-	public var fileType:String = "txt";
+	public var fileType:Array<String> = ["txt"];
 
-	public function new(x:Float, y:Float, ?w:Int, ?h:Int, fileType:String = "txt", ?onFile:(String, Bytes)->Void) {
+	public function new(x:Float, y:Float, ?w:Int, ?h:Int, fileType:OneOfTwo<String, Array<String>>, ?onFile:(String, Bytes)->Void) {
 		super(x, y, (w != null ? w : 320), (h != null ? h : 58), 'editors/ui/inputbox');
-		this.fileType = fileType;
+		if (fileType != null) {
+			// backward compat with custom editors
+			if (fileType is String) fileType = cast(fileType, String).split(';');
+			this.fileType = fileType;
+		}
 
 		if (onFile != null) this.onFile = onFile;
 
@@ -86,7 +91,9 @@ class UIFileExplorer extends UISliceSprite {
 	}
 
 	public function loadFile(path:String) {
+		if (path == null) return;
 		file = cast sys.io.File.getBytes(filePath = path);
+		fileExt = haxe.io.Path.extension(filePath);
 		deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = false);
 
 		if (this.onFile != null) this.onFile(filePath, file);

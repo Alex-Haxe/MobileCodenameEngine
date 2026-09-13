@@ -2,17 +2,12 @@ package funkin.backend.shaders;
 
 import openfl.Assets;
 
-/**
- * Class for custom shaders.
- *
- * To create one, create a `shaders` folder in your assets/mod folder, then add a file named `my-shader.frag` or/and `my-shader.vert`.
- *
- * Non-existent shaders will only load the default one, and throw a warning in the console.
- *
- * To access the shader's uniform variables, use `shader.variable`
- */
+@:deprecated("Use funkin.backend.shaders.FunkinShader.fromFile instead.")
 class CustomShader extends FunkinShader {
-	public var path:String = "";
+	@:isVar
+	public var path(get, set):String;
+	inline function get_path():String return path != null ? path : _fragmentFilePath + _vertexFilePath;
+	inline function set_path(v:Null<String>):String return path = cast v;
 
 	/**
 	 * Creates a new custom shader

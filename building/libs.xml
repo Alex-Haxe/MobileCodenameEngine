@@ -46,15 +46,16 @@
 
 		<!-- Build hxcpp -->
 		<cmd inLib="hxcpp" dir="tools/hxcpp" cmd="haxe compile.hxml" />
+		<cmd inLib="lime" cmd="haxelib run lime rebuild hxcpp"/>
 	</if>
 
 	<!-- Lime Building -->
-	<!-- <if cond="build-lime || all">
+	<if cond="build-lime">
 		<print pretty="true">Rebuilding Lime...</print>
 
-		<!- - Build lime - ->
-		<cmd inLib="lime" cmd="haxelib run lime rebuild . $PLATFORM -release -clean" />
-		<cmd inLib="lime" dir="tools" cmd="haxe tools.hxml" />
-	</if> -->
+		<!-- Build lime -->
+		<cmd inLib="lime" dir="tools" cmd="haxe tools.hxml"/>
+		<cmd inLib="lime" cmd="haxelib run lime rebuild $PLATFORM -nocolor -nocffi -release"/>
+	</if>
 
 </libraries>

@@ -65,7 +65,7 @@ class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	}
 
 	public function precacheVideos() {
-		_videoExtensions = [Flags.VIDEO_EXT];
+		_videoExtensions = Flags.VIDEO_EXTS;
 		
 		videoCacheRemap = [];
 		for (entry in zip.entries) {

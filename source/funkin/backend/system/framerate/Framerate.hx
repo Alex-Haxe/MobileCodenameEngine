@@ -531,6 +531,7 @@ class Framerate extends Sprite {
 	}
 
 	public function reload() {
+		textFormat = new TextFormat(fontName, 12, -1);
 		for(c in categories)
 			c.reload();
 		#if SHOW_BUILD_ON_FPS
