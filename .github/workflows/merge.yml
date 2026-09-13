@@ -31,15 +31,20 @@ jobs:
       - name: Merge upstream into main
         run: |
           git checkout main
-          
-          if ! git merge upstream/main -X ours --no-edit; then
-            echo "Merge failed. Checking for modify/delete conflicts..."
-            
-            git status --porcelain | grep '^DU ' | cut -c 4- | tr '\n' '\0' | xargs -0 -r git rm
-            
-            git commit --allow-empty -m "Auto-merged upstream/main and resolved deleted files"
-          fi
 
+          if ! git merge upstream/main -X ours --no-edit; then
+            echo "Merge failed. Checking for conflicts..."
+
+            git status --porcelain | grep '^DU ' | cut -c 4- | tr '\n' '\0' | xargs -0 -r git rm
+
+            git status --porcelain | grep '^UU \|^UD \|^DU \|^AA \|^DD ' | cut -c 4- | while read file; do
+              git checkout --ours "$file"
+              git add "$file"
+            done
+
+            git commit --allow-empty -m "Auto-merged upstream/main and resolved conflicts"
+          fi
+           
       - name: Push updated branch
         run: |
           git push origin main
