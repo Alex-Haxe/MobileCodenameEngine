@@ -12,7 +12,7 @@
 		<lib name="lime" version="8.2.1" />
 
 		<!-- Flixel -->
-		<git name="flixel" url="https://github.com/Alex-Haxe/cne-flixel-old" />
+		<git name="flixel" url="https://github.com/Alex-Haxe/cne-flixel" ref="cne"/>
 		<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" ref="old" />
 
 		<!-- Other Libraries -->
